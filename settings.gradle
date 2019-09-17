@@ -1,1 +1,1 @@
-include 'desktop', 'android', 'ios', 'core'
+include 'api', 'gdx', 'wpi', 'setup'
