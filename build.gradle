@@ -34,37 +34,34 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
+    apply plugin: "kotlin"
+
+    sourceCompatibility = 1.7
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+    sourceSets.main.java.srcDirs = [ "src/" ]
+    dependencies {
+        api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    }
 }
 
 project(":api"){
-    apply plugin: "kotlin"
-    dependencies {
-        api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    }
 }
 
 project(":gdx") {
-    apply plugin: "kotlin"
-
-
     dependencies {
+        implementation project(":api")
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
-        api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     }
 }
 project(":setup"){
-    apply plugin: "kotlin"
-    dependencies {
-        api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    }
 }
 project(":wpi"){
-    apply plugin: "kotlin"
     apply plugin: "edu.wpi.first.GradleRIO"
     dependencies {
-        api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        implementation project(":api")
         api wpi.deps.wpilib()
         api wpi.deps.vendor.java()
     }
