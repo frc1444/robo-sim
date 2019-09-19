@@ -1,2 +1,2 @@
-include 'api', 'gdx', 'wpi', 'setup'
+include 'api', 'gdx', 'wpi'
 rootProject.name = "robo-sim"

@@ -36,7 +36,6 @@ com_crashlytics_export_strings.xml
 /api/build/
 /gdx/build/
 /wpi/build/
-/setup/build/
 ## Gradle
 
 /local.properties
