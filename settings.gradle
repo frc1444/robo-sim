@@ -1,1 +1,2 @@
 include 'api', 'gdx', 'wpi', 'setup'
+rootProject.name = "robo-sim"

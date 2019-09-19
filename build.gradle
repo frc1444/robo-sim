@@ -62,7 +62,7 @@ project(":wpi"){
     apply plugin: "edu.wpi.first.GradleRIO"
     dependencies {
         implementation project(":api")
-        api wpi.deps.wpilib()
-        api wpi.deps.vendor.java()
+        implementation wpi.deps.wpilib()
+        implementation wpi.deps.vendor.java()
     }
 }

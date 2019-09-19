@@ -3,7 +3,7 @@ package com.first1444.sim.wpi.frc
 import com.first1444.sim.api.RunnableCreator
 import edu.wpi.first.wpilibj.TimedRobot
 
-class WpiTimedRobot(
+class WpiTimedRobot @JvmOverloads constructor(
         private val runnableCreator: RunnableCreator,
         period: Double = kDefaultPeriod
 ) : TimedRobot(period) {
