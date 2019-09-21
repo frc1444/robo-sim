@@ -34,14 +34,13 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
+
+
+}
+subprojects {
     apply plugin: "kotlin"
-
-    sourceCompatibility = 1.7
-    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-    sourceSets.main.java.srcDirs = [ "src/" ]
     dependencies {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     }
 }
 
