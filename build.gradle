@@ -15,9 +15,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
-//plugins {
-//    id "edu.wpi.first.GradleRIO" version "2019.4.1" apply false
-//}
 
 allprojects {
 
@@ -58,12 +55,9 @@ project(":gdx") {
     }
 }
 project(":wpi"){
-//    apply plugin: "edu.wpi.first.GradleRIO"
     dependencies {
         api project(":api")
 //        api "edu.wpi.first.wpilib.networktables.java:NetworkTables:$wpiLibVersion"
         api "edu.wpi.first.wpilibj:wpilibj-java:$wpiLibVersion"
-//        api wpi.deps.wpilib()
-//        api wpi.deps.vendor.java()
     }
 }

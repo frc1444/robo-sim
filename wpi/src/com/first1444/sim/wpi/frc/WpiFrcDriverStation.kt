@@ -15,9 +15,9 @@ class WpiFrcDriverStation(
         }
     override val mode: FrcMode
         get() = when {
-            station.isDisabled -> FrcMode.DISABLED
-            station.isAutonomous -> FrcMode.AUTONOMOUS
             station.isOperatorControl -> FrcMode.TELEOP
+            station.isAutonomous -> FrcMode.AUTONOMOUS
+            station.isDisabled -> FrcMode.DISABLED
             station.isTest -> FrcMode.TEST
             else -> throw IllegalStateException("The driver station is not in any mode?")
         }
@@ -27,13 +27,15 @@ class WpiFrcDriverStation(
                 station.eventName,
                 when(station.matchType!!){
                     DriverStation.MatchType.Elimination -> MatchType.ELIMINATION
-                    DriverStation.MatchType.Practice -> MatchType.PRACTICE
                     DriverStation.MatchType.Qualification -> MatchType.QUALIFICATION
+                    DriverStation.MatchType.Practice -> MatchType.PRACTICE
                     DriverStation.MatchType.None -> null
                 },
                 station.matchNumber,
                 station.replayNumber
         )
+    override val gameSpecificMessage: String
+        get() = station.gameSpecificMessage
     override val isDriverStationAttached: Boolean
         get() = station.isDSAttached
     override val isFMSAttached: Boolean

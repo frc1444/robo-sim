@@ -4,6 +4,11 @@ interface FrcDriverStation {
     val alliance: Alliance?
     val mode: FrcMode
     val matchInfo: MatchInfo
+    /**
+     * Also available using [matchInfo]
+     */
+    val gameSpecificMessage: String
+
     val isDriverStationAttached: Boolean
     val isFMSAttached: Boolean
 
