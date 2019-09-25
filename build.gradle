@@ -1,7 +1,12 @@
 
 buildscript {
-    ext.kotlinVersion = '1.3.50'
-    ext.wpiLibVersion = "2019.4.1"
+    ext {
+        kotlinVersion = '1.3.50'
+        wpiLibVersion = "2019.4.1"
+        junit5Version = "5.4.2"
+        gdxVersion = '1.9.10'
+        box2DLightsVersion = '1.4'
+    }
 
     repositories {
         mavenLocal()
@@ -13,16 +18,13 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.junit.platform:junit-platform-gradle-plugin:1.2.0"
     }
 }
 
 allprojects {
 
     version = '1.0'
-    ext {
-        gdxVersion = '1.9.10'
-        box2DLightsVersion = '1.4'
-    }
 
     repositories {
         mavenLocal()
@@ -40,24 +42,35 @@ subprojects {
     apply plugin: "kotlin"
     dependencies {
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        testImplementation "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
     }
 }
 
 project(":api"){
+    dependencies {
+    }
 }
 
 project(":gdx") {
+    apply plugin: 'org.junit.platform.gradle.plugin'
     dependencies {
         api project(":api")
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+
+        testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        testImplementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        testImplementation "com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion"
     }
 }
 project(":wpi"){
     dependencies {
         api project(":api")
-//        api "edu.wpi.first.wpilib.networktables.java:NetworkTables:$wpiLibVersion"
+//        api "edu.wpi.first.wpiutil:wpiutil-java:$wpiLibVersion"
+//        api "edu.wpi.first.cscore:cscore-java:$wpiLibVersion"
         api "edu.wpi.first.wpilibj:wpilibj-java:$wpiLibVersion"
     }
 }
