@@ -1,39 +1,26 @@
 package com.first1444.sim.api.frc
 
 abstract class IterativeRobotRunnable(
+        private val iterativeRobot: IterativeRobot,
         modeGetter: () -> FrcMode
 ) : BasicRobotRunnable(modeGetter) {
-
-    protected abstract fun robotPeriodic()
-
-    protected abstract fun disabledInit()
-    protected abstract fun disabledPeriodic()
-
-    protected abstract fun autonomousInit()
-    protected abstract fun autonomousPeriodic()
-
-    protected abstract fun teleopInit()
-    protected abstract fun teleopPeriodic()
-
-    protected abstract fun testInit()
-    protected abstract fun testPeriodic()
 
     override fun update(mode: FrcMode, previousMode: FrcMode?) {
         if(mode != previousMode){
             when(mode){
-                FrcMode.DISABLED -> disabledInit()
-                FrcMode.TELEOP -> teleopInit()
-                FrcMode.AUTONOMOUS -> autonomousInit()
-                FrcMode.TEST -> testInit()
+                FrcMode.DISABLED -> iterativeRobot.disabledInit()
+                FrcMode.TELEOP -> iterativeRobot.teleopInit()
+                FrcMode.AUTONOMOUS -> iterativeRobot.autonomousInit()
+                FrcMode.TEST -> iterativeRobot.testInit()
             }
         }
         when(mode){
-            FrcMode.DISABLED -> disabledPeriodic()
-            FrcMode.TELEOP -> teleopPeriodic()
-            FrcMode.AUTONOMOUS -> autonomousPeriodic()
-            FrcMode.TEST -> testPeriodic()
+            FrcMode.DISABLED -> iterativeRobot.disabledPeriodic()
+            FrcMode.TELEOP -> iterativeRobot.teleopPeriodic()
+            FrcMode.AUTONOMOUS -> iterativeRobot.autonomousPeriodic()
+            FrcMode.TEST -> iterativeRobot.testPeriodic()
         }
-        robotPeriodic()
+        iterativeRobot.robotPeriodic()
     }
 
 }

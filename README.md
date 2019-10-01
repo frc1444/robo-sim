@@ -1,5 +1,10 @@
 # RoboSim
 A 2D simulation and abstraction of WPILib code for FRC 
+
+### Goal
+The goal of this is to eventually make it usable by others. However, in the early stages of development, the goal
+will be to make something that is usable by team1444 and retrodaredevil
+
 ### Using
 This is in the very early stages of development and will not be ready for use for a while.
 
