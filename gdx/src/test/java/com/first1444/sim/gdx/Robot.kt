@@ -1,7 +1,7 @@
 package com.first1444.sim.gdx
 
-import com.first1444.sim.api.physics.Accelerator
+import com.first1444.sim.gdx.physics.VelocityComponent
 
 interface Robot {
-    val acceleratorList: List<Accelerator>
+    val velocityComponentList: List<VelocityComponent>
 }
