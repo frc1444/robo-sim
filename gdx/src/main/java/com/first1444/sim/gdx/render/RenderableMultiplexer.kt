@@ -23,18 +23,4 @@ class RenderableMultiplexer(
         }
     }
 
-    class Builder {
-        private val list: MutableList<Renderable> = ArrayList()
-
-        fun add(renderable: Renderable): Builder {
-            list.add(renderable)
-            return this
-        }
-
-        fun build(): RenderableMultiplexer{
-            return RenderableMultiplexer(ArrayList(list))
-        }
-
-    }
-
 }

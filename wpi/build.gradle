@@ -1,3 +1,9 @@
 
 sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+dependencies {
+//    api "edu.wpi.first.wpiutil:wpiutil-java:$wpiLibVersion"
+//    api "edu.wpi.first.cscore:cscore-java:$wpiLibVersion"
+    api "edu.wpi.first.wpilibj:wpilibj-java:$wpiLibVersion"
+}

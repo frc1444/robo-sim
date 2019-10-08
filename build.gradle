@@ -18,7 +18,6 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "org.junit.platform:junit-platform-gradle-plugin:1.2.0"
     }
 }
 
@@ -36,7 +35,6 @@ allprojects {
         maven { url "http://first.wpi.edu/FRC/roborio/maven/release"}
     }
 
-
 }
 subprojects {
     apply plugin: "kotlin"
@@ -44,6 +42,9 @@ subprojects {
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         testImplementation "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
         testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+    }
+    test {
+        useJUnitPlatform()
     }
 }
 
@@ -55,24 +56,17 @@ project(":api"){
 }
 
 project(":gdx") {
-    apply plugin: 'org.junit.platform.gradle.plugin'
     dependencies {
         api project(":api")
-        api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
-
-        testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-        testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        testImplementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-        testImplementation "com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion"
+    }
+}
+project(":desktop") {
+    dependencies {
+        api project(":gdx")
     }
 }
 project(":wpi"){
     dependencies {
         api project(":api")
-//        api "edu.wpi.first.wpiutil:wpiutil-java:$wpiLibVersion"
-//        api "edu.wpi.first.cscore:cscore-java:$wpiLibVersion"
-        api "edu.wpi.first.wpilibj:wpilibj-java:$wpiLibVersion"
     }
 }
