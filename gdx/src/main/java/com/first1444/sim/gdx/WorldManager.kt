@@ -19,6 +19,9 @@ class WorldManager(
     private val fixtureArrayCache = Array<Fixture>()
 
     override fun update(delta: Float) {
+        for(updateable in updateableList){
+            updateable.update(delta)
+        }
         world.step(delta, 6, 2)
     }
 
