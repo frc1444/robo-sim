@@ -16,7 +16,7 @@ class EntityVelocityApplier(
             val entityRotation = entity.rotationRadians.toDouble()
             val entityPosition = entity.position
 
-            val instant = component.getVelocityInstant()
+            val instant = component.velocityInstant
             val velocity = instant.velocity.rotateRadians(entityRotation) // rotate the velocity to be applied in the correct direction
 
             val worldPosition = instant.position.rotateRadians(entityRotation) + entityPosition.sim

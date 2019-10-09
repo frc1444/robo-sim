@@ -8,5 +8,5 @@ data class VelocityInstant(
 )
 
 interface VelocityComponent {
-    fun getVelocityInstant(): VelocityInstant
+    val velocityInstant: VelocityInstant
 }

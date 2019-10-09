@@ -8,9 +8,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.Viewport
 
-class WorldManager(
-    val viewport: Viewport
-) : Updateable, Disposable{
+class WorldManager : Updateable, Disposable{
 
     val world: World = World(Vector2.Zero, true)
     private val updateableList: MutableList<Updateable> = ArrayList()

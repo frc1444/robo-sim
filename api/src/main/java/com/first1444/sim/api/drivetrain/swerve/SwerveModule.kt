@@ -21,7 +21,6 @@ interface SwerveModule : Runnable {
     val currentAngleDegrees: Double
     val currentAngleRadians: Double
 
-    val totalDistanceTraveledInches: Double
     val totalDistanceTraveledMeters: Double
 
     val name: String
