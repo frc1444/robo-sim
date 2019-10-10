@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.first1444.sim.api.Vector2
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDrive
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
+import com.first1444.sim.api.sensors.DefaultMutableOrientation
 import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.drivetrain.swerve.VelocitySwerveModule
 import com.first1444.sim.gdx.render.RenderableMultiplexer
@@ -59,19 +60,26 @@ class TestMain : Game() {
                 setAsBox(0.5f, 0.5f, GDX_ZERO, 0.0f)
             }
         })
+        val orientation = DefaultMutableOrientation(EntityOrientation(entity))
+        orientation.orientationDegrees = 90.0 // we start at 90 degrees
 
         setScreen(SimpleScreen(
                 UpdateableMultiplexer(listOf(
                         clock,
                         Updateable { delta ->
-                            val up = if(Gdx.input.isKeyPressed(Input.Keys.W)) 1 else 0
-                            val down = if(Gdx.input.isKeyPressed(Input.Keys.S)) 1 else 0
-                            val left = if(Gdx.input.isKeyPressed(Input.Keys.A)) 1 else 0
-                            val right = if(Gdx.input.isKeyPressed(Input.Keys.D)) 1 else 0
+                            val up = if(Gdx.input.isKeyPressed(Input.Keys.W)) 1.0 else 0.0
+                            val down = if(Gdx.input.isKeyPressed(Input.Keys.S)) 1.0 else 0.0
+                            val left = if(Gdx.input.isKeyPressed(Input.Keys.A)) 1.0 else 0.0
+                            val right = if(Gdx.input.isKeyPressed(Input.Keys.D)) 1.0 else 0.0
                             val x = right - left
                             val y = up - down
+                            var translation = Vector2(-y, x).rotateRadians(-orientation.orientationRadians)
+                            if(translation.magnitude > 1){
+                                translation /= translation.magnitude
+                            }
                             val rotate = (if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) 1 else 0) - (if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) 1 else 0)
-                            swerveDrive.setControl(y.toDouble(), x.toDouble(), rotate.toDouble(), 1.0)
+
+                            swerveDrive.setControl(translation.y, translation.x, rotate.toDouble(), 1.0)
                         },
                         Updateable.wrap(swerveDrive),
                         EntityVelocityApplier(entity, listOf(fr, fl, rl, rr)),

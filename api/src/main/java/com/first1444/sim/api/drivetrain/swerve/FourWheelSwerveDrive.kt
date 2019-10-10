@@ -50,7 +50,7 @@ class FourWheelSwerveDrive(
           |
         FL FR
         RL RR
-        or
+        or more accurately:
         RL FL
              ======>
         RR FR
