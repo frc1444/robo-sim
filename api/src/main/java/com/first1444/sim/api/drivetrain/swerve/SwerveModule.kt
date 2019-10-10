@@ -1,5 +1,7 @@
 package com.first1444.sim.api.drivetrain.swerve
 
+import com.first1444.sim.api.event.EventHandler
+
 interface SwerveModule : Runnable {
     /**
      * Updates the swerve module with the target speed and angle. Should be called to apply the speed and angle
@@ -7,8 +9,7 @@ interface SwerveModule : Runnable {
     override fun run()
 
 
-    // TODO figure out a more elegant way to receive method calls such as recalibrate (an event system?)
-    fun recalibrate() {}
+    val eventHandler: EventHandler
 
     /**
      * @param speed A number in range [-1..1] representing the speed as a percentage

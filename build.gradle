@@ -56,8 +56,14 @@ project(":api"){
 }
 
 project(":gdx") {
+    apply plugin: "kotlin"
     dependencies {
         api project(":api")
+    }
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
     }
 }
 project(":desktop") {

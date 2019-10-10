@@ -11,3 +11,8 @@ fun Vector2.copyTo(vector2: com.badlogic.gdx.math.Vector2): com.badlogic.gdx.mat
 }
 val com.badlogic.gdx.math.Vector2.sim: Vector2
     get() = Vector2(x.toDouble(), y.toDouble())
+
+fun gdxVector(x: Float, y: Float): com.badlogic.gdx.math.Vector2{
+    return com.badlogic.gdx.math.Vector2(x, y)
+}
+val GDX_ZERO = com.badlogic.gdx.math.Vector2.Zero

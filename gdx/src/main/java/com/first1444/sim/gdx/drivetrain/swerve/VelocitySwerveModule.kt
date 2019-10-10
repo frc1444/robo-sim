@@ -3,6 +3,7 @@ package com.first1444.sim.gdx.drivetrain.swerve
 import com.first1444.sim.api.Clock
 import com.first1444.sim.api.Vector2
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
+import com.first1444.sim.api.event.EventHandler
 import com.first1444.sim.gdx.physics.VelocityComponent
 import com.first1444.sim.gdx.physics.VelocityInstant
 import java.lang.Math.toDegrees
@@ -54,6 +55,8 @@ class VelocitySwerveModule(
         }
         this.lastTimestamp = timestamp
     }
+
+    override val eventHandler: EventHandler = EventHandler.DO_NOTHING
 
     override fun setTargetSpeed(speed: Double) {
         this.speed = speed

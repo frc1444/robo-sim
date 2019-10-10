@@ -1,12 +1,12 @@
-sourceCompatibility = 1.7
+apply plugin: "kotlin"
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+//kotlinOptions {
+//    jvmTarget = '1.8'
+//}
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 dependencies {
     api "com.badlogicgames.gdx:gdx:$gdxVersion"
     api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
     api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
-
-//    testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-//    testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-//    testImplementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-//    testImplementation "com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion"
 }

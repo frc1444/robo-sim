@@ -1,5 +1,6 @@
 package com.first1444.sim.api.drivetrain.swerve
 
+import com.first1444.sim.api.event.EventHandler
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.lang.Math.toRadians
@@ -65,6 +66,8 @@ private class TestSwerveModule(
 ) : SwerveModule {
     override fun run() {
     }
+
+    override val eventHandler: EventHandler = EventHandler.DO_NOTHING
 
     override fun setTargetSpeed(speed: Double) {
         assertEquals(expectedSpeed, speed, 0.0001) { "$name got unexpected speed" }

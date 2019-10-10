@@ -13,6 +13,7 @@ data class Vector2(
         val y: Double
 ) {
     companion object {
+        @JvmField
         val ZERO = Vector2(0.0, 0.0)
     }
     val magnitude: Double by lazy { hypot(x, y) }
@@ -53,4 +54,7 @@ data class Vector2(
         )
     }
     @JvmOverloads fun rotateDegrees(degrees: Double, origin: Vector2 = ZERO): Vector2 = rotateRadians(toRadians(degrees))
+    override fun toString(): String {
+        return "Vector2(x=$x, y=$y)"
+    }
 }
