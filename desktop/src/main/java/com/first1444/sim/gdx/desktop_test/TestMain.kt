@@ -10,17 +10,20 @@ import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ExtendViewport
+import com.first1444.sim.api.MeasureUtil.inchesToMeters
+import com.first1444.sim.api.MeasureUtil.poundsToKilograms
 import com.first1444.sim.api.Vector2
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDrive
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
 import com.first1444.sim.api.sensors.DefaultMutableOrientation
 import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.drivetrain.swerve.VelocitySwerveModule
+import com.first1444.sim.gdx.implementations.deepspace2019.CargoEntity
+import com.first1444.sim.gdx.physics.EntityVelocityApplier
 import com.first1444.sim.gdx.render.RenderableMultiplexer
 import com.first1444.sim.gdx.render.ResetRenderable
 import com.first1444.sim.gdx.render.StageRenderable
 import com.first1444.sim.gdx.render.WorldDebugRenderable
-import java.lang.Math.toRadians
 
 class TestMain : Game() {
     override fun create() {
@@ -35,33 +38,39 @@ class TestMain : Game() {
         val worldManager = WorldManager()
         val contentStage = Stage(viewport)
 
-        val maxVelocity = 5.0
-        val fr = VelocitySwerveModule("front right", Vector2(.5, -.5), maxVelocity, clock) // lower right
-        val fl = VelocitySwerveModule("front left", Vector2(.5, .5), maxVelocity, clock) // upper right
-        val rl = VelocitySwerveModule("rear left", Vector2(-.5, .5), maxVelocity, clock) // upper left
-        val rr = VelocitySwerveModule("rear right", Vector2(-.5, -.5), maxVelocity, clock) // lower left
+        val maxVelocity = 3.35
+        val wheelBase = inchesToMeters(22.75) // length
+        val trackWidth = inchesToMeters(24.0)
+        val area = wheelBase * trackWidth
+        println("calculated area is: $area")
+        val fr = VelocitySwerveModule("front right", Vector2(wheelBase / 2, -trackWidth / 2), maxVelocity, clock) // lower right
+        val fl = VelocitySwerveModule("front left", Vector2(wheelBase / 2, trackWidth / 2), maxVelocity, clock) // upper right
+        val rl = VelocitySwerveModule("rear left", Vector2(-wheelBase / 2, trackWidth / 2), maxVelocity, clock) // upper left
+        val rr = VelocitySwerveModule("rear right", Vector2(-wheelBase / 2, -trackWidth / 2), maxVelocity, clock) // lower left
         val swerveDriveData = FourWheelSwerveDriveData(
-                fr,
-                fl,
-                rl,
-                rr,
-        1.0, 1.0
+                fr, fl, rl, rr,
+                wheelBase, trackWidth
         )
         val swerveDrive = FourWheelSwerveDrive(swerveDriveData)
 
         val entity = ActorBox2DEntity(contentStage, worldManager.world, BodyDef().apply{
             type = BodyDef.BodyType.DynamicBody
             angle = 90 * MathUtils.degreesToRadians // start at 90 degrees to make this easy on the player. We will eventually add field centric controls
-            linearDamping = 5.0f // slow it down
-            angularDamping = 30.0f // tune this!
-        }, FixtureDef().apply{
-            density = 1.0f
+//            linearDamping = maxVelocity.toFloat() * slowFactor.toFloat()
+            linearDamping = 5.0f
+            angularDamping = 20.0f
+        }, listOf(FixtureDef().apply{
+//            density = poundsToKilograms(120.0).toFloat() / area.toFloat()
+            density = 1.0f / area.toFloat()
             shape = PolygonShape().apply {
-                setAsBox(0.5f, 0.5f, GDX_ZERO, 0.0f)
+                setAsBox((wheelBase / 2).toFloat(), (trackWidth / 2).toFloat(), GDX_ZERO, 0.0f)
             }
-        })
+        }))
         val orientation = DefaultMutableOrientation(EntityOrientation(entity))
         orientation.orientationDegrees = 90.0 // we start at 90 degrees
+
+        val cargo = CargoEntity(contentStage, worldManager.world)
+        cargo.position = gdxVector(3.0f, 3.0f)
 
         setScreen(SimpleScreen(
                 UpdateableMultiplexer(listOf(
@@ -83,6 +92,7 @@ class TestMain : Game() {
                         },
                         Updateable.wrap(swerveDrive),
                         EntityVelocityApplier(entity, listOf(fr, fl, rl, rr)),
+                        entity, cargo,
                         worldManager
                 )),
                 RenderableMultiplexer(listOf(

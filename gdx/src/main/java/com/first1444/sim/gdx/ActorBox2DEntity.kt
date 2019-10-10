@@ -14,13 +14,15 @@ open class ActorBox2DEntity(
         final override val body: Body
 ) : Box2DEntity {
 
-    constructor(stage: Stage, world: World, bodyDef: BodyDef, fixtureDef: FixtureDef) : this(
+    constructor(stage: Stage, world: World, bodyDef: BodyDef, fixtureDefs: List<FixtureDef>) : this(
             Group().apply {
                 stage.addActor(this)
                 touchable = Touchable.childrenOnly
             },
             world.createBody(bodyDef).apply {
-                createFixture(fixtureDef)
+                for(fixtureDef in fixtureDefs){
+                    createFixture(fixtureDef)
+                }
             }
     )
 
