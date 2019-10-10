@@ -1,13 +1,13 @@
 package com.first1444.sim.gdx.physics
 
 import com.badlogic.gdx.math.Vector2
-import com.first1444.sim.gdx.Box2DEntity
+import com.first1444.sim.gdx.BodyEntity
 import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.copyTo
 import com.first1444.sim.gdx.sim
 
 class EntityVelocityApplier(
-        private val entity: Box2DEntity,
+        private val entity: BodyEntity,
         private val velocityComponents: List<VelocityComponent>
 ) : Updateable {
     private val temp1 = Vector2()

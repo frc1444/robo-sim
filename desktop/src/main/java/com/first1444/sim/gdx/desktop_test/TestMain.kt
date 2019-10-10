@@ -8,10 +8,10 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.first1444.sim.api.MeasureUtil.inchesToMeters
-import com.first1444.sim.api.MeasureUtil.poundsToKilograms
 import com.first1444.sim.api.Vector2
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDrive
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
@@ -19,6 +19,7 @@ import com.first1444.sim.api.sensors.DefaultMutableOrientation
 import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.drivetrain.swerve.VelocitySwerveModule
 import com.first1444.sim.gdx.implementations.deepspace2019.CargoEntity
+import com.first1444.sim.gdx.physics.BodyVelocityApplier
 import com.first1444.sim.gdx.physics.EntityVelocityApplier
 import com.first1444.sim.gdx.render.RenderableMultiplexer
 import com.first1444.sim.gdx.render.ResetRenderable
@@ -41,8 +42,6 @@ class TestMain : Game() {
         val maxVelocity = 3.35
         val wheelBase = inchesToMeters(22.75) // length
         val trackWidth = inchesToMeters(24.0)
-        val area = wheelBase * trackWidth
-        println("calculated area is: $area")
         val fr = VelocitySwerveModule("front right", Vector2(wheelBase / 2, -trackWidth / 2), maxVelocity, clock) // lower right
         val fl = VelocitySwerveModule("front left", Vector2(wheelBase / 2, trackWidth / 2), maxVelocity, clock) // upper right
         val rl = VelocitySwerveModule("rear left", Vector2(-wheelBase / 2, trackWidth / 2), maxVelocity, clock) // upper left
@@ -53,19 +52,51 @@ class TestMain : Game() {
         )
         val swerveDrive = FourWheelSwerveDrive(swerveDriveData)
 
-        val entity = ActorBox2DEntity(contentStage, worldManager.world, BodyDef().apply{
+        val entity = ActorBodyEntity(contentStage, worldManager.world, BodyDef().apply{
             type = BodyDef.BodyType.DynamicBody
             angle = 90 * MathUtils.degreesToRadians // start at 90 degrees to make this easy on the player. We will eventually add field centric controls
-//            linearDamping = maxVelocity.toFloat() * slowFactor.toFloat()
-            linearDamping = 5.0f
-            angularDamping = 20.0f
+//            linearDamping = 5.0f
+//            angularDamping = 20.0f
         }, listOf(FixtureDef().apply{
-//            density = poundsToKilograms(120.0).toFloat() / area.toFloat()
-            density = 1.0f / area.toFloat()
+            restitution = .2f
             shape = PolygonShape().apply {
                 setAsBox((wheelBase / 2).toFloat(), (trackWidth / 2).toFloat(), GDX_ZERO, 0.0f)
             }
+            val area = wheelBase * trackWidth
+            density = 1.0f / area.toFloat()
         }))
+        val wheelBody = BodyDef().apply {
+            type = BodyDef.BodyType.DynamicBody
+            linearDamping = 5.0f / 4
+            angularDamping = 20.0f / 4
+        }
+        val wheelFixture = FixtureDef().apply {
+            val wheelDiameter = inchesToMeters(4.0f)
+            val wheelWidth = inchesToMeters(1.0f)
+            val area = wheelDiameter * wheelWidth
+            shape = PolygonShape().apply {
+                setAsBox(wheelDiameter / 2, wheelWidth / 2, GDX_ZERO, 0.0f) // 4 inches by 1 inch
+            }
+            density = 1.0f / area
+        }
+        val updateableList = mutableListOf<Updateable>()
+        for(module in listOf(fr, fl, rl, rr)){
+            val position = module.position
+            val wheelEntity = ActorBodyEntity(contentStage, worldManager.world, wheelBody, listOf(wheelFixture))
+            wheelEntity.setPosition(position)
+            val joint = RevoluteJointDef().apply {
+                bodyA = entity.body
+                bodyB = wheelEntity.body
+                localAnchorA.set(position)
+                localAnchorB.set(0.0f, 0.0f)
+                referenceAngle = 0.0f
+            }
+            worldManager.world.createJoint(joint)
+            updateableList.add(Updateable {
+                wheelEntity.rotationRadians = module.currentAngleRadians.toFloat() + entity.rotationRadians
+            })
+            updateableList.add(BodyVelocityApplier(wheelEntity, entity, module))
+        }
         val orientation = DefaultMutableOrientation(EntityOrientation(entity))
         orientation.orientationDegrees = 90.0 // we start at 90 degrees
 
@@ -91,8 +122,8 @@ class TestMain : Game() {
                             swerveDrive.setControl(translation.y, translation.x, rotate.toDouble(), 1.0)
                         },
                         Updateable.wrap(swerveDrive),
-                        EntityVelocityApplier(entity, listOf(fr, fl, rl, rr)),
-                        entity, cargo,
+//                        EntityVelocityApplier(entity, listOf(fr, fl, rl, rr)),
+                        entity, cargo, UpdateableMultiplexer(updateableList),
                         worldManager
                 )),
                 RenderableMultiplexer(listOf(

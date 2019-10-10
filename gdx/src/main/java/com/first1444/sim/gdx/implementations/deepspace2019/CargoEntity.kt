@@ -6,11 +6,11 @@ import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.first1444.sim.api.MeasureUtil.inchesToMeters
-import com.first1444.sim.gdx.ActorBox2DEntity
+import com.first1444.sim.gdx.ActorBodyEntity
 
 class CargoEntity(
         stage: Stage, world: World, bodyDef: BodyDef = BODY_DEF, fixtureDefs: List<FixtureDef> = listOf(FIXTURE_DEF)
-) : ActorBox2DEntity(
+) : ActorBodyEntity(
         stage, world, bodyDef, fixtureDefs
 ) {
 

@@ -43,7 +43,7 @@ class FourWheelSwerveDrive(
     override fun setControl(forward: Double, strafe: Double, turnAmount: Double, speed: Double) {
         controlData = ControlData(forward, strafe, turnAmount, speed)
     }
-    override fun run(){
+    override fun run() {
         /*
         In this algorithm, 0 degrees is in the direction like so:
           ^
@@ -64,44 +64,55 @@ class FourWheelSwerveDrive(
         val turnAmount = controlData.turnAmount // RCW
         val speed = controlData.speed
 
-        val sinA = this.sinA // wheel base // L/R
-        val cosA = this.cosA // track width// W/R
+        if (forward == 0.0 && strafe == 0.0 && turnAmount == 0.0) {
+            drivetrainData.apply {
+                frontRight.setTargetSpeed(0.0)
+                frontLeft.setTargetSpeed(0.0)
+                rearLeft.setTargetSpeed(0.0)
+                rearRight.setTargetSpeed(0.0)
+            }
+        } else {
 
-        val A = strafe - turnAmount * sinA
-        val B = strafe + turnAmount * sinA
-        val C = forward - turnAmount * cosA
-        val D = forward + turnAmount * cosA
+            val sinA = this.sinA // wheel base // L/R
+            val cosA = this.cosA // track width// W/R
 
-        var frSpeed = hypot(B, C) * speed // ws1
-        var flSpeed = hypot(B, D) * speed // ws2
-        var rlSpeed = hypot(A, D) * speed // ws3
-        var rrSpeed = hypot(A, C) * speed // ws4
+            val A = strafe - turnAmount * sinA
+            val B = strafe + turnAmount * sinA
+            val C = forward - turnAmount * cosA
+            val D = forward + turnAmount * cosA
 
-        val max = max(max(frSpeed, flSpeed), max(rlSpeed, rrSpeed))
-        if (max > 1) {
-            frSpeed /= max
-            flSpeed /= max
-            rlSpeed /= max
-            rrSpeed /= max
+            var frSpeed = hypot(B, C) * speed // ws1
+            var flSpeed = hypot(B, D) * speed // ws2
+            var rlSpeed = hypot(A, D) * speed // ws3
+            var rrSpeed = hypot(A, C) * speed // ws4
+
+            val max = max(max(frSpeed, flSpeed), max(rlSpeed, rrSpeed))
+            if (max > 1) {
+                frSpeed /= max
+                flSpeed /= max
+                rlSpeed /= max
+                rrSpeed /= max
+            }
+
+            // These are all negative because we want these to be regular counter clock wise angles
+            // The tutorial/diagram that was followed had angles that were clock wise angles, which we don't want
+            val frAngle = -atan2(B, C) // wa1
+            val flAngle = -atan2(B, D) // wa2
+            val rlAngle = -atan2(A, D) // wa3
+            val rrAngle = -atan2(A, C) // wa4
+
+            drivetrainData.apply {
+                frontRight.setTargetAngleRadians(frAngle)
+                frontRight.setTargetSpeed(frSpeed)
+                frontLeft.setTargetAngleRadians(flAngle)
+                frontLeft.setTargetSpeed(flSpeed)
+                rearLeft.setTargetAngleRadians(rlAngle)
+                rearLeft.setTargetSpeed(rlSpeed)
+                rearRight.setTargetAngleRadians(rrAngle)
+                rearRight.setTargetSpeed(rrSpeed)
+            }
         }
-
-        // These are all negative because we want these to be regular counter clock wise angles
-        // The tutorial/diagram that was followed had angles that were clock wise angles, which we don't want
-        val frAngle = -atan2(B, C) // wa1
-        val flAngle = -atan2(B, D) // wa2
-        val rlAngle = -atan2(A, D) // wa3
-        val rrAngle = -atan2(A, C) // wa4
-
         drivetrainData.apply {
-            frontRight.setTargetAngleRadians(frAngle)
-            frontRight.setTargetSpeed(frSpeed)
-            frontLeft.setTargetAngleRadians(flAngle)
-            frontLeft.setTargetSpeed(flSpeed)
-            rearLeft.setTargetAngleRadians(rlAngle)
-            rearLeft.setTargetSpeed(rlSpeed)
-            rearRight.setTargetAngleRadians(rrAngle)
-            rearRight.setTargetSpeed(rrSpeed)
-
             frontRight.run()
             frontLeft.run()
             rearLeft.run()

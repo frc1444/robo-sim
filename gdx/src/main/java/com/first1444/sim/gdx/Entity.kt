@@ -7,6 +7,18 @@ import com.badlogic.gdx.math.Vector2
 
 interface Entity : Updateable {
     var position: Vector2
-    val rotationDegrees: Float
-    val rotationRadians: Float
+    var rotationDegrees: Float
+    var rotationRadians: Float
+
+    fun setTransformRadians(position: Vector2, rotationRadians: Float)
+    fun setTransformRadians(position: com.first1444.sim.api.Vector2, rotationRadians: Float)
+    fun setTransformRadians(x: Float, y: Float, rotationRadians: Float)
+
+    fun setTransformDegrees(position: com.first1444.sim.api.Vector2, rotationDegrees: Float)
+    fun setTransformDegrees(position: Vector2, rotationDegrees: Float)
+    fun setTransformDegrees(x: Float, y: Float, rotationDegrees: Float)
+
+    fun setPosition(vector2: com.first1444.sim.api.Vector2){
+        position = vector2.gdx
+    }
 }

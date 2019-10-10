@@ -14,7 +14,7 @@ import kotlin.math.sin
 
 class VelocitySwerveModule(
         override val name: String,
-        private val position: Vector2,
+        val position: Vector2,
         /**
          * The maximum velocity in meters/second
          */
