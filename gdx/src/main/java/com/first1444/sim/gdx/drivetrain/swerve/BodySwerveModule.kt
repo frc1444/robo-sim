@@ -1,57 +1,48 @@
 package com.first1444.sim.gdx.drivetrain.swerve
 
+import com.badlogic.gdx.physics.box2d.Body
 import com.first1444.sim.api.Clock
-import com.first1444.sim.api.Vector2
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
 import com.first1444.sim.api.event.EventHandler
-import com.first1444.sim.gdx.physics.VelocityComponent
-import com.first1444.sim.gdx.physics.VelocityInstant
-import java.lang.Math.toDegrees
-import java.lang.Math.toRadians
+import com.first1444.sim.gdx.GdxUtil.gdxVectorFromRadians
+import com.first1444.sim.gdx.velocity.VelocityHandler
 import kotlin.math.absoluteValue
-import kotlin.math.cos
-import kotlin.math.sin
 
-@Deprecated("Use BodySwerveModule")
-class VelocitySwerveModule(
+class BodySwerveModule(
         override val name: String,
-        val position: Vector2,
+        private val body: Body,
+        private val parentBody: Body,
         /**
          * The maximum velocity in meters/second
          */
         private val maxVelocity: Double,
-        private val clock: Clock
-) : SwerveModule, VelocityComponent {
+        private val clock: Clock,
+        private val velocityHandler: VelocityHandler
+) : SwerveModule {
 
     private var speed = 0.0
     private var angleRadians = 0.0
 
-    private var lastVelocityInstant: VelocityInstant? = null
-
-    override val velocityInstant: VelocityInstant
-        get() {
-            return lastVelocityInstant ?: throw IllegalStateException("You have to call run() before you can access this!")
-        }
 
     private var lastTimestamp: Double? = null
     private var distanceTraveledMeters = 0.0
 
     override fun run() {
-        val speed = this.speed
-        val angleRadians = this.angleRadians
-        val maxVelocity = this.maxVelocity
-        lastVelocityInstant = VelocityInstant(
-                position,
-                Vector2(
-                        cos(angleRadians) * maxVelocity * speed,
-                        sin(angleRadians) * maxVelocity * speed
-                )
-        )
-        val velocity = (speed * maxVelocity).absoluteValue
+
         val timestamp = clock.timeSeconds
         val lastTimestamp = this.lastTimestamp
         if(lastTimestamp != null){
             val delta = timestamp - lastTimestamp
+
+            val speed = this.speed
+            val maxVelocity = this.maxVelocity
+            val velocity = (speed * maxVelocity).absoluteValue
+            val angleRadians = this.angleRadians + parentBody.angle
+            velocityHandler.setDesiredVelocity(velocity.toFloat())
+            velocityHandler.update(delta.toFloat())
+            val newVelocity = velocityHandler.calculatedVelocity
+            body.linearVelocity = gdxVectorFromRadians(angleRadians.toFloat(), newVelocity)
+
             distanceTraveledMeters += velocity * delta
         }
         this.lastTimestamp = timestamp
@@ -64,7 +55,7 @@ class VelocitySwerveModule(
     }
 
     override fun setTargetAngleDegrees(positionDegrees: Double) {
-        setTargetAngleRadians(toRadians(positionDegrees))
+        setTargetAngleRadians(Math.toRadians(positionDegrees))
     }
 
     override fun setTargetAngleRadians(positionRadians: Double) {
@@ -72,10 +63,11 @@ class VelocitySwerveModule(
     }
 
     override val currentAngleDegrees: Double
-        get() = toDegrees(currentAngleRadians)
+        get() = Math.toDegrees(currentAngleRadians)
     override val currentAngleRadians: Double
         get() = angleRadians
     override val totalDistanceTraveledMeters: Double
         get() = distanceTraveledMeters
 
 }
+

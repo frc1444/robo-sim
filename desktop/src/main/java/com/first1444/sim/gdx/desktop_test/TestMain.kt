@@ -15,16 +15,21 @@ import com.first1444.sim.api.MeasureUtil.inchesToMeters
 import com.first1444.sim.api.Vector2
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDrive
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
+import com.first1444.sim.api.drivetrain.swerve.SwerveModule
 import com.first1444.sim.api.sensors.DefaultMutableOrientation
 import com.first1444.sim.gdx.*
+import com.first1444.sim.gdx.GdxUtil.GDX_ZERO
+import com.first1444.sim.gdx.GdxUtil.gdxVector
+import com.first1444.sim.gdx.drivetrain.swerve.BodySwerveModule
 import com.first1444.sim.gdx.drivetrain.swerve.VelocitySwerveModule
 import com.first1444.sim.gdx.implementations.deepspace2019.CargoEntity
 import com.first1444.sim.gdx.physics.BodyVelocityApplier
-import com.first1444.sim.gdx.physics.EntityVelocityApplier
 import com.first1444.sim.gdx.render.RenderableMultiplexer
 import com.first1444.sim.gdx.render.ResetRenderable
 import com.first1444.sim.gdx.render.StageRenderable
 import com.first1444.sim.gdx.render.WorldDebugRenderable
+import com.first1444.sim.gdx.velocity.AccelerateVelocityHandler
+import com.first1444.sim.gdx.velocity.InstantVelocityHandler
 
 class TestMain : Game() {
     override fun create() {
@@ -42,16 +47,6 @@ class TestMain : Game() {
         val maxVelocity = 3.35
         val wheelBase = inchesToMeters(22.75) // length
         val trackWidth = inchesToMeters(24.0)
-        val fr = VelocitySwerveModule("front right", Vector2(wheelBase / 2, -trackWidth / 2), maxVelocity, clock) // lower right
-        val fl = VelocitySwerveModule("front left", Vector2(wheelBase / 2, trackWidth / 2), maxVelocity, clock) // upper right
-        val rl = VelocitySwerveModule("rear left", Vector2(-wheelBase / 2, trackWidth / 2), maxVelocity, clock) // upper left
-        val rr = VelocitySwerveModule("rear right", Vector2(-wheelBase / 2, -trackWidth / 2), maxVelocity, clock) // lower left
-        val swerveDriveData = FourWheelSwerveDriveData(
-                fr, fl, rl, rr,
-                wheelBase, trackWidth
-        )
-        val swerveDrive = FourWheelSwerveDrive(swerveDriveData)
-
         val entity = ActorBodyEntity(contentStage, worldManager.world, BodyDef().apply{
             type = BodyDef.BodyType.DynamicBody
             angle = 90 * MathUtils.degreesToRadians // start at 90 degrees to make this easy on the player. We will eventually add field centric controls
@@ -79,9 +74,18 @@ class TestMain : Game() {
             }
             density = 1.0f / area
         }
+        val frPosition = Vector2(wheelBase / 2, -trackWidth / 2)
+        val flPosition = Vector2(wheelBase / 2, trackWidth / 2)
+        val rlPosition = Vector2(-wheelBase / 2, trackWidth / 2)
+        val rrPosition = Vector2(-wheelBase / 2, -trackWidth / 2)
+
+        val moduleList = ArrayList<SwerveModule>(4)
         val updateableList = mutableListOf<Updateable>()
-        for(module in listOf(fr, fl, rl, rr)){
-            val position = module.position
+        for((moduleName, position) in listOf(
+                Pair("front right", frPosition),
+                Pair("front left", flPosition),
+                Pair("rear left", rlPosition),
+                Pair("rear right", rrPosition))){
             val wheelEntity = ActorBodyEntity(contentStage, worldManager.world, wheelBody, listOf(wheelFixture))
             wheelEntity.setPosition(position)
             val joint = RevoluteJointDef().apply {
@@ -92,11 +96,21 @@ class TestMain : Game() {
                 referenceAngle = 0.0f
             }
             worldManager.world.createJoint(joint)
+            val module = BodySwerveModule(
+                    moduleName, wheelEntity.body, entity.body, maxVelocity, clock,
+                    AccelerateVelocityHandler(maxVelocity.toFloat() / .5f, maxVelocity.toFloat() / .2f)
+            )
+            moduleList.add(module)
             updateableList.add(Updateable {
                 wheelEntity.rotationRadians = module.currentAngleRadians.toFloat() + entity.rotationRadians
             })
-            updateableList.add(BodyVelocityApplier(wheelEntity, entity, module))
+//            updateableList.add(BodyVelocityApplier(wheelEntity, entity, module, AccelerateVelocityHandler(maxVelocity.toFloat() / 3.0f)))
         }
+        val swerveDriveData = FourWheelSwerveDriveData(
+                moduleList[0], moduleList[1], moduleList[2], moduleList[3],
+                wheelBase, trackWidth
+        )
+        val swerveDrive = FourWheelSwerveDrive(swerveDriveData)
         val orientation = DefaultMutableOrientation(EntityOrientation(entity))
         orientation.orientationDegrees = 90.0 // we start at 90 degrees
 
