@@ -3,6 +3,7 @@ package com.first1444.sim.gdx.desktop_test
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.controllers.Controllers
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.physics.box2d.BodyDef
@@ -21,15 +22,20 @@ import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.GdxUtil.GDX_ZERO
 import com.first1444.sim.gdx.GdxUtil.gdxVector
 import com.first1444.sim.gdx.drivetrain.swerve.BodySwerveModule
-import com.first1444.sim.gdx.drivetrain.swerve.VelocitySwerveModule
 import com.first1444.sim.gdx.implementations.deepspace2019.CargoEntity
-import com.first1444.sim.gdx.physics.BodyVelocityApplier
 import com.first1444.sim.gdx.render.RenderableMultiplexer
 import com.first1444.sim.gdx.render.ResetRenderable
 import com.first1444.sim.gdx.render.StageRenderable
 import com.first1444.sim.gdx.render.WorldDebugRenderable
 import com.first1444.sim.gdx.velocity.AccelerateVelocityHandler
-import com.first1444.sim.gdx.velocity.InstantVelocityHandler
+import me.retrodaredevil.controller.MutableControlConfig
+import me.retrodaredevil.controller.gdx.GdxControllerPartCreator
+import me.retrodaredevil.controller.gdx.IndexedControllerProvider
+import me.retrodaredevil.controller.implementations.BaseStandardControllerInput
+import me.retrodaredevil.controller.implementations.StandardControllerInputCreator
+import me.retrodaredevil.controller.implementations.mappings.DefaultStandardControllerInputCreator
+import me.retrodaredevil.controller.options.OptionValues
+import me.retrodaredevil.controller.types.StandardControllerInput
 
 class TestMain : Game() {
     override fun create() {
@@ -62,8 +68,6 @@ class TestMain : Game() {
         }))
         val wheelBody = BodyDef().apply {
             type = BodyDef.BodyType.DynamicBody
-            linearDamping = 5.0f / 4
-            angularDamping = 20.0f / 4
         }
         val wheelFixture = FixtureDef().apply {
             val wheelDiameter = inchesToMeters(4.0f)
@@ -104,7 +108,6 @@ class TestMain : Game() {
             updateableList.add(Updateable {
                 wheelEntity.rotationRadians = module.currentAngleRadians.toFloat() + entity.rotationRadians
             })
-//            updateableList.add(BodyVelocityApplier(wheelEntity, entity, module, AccelerateVelocityHandler(maxVelocity.toFloat() / 3.0f)))
         }
         val swerveDriveData = FourWheelSwerveDriveData(
                 moduleList[0], moduleList[1], moduleList[2], moduleList[3],
@@ -117,23 +120,48 @@ class TestMain : Game() {
         val cargo = CargoEntity(contentStage, worldManager.world)
         cargo.position = gdxVector(3.0f, 3.0f)
 
+        val provider = IndexedControllerProvider(0)
+        val creator = GdxControllerPartCreator(provider)
+        val joystick = BaseStandardControllerInput(DefaultStandardControllerInputCreator(), creator, OptionValues.createImmutableBooleanOptionValue(true), OptionValues.createImmutableBooleanOptionValue(false))
+        val controlConfig = MutableControlConfig().apply {
+            fullAnalogDeadzone = .03
+        }
         setScreen(SimpleScreen(
                 UpdateableMultiplexer(listOf(
                         clock,
                         Updateable { delta ->
-                            val up = if(Gdx.input.isKeyPressed(Input.Keys.W)) 1.0 else 0.0
-                            val down = if(Gdx.input.isKeyPressed(Input.Keys.S)) 1.0 else 0.0
-                            val left = if(Gdx.input.isKeyPressed(Input.Keys.A)) 1.0 else 0.0
-                            val right = if(Gdx.input.isKeyPressed(Input.Keys.D)) 1.0 else 0.0
-                            val x = right - left
-                            val y = up - down
-                            var translation = Vector2(-y, x).rotateRadians(-orientation.orientationRadians)
+                            joystick.update(controlConfig)
+                            var translation = joystick.leftJoy.let {
+                                val x: Double
+                                val y: Double
+                                if(it.isDeadzone){
+                                    x = 0.0
+                                    y = 0.0
+                                } else {
+                                    x = it.correctX
+                                    y = it.correctY
+                                }
+                                Vector2(-y, x).rotateRadians(-orientation.orientationRadians)
+                            }
                             if(translation.magnitude > 1){
                                 translation /= translation.magnitude
                             }
-                            val rotate = (if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) 1 else 0) - (if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) 1 else 0)
+//                            val rotate = (if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) 1 else 0) - (if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) 1 else 0)
+                            val rotate = joystick.rightJoy.let {
+                                if(it.isDeadzone){
+                                    0.0
+                                } else {
+                                    it.x
+                                }
+                            }
+                            if(Controllers.getControllers().size > 0) {
+                                val controller = Controllers.getControllers().get(0)
+                                println(controller)
+                                println(controller.getAxis(0))
+                            }
 
-                            swerveDrive.setControl(translation.y, translation.x, rotate.toDouble(), 1.0)
+                            println(translation)
+                            swerveDrive.setControl(translation.y, translation.x, rotate, 1.0)
                         },
                         Updateable.wrap(swerveDrive),
 //                        EntityVelocityApplier(entity, listOf(fr, fl, rl, rr)),

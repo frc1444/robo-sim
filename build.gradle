@@ -33,6 +33,7 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url "http://first.wpi.edu/FRC/roborio/maven/release"}
+        maven { url "https://jitpack.io" }
     }
 
 }
