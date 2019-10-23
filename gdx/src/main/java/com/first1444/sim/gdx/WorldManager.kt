@@ -11,21 +11,14 @@ import com.badlogic.gdx.utils.viewport.Viewport
 class WorldManager : Updateable, Disposable{
 
     val world: World = World(Vector2.Zero, false) // TODO when we understand sleep better, we can enable it
-    private val updateableList: MutableList<Updateable> = ArrayList()
 
     private val bodyArrayCache = Array<Body>()
     private val fixtureArrayCache = Array<Fixture>()
 
     override fun update(delta: Float) {
-        for(updateable in updateableList){
-            updateable.update(delta)
-        }
         world.step(delta, 6, 2)
     }
 
-    fun addUpdateable(updateable: Updateable){
-        updateableList.add(updateable)
-    }
     override fun dispose() {
         world.dispose()
     }

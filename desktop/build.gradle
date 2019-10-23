@@ -10,12 +10,10 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-//    implementation "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
-//    implementation "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
     implementation "com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion"
 
-    implementation "com.github.retrodaredevil.abstract-controller-lib:api:v2.2.3"
-    implementation "com.github.retrodaredevil.abstract-controller-lib:gdx:v2.2.3"
+    implementation "com.github.retrodaredevil.abstract-controller-lib:api:v2.2.4"
+    implementation "com.github.retrodaredevil.abstract-controller-lib:gdx:v2.2.4"
 }
 
 task run(dependsOn: classes, type: JavaExec) {

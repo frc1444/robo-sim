@@ -2,10 +2,11 @@ package com.first1444.sim.gdx.drivetrain.swerve
 
 import com.badlogic.gdx.physics.box2d.Body
 import com.first1444.sim.api.Clock
+import com.first1444.sim.api.MathUtil.minChange
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
 import com.first1444.sim.api.event.EventHandler
 import com.first1444.sim.gdx.GdxUtil.gdxVectorFromRadians
-import com.first1444.sim.gdx.velocity.VelocityHandler
+import com.first1444.sim.gdx.velocity.SetPointHandler
 import kotlin.math.absoluteValue
 
 class BodySwerveModule(
@@ -17,12 +18,10 @@ class BodySwerveModule(
          */
         private val maxVelocity: Double,
         private val clock: Clock,
-        private val velocityHandler: VelocityHandler
+        private val driveVelocitySetPointHandler: SetPointHandler,
+        private val angleRadiansSetPointHandler: SetPointHandler
 ) : SwerveModule {
-
     private var speed = 0.0
-    private var angleRadians = 0.0
-
 
     private var lastTimestamp: Double? = null
     private var distanceTraveledMeters = 0.0
@@ -34,14 +33,17 @@ class BodySwerveModule(
         if(lastTimestamp != null){
             val delta = timestamp - lastTimestamp
 
+            angleRadiansSetPointHandler.update(delta.toFloat())
+            val angleRadians = (currentAngleRadians + parentBody.angle).toFloat()
+            body.setTransform(body.position, angleRadians)
+
             val speed = this.speed
             val maxVelocity = this.maxVelocity
             val velocity = (speed * maxVelocity).absoluteValue
-            val angleRadians = this.angleRadians + parentBody.angle
-            velocityHandler.setDesiredVelocity(velocity.toFloat())
-            velocityHandler.update(delta.toFloat())
-            val newVelocity = velocityHandler.calculatedVelocity
-            body.linearVelocity = gdxVectorFromRadians(angleRadians.toFloat(), newVelocity)
+            driveVelocitySetPointHandler.setDesired(velocity.toFloat())
+            driveVelocitySetPointHandler.update(delta.toFloat())
+            val newVelocity = driveVelocitySetPointHandler.calculated
+            body.linearVelocity = gdxVectorFromRadians(angleRadians, newVelocity)
 
             distanceTraveledMeters += velocity * delta
         }
@@ -59,13 +61,16 @@ class BodySwerveModule(
     }
 
     override fun setTargetAngleRadians(positionRadians: Double) {
-        this.angleRadians = positionRadians
+        val current = currentAngleRadians
+        val change = minChange(positionRadians, current, Math.PI * 2)
+        angleRadiansSetPointHandler.setDesired((current + change).toFloat())
+//        angleRadiansSetPointHandler.setDesired(positionRadians.toFloat())
     }
 
     override val currentAngleDegrees: Double
         get() = Math.toDegrees(currentAngleRadians)
     override val currentAngleRadians: Double
-        get() = angleRadians
+        get() = angleRadiansSetPointHandler.calculated.toDouble()
     override val totalDistanceTraveledMeters: Double
         get() = distanceTraveledMeters
 

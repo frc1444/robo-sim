@@ -1,9 +1,6 @@
 package com.first1444.sim.gdx.desktop_test
 
 import com.badlogic.gdx.Game
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
-import com.badlogic.gdx.controllers.Controllers
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.physics.box2d.BodyDef
@@ -14,33 +11,33 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.first1444.sim.api.MeasureUtil.inchesToMeters
 import com.first1444.sim.api.Vector2
-import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDrive
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
-import com.first1444.sim.api.sensors.DefaultMutableOrientation
+import com.first1444.sim.api.frc.sim.MutableFrcDriverStation
 import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.GdxUtil.GDX_ZERO
 import com.first1444.sim.gdx.GdxUtil.gdxVector
 import com.first1444.sim.gdx.drivetrain.swerve.BodySwerveModule
 import com.first1444.sim.gdx.implementations.deepspace2019.CargoEntity
+import com.first1444.sim.gdx.implementations.deepspace2019.Field
 import com.first1444.sim.gdx.render.RenderableMultiplexer
 import com.first1444.sim.gdx.render.ResetRenderable
 import com.first1444.sim.gdx.render.StageRenderable
 import com.first1444.sim.gdx.render.WorldDebugRenderable
-import com.first1444.sim.gdx.velocity.AccelerateVelocityHandler
-import me.retrodaredevil.controller.MutableControlConfig
+import com.first1444.sim.gdx.velocity.AccelerateSetPointHandler
+import com.first1444.sim.gdx.velocity.InstantSetPointHandler
 import me.retrodaredevil.controller.gdx.GdxControllerPartCreator
 import me.retrodaredevil.controller.gdx.IndexedControllerProvider
 import me.retrodaredevil.controller.implementations.BaseStandardControllerInput
-import me.retrodaredevil.controller.implementations.StandardControllerInputCreator
+import me.retrodaredevil.controller.implementations.ControllerPartCreator
 import me.retrodaredevil.controller.implementations.mappings.DefaultStandardControllerInputCreator
+import me.retrodaredevil.controller.input.InputPart
 import me.retrodaredevil.controller.options.OptionValues
-import me.retrodaredevil.controller.types.StandardControllerInput
 
 class TestMain : Game() {
     override fun create() {
         val clock = UpdateableClock()
-        val viewport = object : ExtendViewport(14.0f, 14.0f) {
+        val viewport = object : ExtendViewport(10.0f, 20.0f) {
             override fun apply(centerCamera: Boolean) {
                 super.apply(false)
             }
@@ -102,70 +99,38 @@ class TestMain : Game() {
             worldManager.world.createJoint(joint)
             val module = BodySwerveModule(
                     moduleName, wheelEntity.body, entity.body, maxVelocity, clock,
-                    AccelerateVelocityHandler(maxVelocity.toFloat() / .5f, maxVelocity.toFloat() / .2f)
+                    AccelerateSetPointHandler(maxVelocity.toFloat() / .5f, maxVelocity.toFloat() / .2f),
+                    AccelerateSetPointHandler(MathUtils.PI2 / .5f)
             )
             moduleList.add(module)
-            updateableList.add(Updateable {
-                wheelEntity.rotationRadians = module.currentAngleRadians.toFloat() + entity.rotationRadians
-            })
+//            updateableList.add(Updateable {
+//                wheelEntity.rotationRadians = module.currentAngleRadians.toFloat() + entity.rotationRadians
+//            })
         }
         val swerveDriveData = FourWheelSwerveDriveData(
                 moduleList[0], moduleList[1], moduleList[2], moduleList[3],
                 wheelBase, trackWidth
         )
-        val swerveDrive = FourWheelSwerveDrive(swerveDriveData)
-        val orientation = DefaultMutableOrientation(EntityOrientation(entity))
-        orientation.orientationDegrees = 90.0 // we start at 90 degrees
+//        val orientation = DefaultMutableOrientation(EntityOrientation(entity))
+//        orientation.orientationDegrees = 90.0 // we start at 90 degrees
 
-        val cargo = CargoEntity(contentStage, worldManager.world)
-        cargo.position = gdxVector(3.0f, 3.0f)
+        for(i in 0..20) {
+            val cargo = CargoEntity(contentStage, worldManager.world)
+            cargo.position = gdxVector(3.0f, 3.0f)
+            updateableList.add(cargo)
+        }
+        Field.createField(worldManager.world)
 
         val provider = IndexedControllerProvider(0)
-        val creator = GdxControllerPartCreator(provider)
+        val creator = GdxControllerPartCreator(provider, true)
         val joystick = BaseStandardControllerInput(DefaultStandardControllerInputCreator(), creator, OptionValues.createImmutableBooleanOptionValue(true), OptionValues.createImmutableBooleanOptionValue(false))
-        val controlConfig = MutableControlConfig().apply {
-            fullAnalogDeadzone = .03
-        }
+        val driverStation = MutableFrcDriverStation()
+        val robot = Robot(driverStation, clock, swerveDriveData, EntityOrientation(entity), joystick)
         setScreen(SimpleScreen(
                 UpdateableMultiplexer(listOf(
                         clock,
-                        Updateable { delta ->
-                            joystick.update(controlConfig)
-                            var translation = joystick.leftJoy.let {
-                                val x: Double
-                                val y: Double
-                                if(it.isDeadzone){
-                                    x = 0.0
-                                    y = 0.0
-                                } else {
-                                    x = it.correctX
-                                    y = it.correctY
-                                }
-                                Vector2(-y, x).rotateRadians(-orientation.orientationRadians)
-                            }
-                            if(translation.magnitude > 1){
-                                translation /= translation.magnitude
-                            }
-//                            val rotate = (if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) 1 else 0) - (if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) 1 else 0)
-                            val rotate = joystick.rightJoy.let {
-                                if(it.isDeadzone){
-                                    0.0
-                                } else {
-                                    it.x
-                                }
-                            }
-                            if(Controllers.getControllers().size > 0) {
-                                val controller = Controllers.getControllers().get(0)
-                                println(controller)
-                                println(controller.getAxis(0))
-                            }
-
-                            println(translation)
-                            swerveDrive.setControl(translation.y, translation.x, rotate, 1.0)
-                        },
-                        Updateable.wrap(swerveDrive),
-//                        EntityVelocityApplier(entity, listOf(fr, fl, rl, rr)),
-                        entity, cargo, UpdateableMultiplexer(updateableList),
+                        Updateable.wrap(robot),
+                        entity, UpdateableMultiplexer(updateableList),
                         worldManager
                 )),
                 RenderableMultiplexer(listOf(
@@ -181,6 +146,5 @@ class TestMain : Game() {
                 }
         ))
     }
-
 
 }

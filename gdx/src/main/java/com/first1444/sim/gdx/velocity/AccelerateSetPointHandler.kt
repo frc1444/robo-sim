@@ -1,11 +1,11 @@
 package com.first1444.sim.gdx.velocity
 
-class AccelerateVelocityHandler(
+class AccelerateSetPointHandler(
         private val positiveAccelerationPerSecond: Float,
         private val positiveDecelerationPerSecond: Float,
         private val negativeAccelerationPerSecond: Float,
         private val negativeDecelerationPerSecond: Float
-) : VelocityHandler {
+) : SetPointHandler {
     init {
         require(positiveAccelerationPerSecond >= 0)
         require(positiveDecelerationPerSecond >= 0)
@@ -17,14 +17,14 @@ class AccelerateVelocityHandler(
 
     private var velocity = 0.0f
     private var desiredVelocity = 0.0f
-    override val calculatedVelocity: Float
+    override val calculated: Float
         get() = velocity
 
-    override fun setDesiredVelocity(desired: Float) {
+    override fun setDesired(desired: Float) {
         desiredVelocity = desired
     }
 
-    override fun forceSetVelocity(velocity: Float, reset: Boolean) {
+    override fun forceSet(velocity: Float, reset: Boolean) {
         this.velocity = velocity
         this.desiredVelocity = velocity
     }

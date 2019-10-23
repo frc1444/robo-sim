@@ -6,6 +6,8 @@ abstract class BasicRobotRunnable(
 
     private var lastMode: FrcMode? = null
 
+    constructor(driverStation: FrcDriverStation) : this(driverStation::mode)
+
     /**
      * @param mode The current [FrcMode]
      * @param previousMode The last [FrcMode]. May be the same as [mode]
