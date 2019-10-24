@@ -18,11 +18,11 @@ class CargoEntity(
         val BODY_DEF = BodyDef().apply {
             type = BodyDef.BodyType.DynamicBody
             fixedRotation = true
-            linearDamping = 0.5f
+            linearDamping = 0.4f
         }
         val FIXTURE_DEF = FixtureDef().apply {
             density = .1f
-            restitution = 0.5f // very bouncy
+            restitution = 0.23f // very bouncy
             shape = CircleShape(). apply {
                 radius = inchesToMeters(13.0 / 2).toFloat()
             }

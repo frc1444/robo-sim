@@ -25,13 +25,10 @@ import com.first1444.sim.gdx.render.ResetRenderable
 import com.first1444.sim.gdx.render.StageRenderable
 import com.first1444.sim.gdx.render.WorldDebugRenderable
 import com.first1444.sim.gdx.velocity.AccelerateSetPointHandler
-import com.first1444.sim.gdx.velocity.InstantSetPointHandler
 import me.retrodaredevil.controller.gdx.GdxControllerPartCreator
 import me.retrodaredevil.controller.gdx.IndexedControllerProvider
 import me.retrodaredevil.controller.implementations.BaseStandardControllerInput
-import me.retrodaredevil.controller.implementations.ControllerPartCreator
 import me.retrodaredevil.controller.implementations.mappings.DefaultStandardControllerInputCreator
-import me.retrodaredevil.controller.input.InputPart
 import me.retrodaredevil.controller.options.OptionValues
 
 class TestMain : Game() {
@@ -120,6 +117,14 @@ class TestMain : Game() {
             updateableList.add(cargo)
         }
         Field.createField(worldManager.world)
+        Field.createRocket(worldManager.world).setTransform(-Field.FIELD_WIDTH_METERS / 2, inchesToMeters(-96.0f), 0.0f)
+        Field.createRocket(worldManager.world).setTransform(Field.FIELD_WIDTH_METERS / 2, inchesToMeters(-96.0f), MathUtils.PI)
+        Field.createRocket(worldManager.world).setTransform(-Field.FIELD_WIDTH_METERS / 2, inchesToMeters(96.0f), 0.0f)
+        Field.createRocket(worldManager.world).setTransform(Field.FIELD_WIDTH_METERS / 2, inchesToMeters(96.0f), MathUtils.PI)
+        Field.createCargoShip(worldManager.world).setTransform(0f, 0f, 0f)
+        Field.createCargoShip(worldManager.world).setTransform(0f, 0f, MathUtils.PI)
+        Field.createHab(worldManager.world).setTransform(0f, -Field.FIELD_LENGTH_METERS / 2, 0f)
+        Field.createHab(worldManager.world).setTransform(0f, Field.FIELD_LENGTH_METERS / 2, MathUtils.PI)
 
         val provider = IndexedControllerProvider(0)
         val creator = GdxControllerPartCreator(provider, true)
