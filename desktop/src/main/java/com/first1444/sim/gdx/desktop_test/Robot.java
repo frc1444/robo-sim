@@ -49,6 +49,9 @@ public class Robot extends BasicRobotRunnable {
 
     @Override
     protected void update(@NotNull FrcMode mode, @Nullable FrcMode previousMode) {
+        if(previousMode != mode){
+            System.out.println("New mode: " + mode);
+        }
         controller.update(controlConfig);
 
         updateSwerve();

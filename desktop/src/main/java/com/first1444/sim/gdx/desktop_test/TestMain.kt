@@ -1,6 +1,8 @@
 package com.first1444.sim.gdx.desktop_test
 
 import com.badlogic.gdx.Game
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.physics.box2d.BodyDef
@@ -10,9 +12,15 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.first1444.sim.api.MeasureUtil.inchesToMeters
+import com.first1444.sim.api.RunnableCreator
 import com.first1444.sim.api.Vector2
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
+import com.first1444.sim.api.frc.Alliance
+import com.first1444.sim.api.frc.DriverStationLocation
+import com.first1444.sim.api.frc.MatchInfo
+import com.first1444.sim.api.frc.sim.FmsFrcDriverStation
+import com.first1444.sim.api.frc.sim.FmsSimulator
 import com.first1444.sim.api.frc.sim.MutableFrcDriverStation
 import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.GdxUtil.GDX_ZERO
@@ -44,14 +52,15 @@ class TestMain : Game() {
         val worldManager = WorldManager()
         val contentStage = Stage(viewport)
 
+        val fms = FmsSimulator(clock, MatchInfo("", "",null, 0, 0))
+        val driverStation = FmsFrcDriverStation(fms, Alliance.RED, DriverStationLocation.LEFT.locationValue)
+
         val maxVelocity = 3.35
         val wheelBase = inchesToMeters(22.75) // length
         val trackWidth = inchesToMeters(24.0)
         val entity = ActorBodyEntity(contentStage, worldManager.world, BodyDef().apply{
             type = BodyDef.BodyType.DynamicBody
             angle = 90 * MathUtils.degreesToRadians // start at 90 degrees to make this easy on the player. We will eventually add field centric controls
-//            linearDamping = 5.0f
-//            angularDamping = 20.0f
         }, listOf(FixtureDef().apply{
             restitution = .2f
             shape = PolygonShape().apply {
@@ -95,21 +104,16 @@ class TestMain : Game() {
             }
             worldManager.world.createJoint(joint)
             val module = BodySwerveModule(
-                    moduleName, wheelEntity.body, entity.body, maxVelocity, clock,
+                    moduleName, wheelEntity.body, entity.body, maxVelocity, clock, driverStation,
                     AccelerateSetPointHandler(maxVelocity.toFloat() / .5f, maxVelocity.toFloat() / .2f),
                     AccelerateSetPointHandler(MathUtils.PI2 / .5f)
             )
             moduleList.add(module)
-//            updateableList.add(Updateable {
-//                wheelEntity.rotationRadians = module.currentAngleRadians.toFloat() + entity.rotationRadians
-//            })
         }
         val swerveDriveData = FourWheelSwerveDriveData(
                 moduleList[0], moduleList[1], moduleList[2], moduleList[3],
                 wheelBase, trackWidth
         )
-//        val orientation = DefaultMutableOrientation(EntityOrientation(entity))
-//        orientation.orientationDegrees = 90.0 // we start at 90 degrees
 
         for(i in 0..20) {
             val cargo = CargoEntity(contentStage, worldManager.world)
@@ -117,24 +121,22 @@ class TestMain : Game() {
             updateableList.add(cargo)
         }
         Field.createField(worldManager.world)
-        Field.createRocket(worldManager.world).setTransform(-Field.FIELD_WIDTH_METERS / 2, inchesToMeters(-96.0f), 0.0f)
-        Field.createRocket(worldManager.world).setTransform(Field.FIELD_WIDTH_METERS / 2, inchesToMeters(-96.0f), MathUtils.PI)
-        Field.createRocket(worldManager.world).setTransform(-Field.FIELD_WIDTH_METERS / 2, inchesToMeters(96.0f), 0.0f)
-        Field.createRocket(worldManager.world).setTransform(Field.FIELD_WIDTH_METERS / 2, inchesToMeters(96.0f), MathUtils.PI)
-        Field.createCargoShip(worldManager.world).setTransform(0f, 0f, 0f)
-        Field.createCargoShip(worldManager.world).setTransform(0f, 0f, MathUtils.PI)
-        Field.createHab(worldManager.world).setTransform(0f, -Field.FIELD_LENGTH_METERS / 2, 0f)
-        Field.createHab(worldManager.world).setTransform(0f, Field.FIELD_LENGTH_METERS / 2, MathUtils.PI)
 
         val provider = IndexedControllerProvider(0)
         val creator = GdxControllerPartCreator(provider, true)
         val joystick = BaseStandardControllerInput(DefaultStandardControllerInputCreator(), creator, OptionValues.createImmutableBooleanOptionValue(true), OptionValues.createImmutableBooleanOptionValue(false))
-        val driverStation = MutableFrcDriverStation()
-        val robot = Robot(driverStation, clock, swerveDriveData, EntityOrientation(entity), joystick)
+        val robotCreator = RunnableCreator.wrap {
+            Robot(driverStation, clock, swerveDriveData, EntityOrientation(entity), joystick)
+        }
         setScreen(SimpleScreen(
                 UpdateableMultiplexer(listOf(
                         clock,
-                        Updateable.wrap(robot),
+                        Updateable {
+                            if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+                                fms.start(null)
+                            }
+                        },
+                        Updateable.wrap(robotCreator.createRunnable()), // TODO create the runnable on the first call to update instead
                         entity, UpdateableMultiplexer(updateableList),
                         worldManager
                 )),

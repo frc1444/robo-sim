@@ -1,6 +1,7 @@
 package com.first1444.sim.gdx.drivetrain.swerve
 
 import com.badlogic.gdx.physics.box2d.Body
+import com.first1444.sim.api.EnabledState
 import com.first1444.sim.api.Clock
 import com.first1444.sim.api.MathUtil.minChange
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
@@ -18,6 +19,7 @@ class BodySwerveModule(
          */
         private val maxVelocity: Double,
         private val clock: Clock,
+        private val enabledState: EnabledState,
         private val driveVelocitySetPointHandler: SetPointHandler,
         private val angleRadiansSetPointHandler: SetPointHandler
 ) : SwerveModule {
@@ -37,15 +39,22 @@ class BodySwerveModule(
             val angleRadians = (currentAngleRadians + parentBody.angle).toFloat()
             body.setTransform(body.position, angleRadians)
 
-            val speed = this.speed
-            val maxVelocity = this.maxVelocity
-            val velocity = (speed * maxVelocity).absoluteValue
-            driveVelocitySetPointHandler.setDesired(velocity.toFloat())
+            if(enabledState.isEnabled) {
+                // angle stuff
+
+                // speed stuff
+                val speed = this.speed
+                val maxVelocity = this.maxVelocity
+                val velocity = (speed * maxVelocity).absoluteValue
+                driveVelocitySetPointHandler.setDesired(velocity.toFloat())
+            } else {
+                driveVelocitySetPointHandler.setDesired(0.0f)
+            }
             driveVelocitySetPointHandler.update(delta.toFloat())
             val newVelocity = driveVelocitySetPointHandler.calculated
-            body.linearVelocity = gdxVectorFromRadians(angleRadians, newVelocity)
+            body.linearVelocity = gdxVectorFromRadians(body.angle, newVelocity)
 
-            distanceTraveledMeters += velocity * delta
+            distanceTraveledMeters += newVelocity * delta
         }
         this.lastTimestamp = timestamp
     }
@@ -61,10 +70,11 @@ class BodySwerveModule(
     }
 
     override fun setTargetAngleRadians(positionRadians: Double) {
-        val current = currentAngleRadians
-        val change = minChange(positionRadians, current, Math.PI * 2)
-        angleRadiansSetPointHandler.setDesired((current + change).toFloat())
-//        angleRadiansSetPointHandler.setDesired(positionRadians.toFloat())
+        if(enabledState.isEnabled) {
+            val current = currentAngleRadians
+            val change = minChange(positionRadians, current, Math.PI * 2)
+            angleRadiansSetPointHandler.setDesired((current + change).toFloat())
+        }
     }
 
     override val currentAngleDegrees: Double

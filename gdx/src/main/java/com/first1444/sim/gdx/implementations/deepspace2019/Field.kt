@@ -1,5 +1,6 @@
 package com.first1444.sim.gdx.implementations.deepspace2019
 
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.physics.box2d.*
 import com.first1444.sim.api.MeasureUtil.inchesToMeters
 import com.first1444.sim.gdx.GdxUtil.gdxVector
@@ -7,6 +8,19 @@ import com.first1444.sim.gdx.GdxUtil.gdxVector
 object Field {
     val FIELD_WIDTH_METERS: Float = inchesToMeters(27 * 12f)
     val FIELD_LENGTH_METERS: Float = inchesToMeters(54 * 12f)
+
+    @JvmStatic
+    fun createField(world: World){
+        createFieldBounds(world)
+        createRocket(world).setTransform(-FIELD_WIDTH_METERS / 2, inchesToMeters(-96.0f), 0.0f)
+        createRocket(world).setTransform(FIELD_WIDTH_METERS / 2, inchesToMeters(-96.0f), MathUtils.PI)
+        createRocket(world).setTransform(-FIELD_WIDTH_METERS / 2, inchesToMeters(96.0f), 0.0f)
+        createRocket(world).setTransform(FIELD_WIDTH_METERS / 2, inchesToMeters(96.0f), MathUtils.PI)
+        createCargoShip(world).setTransform(0f, 0f, 0f)
+        createCargoShip(world).setTransform(0f, 0f, MathUtils.PI)
+        createHab(world).setTransform(0f, -FIELD_LENGTH_METERS / 2, 0f)
+        createHab(world).setTransform(0f, FIELD_LENGTH_METERS / 2, MathUtils.PI)
+    }
 
     @JvmStatic
     fun createRocket(world: World): Body {
@@ -66,7 +80,7 @@ object Field {
     }
 
     @JvmStatic
-    fun createField(world: World){
+    fun createFieldBounds(world: World){
         val hw = (FIELD_WIDTH_METERS / 2.0f)
         val hl = (FIELD_LENGTH_METERS / 2.0f)
         world.createBody(BodyDef()).createFixture(FixtureDef().apply {
