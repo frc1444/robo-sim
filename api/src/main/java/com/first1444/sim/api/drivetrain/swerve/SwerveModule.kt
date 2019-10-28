@@ -22,7 +22,10 @@ interface SwerveModule : Runnable {
     val currentAngleDegrees: Double
     val currentAngleRadians: Double
 
-    val totalDistanceTraveledMeters: Double
+    /**
+     * @return The distance that the swerve wheel has traveled. This number may go up or down
+     */
+    val distanceTraveledMeters: Double
 
     val name: String
 }

@@ -85,7 +85,7 @@ private class TestSwerveModule(
         get() = throw UnsupportedOperationException()
     override val currentAngleRadians: Double
         get() = throw UnsupportedOperationException()
-    override val totalDistanceTraveledMeters: Double
+    override val distanceTraveledMeters: Double
         get() = throw UnsupportedOperationException()
 
 }

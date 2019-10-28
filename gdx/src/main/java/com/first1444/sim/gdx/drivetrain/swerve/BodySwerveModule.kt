@@ -24,9 +24,11 @@ class BodySwerveModule(
         private val angleRadiansSetPointHandler: SetPointHandler
 ) : SwerveModule {
     private var speed = 0.0
+    private var angle = 0.0
 
     private var lastTimestamp: Double? = null
-    private var distanceTraveledMeters = 0.0
+    override var distanceTraveledMeters: Double = 0.0
+        private set
 
     override fun run() {
 
@@ -35,13 +37,19 @@ class BodySwerveModule(
         if(lastTimestamp != null){
             val delta = timestamp - lastTimestamp
 
+            val isEnabled = enabledState.isEnabled
+
+            // angle stuff
+            if(isEnabled) {
+                val current = currentAngleRadians
+                val change = minChange(angle, current, Math.PI * 2)
+                angleRadiansSetPointHandler.setDesired((current + change).toFloat())
+            }
             angleRadiansSetPointHandler.update(delta.toFloat())
             val angleRadians = (currentAngleRadians + parentBody.angle).toFloat()
             body.setTransform(body.position, angleRadians)
 
-            if(enabledState.isEnabled) {
-                // angle stuff
-
+            if(isEnabled) {
                 // speed stuff
                 val speed = this.speed
                 val maxVelocity = this.maxVelocity
@@ -70,19 +78,13 @@ class BodySwerveModule(
     }
 
     override fun setTargetAngleRadians(positionRadians: Double) {
-        if(enabledState.isEnabled) {
-            val current = currentAngleRadians
-            val change = minChange(positionRadians, current, Math.PI * 2)
-            angleRadiansSetPointHandler.setDesired((current + change).toFloat())
-        }
+        angle = positionRadians
     }
 
     override val currentAngleDegrees: Double
         get() = Math.toDegrees(currentAngleRadians)
     override val currentAngleRadians: Double
         get() = angleRadiansSetPointHandler.calculated.toDouble()
-    override val totalDistanceTraveledMeters: Double
-        get() = distanceTraveledMeters
 
 }
 

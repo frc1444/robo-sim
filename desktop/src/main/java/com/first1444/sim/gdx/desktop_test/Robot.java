@@ -2,6 +2,10 @@ package com.first1444.sim.gdx.desktop_test;
 
 import com.first1444.sim.api.Clock;
 import com.first1444.sim.api.Vector2;
+import com.first1444.sim.api.distance.DeltaDistanceAccumulator;
+import com.first1444.sim.api.distance.DistanceAccumulator;
+import com.first1444.sim.api.distance.OrientationDeltaDistanceCalculator;
+import com.first1444.sim.api.distance.SwerveDeltaDistanceCalculator;
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDrive;
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData;
 import com.first1444.sim.api.drivetrain.swerve.SwerveDrive;
@@ -23,10 +27,10 @@ public class Robot extends BasicRobotRunnable {
     private final Clock clock;
     private final SwerveDrive swerveDrive;
     private final MutableOrientation orientation;
-
     private final StandardControllerInput controller;
 
     private final ControlConfig controlConfig;
+    private final DistanceAccumulator distanceAccumulator;
 
     public Robot(
             FrcDriverStation driverStation,
@@ -45,6 +49,7 @@ public class Robot extends BasicRobotRunnable {
         MutableControlConfig config = new MutableControlConfig();
         config.fullAnalogDeadzone = .03;
         this.controlConfig = config;
+        distanceAccumulator = new DeltaDistanceAccumulator(new OrientationDeltaDistanceCalculator(new SwerveDeltaDistanceCalculator(swerveDriveData), orientation));
     }
 
     @Override
@@ -53,6 +58,8 @@ public class Robot extends BasicRobotRunnable {
             System.out.println("New mode: " + mode);
         }
         controller.update(controlConfig);
+        distanceAccumulator.run();
+        System.out.println("Position: " + distanceAccumulator.getPosition());
 
         updateSwerve();
         swerveDrive.run();

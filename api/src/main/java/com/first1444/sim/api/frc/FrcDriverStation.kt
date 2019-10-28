@@ -1,11 +1,10 @@
 package com.first1444.sim.api.frc
 
 import com.first1444.sim.api.EnabledState
+import com.first1444.sim.api.frc.sim.Fms
 
-interface FrcDriverStation : EnabledState {
+interface FrcDriverStation : Fms, EnabledState {
     val alliance: Alliance?
-    val mode: FrcMode
-    val matchInfo: MatchInfo
     /**
      * Also available using [matchInfo]
      */
@@ -17,11 +16,6 @@ interface FrcDriverStation : EnabledState {
     val driverStationLocationValue: Int
     val driverStationLocation: DriverStationLocation
         get() = DriverStationLocation.getDriverStationLocation(driverStationLocationValue)
-
-    /**
-     * The amount of time left in the current [FrcMode] in seconds
-     */
-    val matchTime: Double
 
     override val isEnabled: Boolean
         get() = mode != FrcMode.DISABLED

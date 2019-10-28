@@ -2,6 +2,7 @@ package com.first1444.sim.api
 
 import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
+import java.text.DecimalFormat
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.hypot
@@ -15,6 +16,8 @@ data class Vector2(
     companion object {
         @JvmField
         val ZERO = Vector2(0.0, 0.0)
+
+        private val FORMAT = DecimalFormat(" #0.0000000000000000;-#0.0000000000000000")
     }
     val magnitude: Double by lazy { hypot(x, y) }
     val angleRadians: Double by lazy { atan2(y, x) }
@@ -55,6 +58,6 @@ data class Vector2(
     }
     @JvmOverloads fun rotateDegrees(degrees: Double, origin: Vector2 = ZERO): Vector2 = rotateRadians(toRadians(degrees))
     override fun toString(): String {
-        return "Vector2(x=$x, y=$y)"
+        return "Vector2(x=${FORMAT.format(x)}, y=${FORMAT.format(y)})"
     }
 }
