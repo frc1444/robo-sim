@@ -1,6 +1,7 @@
 package com.first1444.sim.api.frc.sim
 
 import com.first1444.sim.api.Clock
+import com.first1444.sim.api.frc.Fms
 import com.first1444.sim.api.frc.FrcMode
 import com.first1444.sim.api.frc.MatchInfo
 
@@ -37,9 +38,9 @@ class FmsSimulator(
 
     override val matchInfo: MatchInfo
         get() = myMatchInfo
-    override val matchTime: Double
+    override val matchTime: Double?
         get() {
-            val startTime = this.startTime ?: return 0.0
+            val startTime = this.startTime ?: return null
             val elapsed = clock.timeSeconds - startTime
             val transition = teleopTransitionTime
             return when {

@@ -1,9 +1,6 @@
 package com.first1444.sim.api.frc.sim
 
-import com.first1444.sim.api.frc.Alliance
-import com.first1444.sim.api.frc.FrcDriverStation
-import com.first1444.sim.api.frc.FrcMode
-import com.first1444.sim.api.frc.MatchInfo
+import com.first1444.sim.api.frc.*
 
 class FmsFrcDriverStation(
         private val fms: Fms,
@@ -20,7 +17,7 @@ class FmsFrcDriverStation(
         get() = true
     override var isFMSAttached: Boolean = false
 
-    override val matchTime: Double
+    override val matchTime: Double?
         get() = fms.matchTime
 
 }

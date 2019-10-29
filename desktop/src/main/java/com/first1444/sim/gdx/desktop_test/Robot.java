@@ -12,6 +12,9 @@ import com.first1444.sim.api.drivetrain.swerve.SwerveDrive;
 import com.first1444.sim.api.frc.BasicRobotRunnable;
 import com.first1444.sim.api.frc.FrcDriverStation;
 import com.first1444.sim.api.frc.FrcMode;
+import com.first1444.sim.api.scheduler.match.DefaultMatchScheduler;
+import com.first1444.sim.api.scheduler.match.MatchSchedulerRunnable;
+import com.first1444.sim.api.scheduler.match.MatchTime;
 import com.first1444.sim.api.sensors.DefaultMutableOrientation;
 import com.first1444.sim.api.sensors.MutableOrientation;
 import com.first1444.sim.api.sensors.Orientation;
@@ -29,6 +32,7 @@ public class Robot extends BasicRobotRunnable {
     private final MutableOrientation orientation;
     private final StandardControllerInput controller;
 
+    private final MatchSchedulerRunnable scheduler;
     private final ControlConfig controlConfig;
     private final DistanceAccumulator distanceAccumulator;
 
@@ -46,6 +50,7 @@ public class Robot extends BasicRobotRunnable {
         this.orientation = new DefaultMutableOrientation(orientation);
         this.controller = controller;
 
+        this.scheduler = new DefaultMatchScheduler(driverStation, clock);
         MutableControlConfig config = new MutableControlConfig();
         config.fullAnalogDeadzone = .03;
         this.controlConfig = config;
@@ -56,10 +61,18 @@ public class Robot extends BasicRobotRunnable {
     protected void update(@NotNull FrcMode mode, @Nullable FrcMode previousMode) {
         if(previousMode != mode){
             System.out.println("New mode: " + mode);
+            if(mode == FrcMode.AUTONOMOUS){
+                scheduler.schedule(new MatchTime(1.0, MatchTime.Mode.AUTONOMOUS, MatchTime.Type.AFTER_START), () -> {
+                    System.out.println("1 second after auto beginning!");
+                });
+                scheduler.schedule(new MatchTime(1.0, MatchTime.Mode.AUTONOMOUS, MatchTime.Type.FROM_END), () -> {
+                    System.out.println("1 second from auto being over!");
+                });
+            }
         }
         controller.update(controlConfig);
         distanceAccumulator.run();
-        System.out.println("Position: " + distanceAccumulator.getPosition());
+        scheduler.run();
 
         updateSwerve();
         swerveDrive.run();

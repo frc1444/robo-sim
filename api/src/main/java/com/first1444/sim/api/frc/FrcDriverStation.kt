@@ -1,7 +1,6 @@
 package com.first1444.sim.api.frc
 
 import com.first1444.sim.api.EnabledState
-import com.first1444.sim.api.frc.sim.Fms
 
 interface FrcDriverStation : Fms, EnabledState {
     val alliance: Alliance?

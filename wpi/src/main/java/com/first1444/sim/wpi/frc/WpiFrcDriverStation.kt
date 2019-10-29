@@ -42,7 +42,13 @@ class WpiFrcDriverStation(
         get() = station.isFMSAttached
     override val driverStationLocationValue: Int
         get() = station.location
-    override val matchTime: Double
-        get() = station.matchTime
+    override val matchTime: Double?
+        get() {
+            val r = station.matchTime
+            if(r == -1.0){
+                return null
+            }
+            return r
+        }
 
 }

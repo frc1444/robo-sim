@@ -20,6 +20,6 @@ open class MutableFrcDriverStation : FrcDriverStation {
     override var isDriverStationAttached: Boolean = true
     override var isFMSAttached: Boolean = false
     override var driverStationLocationValue: Int = 1
-    override var matchTime: Double = 0.0
+    override var matchTime: Double? = null
 
 }

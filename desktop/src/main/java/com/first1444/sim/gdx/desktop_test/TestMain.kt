@@ -21,7 +21,6 @@ import com.first1444.sim.api.frc.DriverStationLocation
 import com.first1444.sim.api.frc.MatchInfo
 import com.first1444.sim.api.frc.sim.FmsFrcDriverStation
 import com.first1444.sim.api.frc.sim.FmsSimulator
-import com.first1444.sim.api.frc.sim.MutableFrcDriverStation
 import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.GdxUtil.GDX_ZERO
 import com.first1444.sim.gdx.GdxUtil.gdxVector

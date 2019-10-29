@@ -1,4 +1,4 @@
-package com.first1444.sim.api.frc.sim
+package com.first1444.sim.api.frc
 
 import com.first1444.sim.api.frc.FrcMode
 import com.first1444.sim.api.frc.MatchInfo
@@ -10,5 +10,5 @@ interface Fms {
     /**
      * The amount of time left in the current [FrcMode] in seconds
      */
-    val matchTime: Double
+    val matchTime: Double?
 }
