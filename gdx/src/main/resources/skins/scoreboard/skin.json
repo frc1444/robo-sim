@@ -1,0 +1,9 @@
+{
+  "com.badlogic.gdx.graphics.Color": {
+    "background": { "r": 0.063, "g": 0.063, "b": 0.063 },
+    "score": { "r": 1, "g": 1, "b": 1 }
+  },
+  "com.badlogic.gdx.graphics.g2d.BitmapFont": {
+    "default": { "file": "fonts/main_font.fnt" }
+  }
+}

@@ -5,8 +5,10 @@ import com.badlogic.gdx.physics.box2d.*
 import com.first1444.sim.api.MeasureUtil.inchesToMeters
 import com.first1444.sim.gdx.GdxUtil.gdxVector
 
-object Field {
+object Field2019 {
+    @JvmField
     val FIELD_WIDTH_METERS: Float = inchesToMeters(27 * 12f)
+    @JvmField
     val FIELD_LENGTH_METERS: Float = inchesToMeters(54 * 12f)
 
     @JvmStatic

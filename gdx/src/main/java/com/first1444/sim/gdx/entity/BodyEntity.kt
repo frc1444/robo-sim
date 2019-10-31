@@ -1,4 +1,4 @@
-package com.first1444.sim.gdx
+package com.first1444.sim.gdx.entity
 
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2

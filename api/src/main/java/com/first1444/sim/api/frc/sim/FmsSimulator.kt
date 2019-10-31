@@ -44,9 +44,9 @@ class FmsSimulator(
             val elapsed = clock.timeSeconds - startTime
             val transition = teleopTransitionTime
             return when {
-                elapsed > 150 + transition -> 0.0
+                elapsed > 150 + transition -> null // we're disabled
                 elapsed > 15 + transition -> 150 - elapsed
-                elapsed > 15 -> 0.0 // we're disabled
+                elapsed > 15 -> null // we're disabled
                 else -> 15 - elapsed
             }
         }

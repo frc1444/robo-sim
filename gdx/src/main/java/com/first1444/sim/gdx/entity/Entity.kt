@@ -1,6 +1,8 @@
-package com.first1444.sim.gdx
+package com.first1444.sim.gdx.entity
 
 import com.badlogic.gdx.math.Vector2
+import com.first1444.sim.gdx.Updateable
+import com.first1444.sim.gdx.gdx
 
 
 // TODO think about whether or not an entity needs to be able to be removed

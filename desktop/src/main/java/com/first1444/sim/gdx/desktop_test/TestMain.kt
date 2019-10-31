@@ -25,12 +25,16 @@ import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.GdxUtil.GDX_ZERO
 import com.first1444.sim.gdx.GdxUtil.gdxVector
 import com.first1444.sim.gdx.drivetrain.swerve.BodySwerveModule
+import com.first1444.sim.gdx.entity.ActorBodyEntity
+import com.first1444.sim.gdx.entity.EntityOrientation
 import com.first1444.sim.gdx.implementations.deepspace2019.CargoEntity
-import com.first1444.sim.gdx.implementations.deepspace2019.Field
+import com.first1444.sim.gdx.implementations.deepspace2019.Field2019
 import com.first1444.sim.gdx.render.RenderableMultiplexer
 import com.first1444.sim.gdx.render.ResetRenderable
 import com.first1444.sim.gdx.render.StageRenderable
 import com.first1444.sim.gdx.render.WorldDebugRenderable
+import com.first1444.sim.gdx.ui.UIViewport
+import com.first1444.sim.gdx.ui.scoreboard.ScoreboardUpdateable
 import com.first1444.sim.gdx.velocity.AccelerateSetPointHandler
 import me.retrodaredevil.controller.gdx.GdxControllerPartCreator
 import me.retrodaredevil.controller.gdx.IndexedControllerProvider
@@ -50,6 +54,7 @@ class TestMain : Game() {
 
         val worldManager = WorldManager()
         val contentStage = Stage(viewport)
+        val scoreboardStage = Stage(UIViewport(640f))
 
         val fms = FmsSimulator(clock, MatchInfo("", "",null, 0, 0))
         val driverStation = FmsFrcDriverStation(fms, Alliance.RED, DriverStationLocation.LEFT.locationValue)
@@ -57,10 +62,10 @@ class TestMain : Game() {
         val maxVelocity = 3.35
         val wheelBase = inchesToMeters(22.75) // length
         val trackWidth = inchesToMeters(24.0)
-        val entity = ActorBodyEntity(contentStage, worldManager.world, BodyDef().apply{
+        val entity = ActorBodyEntity(contentStage, worldManager.world, BodyDef().apply {
             type = BodyDef.BodyType.DynamicBody
             angle = 90 * MathUtils.degreesToRadians // start at 90 degrees to make this easy on the player. We will eventually add field centric controls
-        }, listOf(FixtureDef().apply{
+        }, listOf(FixtureDef().apply {
             restitution = .2f
             shape = PolygonShape().apply {
                 setAsBox((wheelBase / 2).toFloat(), (trackWidth / 2).toFloat(), GDX_ZERO, 0.0f)
@@ -119,7 +124,7 @@ class TestMain : Game() {
             cargo.position = gdxVector(3.0f, 3.0f)
             updateableList.add(cargo)
         }
-        Field.createField(worldManager.world)
+        Field2019.createField(worldManager.world)
 
         val provider = IndexedControllerProvider(0)
         val creator = GdxControllerPartCreator(provider, true)
@@ -137,12 +142,14 @@ class TestMain : Game() {
                         },
                         Updateable.wrap(robotCreator.createRunnable()), // TODO create the runnable on the first call to update instead
                         entity, UpdateableMultiplexer(updateableList),
-                        worldManager
+                        worldManager,
+                        ScoreboardUpdateable(scoreboardStage, fms)
                 )),
                 RenderableMultiplexer(listOf(
                         ResetRenderable(Color.BLACK),
                         StageRenderable(contentStage),
-                        WorldDebugRenderable(worldManager.world, viewport.camera)
+                        WorldDebugRenderable(worldManager.world, viewport.camera),
+                        StageRenderable(scoreboardStage)
                 )),
                 object : Pauseable {
                     override fun pause() {

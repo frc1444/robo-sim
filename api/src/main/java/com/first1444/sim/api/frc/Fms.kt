@@ -1,8 +1,5 @@
 package com.first1444.sim.api.frc
 
-import com.first1444.sim.api.frc.FrcMode
-import com.first1444.sim.api.frc.MatchInfo
-
 interface Fms {
     val mode: FrcMode
     val matchInfo: MatchInfo
