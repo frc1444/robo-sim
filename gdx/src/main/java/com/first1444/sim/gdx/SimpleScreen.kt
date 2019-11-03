@@ -2,10 +2,11 @@ package com.first1444.sim.gdx
 
 import com.badlogic.gdx.ScreenAdapter
 
-class SimpleScreen(
+class SimpleScreen
+@JvmOverloads constructor(
     private val updateable: Updateable,
     private val renderable: Renderable,
-    private val pauseable: Pauseable
+    private val pauseable: Pauseable = Pauseable.NOTHING
 ) : ScreenAdapter() {
 
     override fun render(delta: Float) {

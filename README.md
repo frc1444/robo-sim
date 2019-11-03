@@ -35,3 +35,6 @@ dependencies {
 }
 ```
 
+### TODO
+Have a start screen to choose from practice or real simulation. Practice simulation allows the changing
+of teams and the quick start of teleop, autonomous and test modes. A real simulation simulates an entire game

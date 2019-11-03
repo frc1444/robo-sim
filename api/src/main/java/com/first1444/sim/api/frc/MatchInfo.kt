@@ -1,7 +1,6 @@
 package com.first1444.sim.api.frc
 
 data class MatchInfo(
-        val gameSpecificMessage: String,
         val eventName: String,
         val matchType: MatchType?,
         val matchNumber: Int,

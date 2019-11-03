@@ -23,7 +23,6 @@ class WpiFrcDriverStation(
         }
     override val matchInfo: MatchInfo
         get() = MatchInfo(
-                station.gameSpecificMessage,
                 station.eventName,
                 when(station.matchType!!){
                     DriverStation.MatchType.Elimination -> MatchType.ELIMINATION

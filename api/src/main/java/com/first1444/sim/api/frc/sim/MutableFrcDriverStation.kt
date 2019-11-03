@@ -13,9 +13,8 @@ open class MutableFrcDriverStation : FrcDriverStation {
 
     override var mode: FrcMode = FrcMode.DISABLED
 
-    override var matchInfo: MatchInfo = MatchInfo("", "", null, 0, 0)
-    override val gameSpecificMessage: String
-        get() = matchInfo.gameSpecificMessage
+    override var matchInfo: MatchInfo = MatchInfo("", null, 0, 0)
+    override var gameSpecificMessage: String = ""
 
     override var isDriverStationAttached: Boolean = true
     override var isFMSAttached: Boolean = false

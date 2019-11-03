@@ -5,23 +5,36 @@ import com.first1444.sim.api.frc.Fms
 import com.first1444.sim.api.frc.FrcMode
 import com.first1444.sim.api.frc.MatchInfo
 
-class FmsSimulator(
+class MatchFmsSimulator(
         private val clock: Clock,
         startingMatchInfo: MatchInfo,
         private val teleopTransitionTime: Double = .5
 ) : Fms {
     private var startTime: Double? = null
-    private var myMatchInfo: MatchInfo = startingMatchInfo
+    /**
+     * Although you are able to set this whenever you want, it is recommended to do so through [start]
+     */
+    override var matchInfo: MatchInfo = startingMatchInfo
 
+    /**
+     * Starts the simulation
+     * @param newMatchInfo If not null, this sets [matchInfo]
+     */
     fun start(newMatchInfo: MatchInfo?){
         startTime = clock.timeSeconds
         if(newMatchInfo != null){
-            myMatchInfo = newMatchInfo
+            matchInfo = newMatchInfo
         }
     }
     fun stop(){
         startTime = null
     }
+
+    val isMatchActive: Boolean
+        get() {
+            val startTime = this.startTime ?: return false
+            return startTime <= 150
+        }
 
     override val mode: FrcMode
         get() {
@@ -36,8 +49,6 @@ class FmsSimulator(
             }
         }
 
-    override val matchInfo: MatchInfo
-        get() = myMatchInfo
     override val matchTime: Double?
         get() {
             val startTime = this.startTime ?: return null
