@@ -1,10 +1,9 @@
-package com.first1444.sim.gdx
+package com.first1444.sim.gdx.ui
 
-import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
+import com.first1444.sim.gdx.clickUpListener
 
 object ScreenSelector {
     @JvmStatic
@@ -12,12 +11,8 @@ object ScreenSelector {
 
         for(selection in selections) {
             table.add(TextButton(selection.label, uiSkin).apply {
-                addListener(object : ClickListener() {
-                    override fun clicked(event: InputEvent, x: Float, y: Float) {
-                        if(event.type == InputEvent.Type.touchUp){
-                            selection.onClick.run()
-                        }
-                    }
+                addListener(clickUpListener {
+                    selection.onClick.run()
                 })
             })
             table.row()

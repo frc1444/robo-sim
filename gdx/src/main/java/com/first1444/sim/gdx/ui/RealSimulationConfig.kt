@@ -1,4 +1,4 @@
-package com.first1444.sim.gdx
+package com.first1444.sim.gdx.ui
 
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.Color
@@ -7,10 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.first1444.sim.api.frc.Alliance
 import com.first1444.sim.api.frc.DriverStationLocation
+import com.first1444.sim.gdx.SimpleScreen
+import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.render.RenderableMultiplexer
 import com.first1444.sim.gdx.render.ResetRenderable
 import com.first1444.sim.gdx.render.StageRenderable
-import com.first1444.sim.gdx.ui.UIViewport
 
 object RealSimulationConfig {
     @JvmSynthetic

@@ -2,7 +2,6 @@ package com.first1444.sim.gdx.desktop_test
 
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
@@ -10,13 +9,11 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef
-import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.first1444.sim.api.Clock
 import com.first1444.sim.api.MeasureUtil.inchesToMeters
@@ -24,12 +21,10 @@ import com.first1444.sim.api.RunnableCreator
 import com.first1444.sim.api.Vector2
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
-import com.first1444.sim.api.frc.Alliance
-import com.first1444.sim.api.frc.DriverStationLocation
-import com.first1444.sim.api.frc.FrcDriverStation
-import com.first1444.sim.api.frc.MatchInfo
+import com.first1444.sim.api.frc.*
 import com.first1444.sim.api.frc.sim.FmsFrcDriverStation
 import com.first1444.sim.api.frc.sim.MatchFmsSimulator
+import com.first1444.sim.api.frc.sim.MutableFrcDriverStation
 import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.GdxUtil.GDX_ZERO
 import com.first1444.sim.gdx.GdxUtil.gdxVector
@@ -42,6 +37,9 @@ import com.first1444.sim.gdx.render.RenderableMultiplexer
 import com.first1444.sim.gdx.render.ResetRenderable
 import com.first1444.sim.gdx.render.StageRenderable
 import com.first1444.sim.gdx.render.WorldDebugRenderable
+import com.first1444.sim.gdx.ui.PracticeSimulation
+import com.first1444.sim.gdx.ui.RealSimulationConfig
+import com.first1444.sim.gdx.ui.ScreenSelector
 import com.first1444.sim.gdx.ui.UIViewport
 import com.first1444.sim.gdx.ui.scoreboard.ScoreboardUpdateable
 import com.first1444.sim.gdx.velocity.AccelerateSetPointHandler
@@ -67,39 +65,41 @@ private fun createSelectionScreen(game: Game): Screen{
     ScreenSelector.populateTable(table, uiSkin, listOf(
             ScreenSelector.ScreenSelect("Practice") {
                 game.screen = createScreen { clock, uiStage, contentStage, worldManager ->
-                    val fms = MatchFmsSimulator(clock, MatchInfo("", null, 0, 0)) // TODO
+                    val driverStation = MutableFrcDriverStation()
+                    uiStage.addActor(PracticeSimulation.createSideTable(driverStation, uiSkin))
                     UpdateableMultiplexer(listOf(
-                            Updateable {
-                                if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){ // TODO change
-                                    fms.start(null)
-                                }
+                            KeyPressStopUpdateable {
+                                driverStation.mode = FrcMode.DISABLED
                             },
-                            createRobot(clock, FmsFrcDriverStation(fms, Alliance.RED, DriverStationLocation.LEFT, ""), contentStage, worldManager),
-                            ScoreboardUpdateable(uiStage, fms)
+                            createRobot(clock, driverStation, contentStage, worldManager),
+                            ScoreboardUpdateable(uiStage, driverStation)
                     ))
                 }
             },
             ScreenSelector.ScreenSelect("Real") {
-                game.screen = RealSimulationConfig.createScreen(uiSkin) {
+                game.screen = RealSimulationConfig.createScreen(uiSkin) { config ->
                     game.screen = createScreen { clock, uiStage, contentStage, worldManager ->
-                        val fms = MatchFmsSimulator(clock, MatchInfo("", null, 0, 0)) // TODO
+                        val fms = MatchFmsSimulator(clock, MatchInfo("", null, 0, 0))
+                        val driverStation = FmsFrcDriverStation(fms, config.alliance, config.driverStationLocation, config.gameSpecificMessage)
                         val sideTable = Table()
                         uiStage.addActor(sideTable)
                         sideTable.left()
                         sideTable.add(TextButton("Start", uiSkin).apply {
-                            addListener(object : ClickListener() {
-                                override fun clicked(event: InputEvent, x: Float, y: Float) {
-                                    fms.start(null)
-                                }
+                            addListener(clickDownListener {
+                                fms.start(null)
+                            })
+                        })
+                        sideTable.row()
+                        sideTable.add(TextButton("Stop", uiSkin).apply {
+                            addListener(clickDownListener {
+                                fms.stop()
                             })
                         })
                         UpdateableMultiplexer(listOf(
-                                Updateable {
-                                    if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){ // TODO change
-                                        fms.start(null)
-                                    }
+                                KeyPressStopUpdateable { // TODO maybe we only want to disable a single robot instead of the entire match
+                                    fms.stop()
                                 },
-                                createRobot(clock, FmsFrcDriverStation(fms, Alliance.RED, DriverStationLocation.LEFT, ""), contentStage, worldManager),
+                                createRobot(clock, driverStation, contentStage, worldManager),
                                 ScoreboardUpdateable(uiStage, fms)
                         ))
                     }
@@ -195,8 +195,6 @@ private fun createScreen(additionalInit: (clock: Clock, uiStage: Stage, contentS
     val contentStage = Stage(viewport)
     val uiStage = Stage(UIViewport(640f))
 
-//    val fms = MatchFmsSimulator(clock, MatchInfo("",null, 0, 0))
-
     val updateableList = mutableListOf<Updateable>()
     for(i in 0..24) {
         val cargo = CargoEntity(contentStage, worldManager.world)
@@ -209,9 +207,12 @@ private fun createScreen(additionalInit: (clock: Clock, uiStage: Stage, contentS
 
     return SimpleScreen(
             UpdateableMultiplexer(listOf(
+                    Updateable {
+                        Gdx.input.inputProcessor = uiStage
+                        uiStage.act(it)
+                    },
                     clock,
                     additionalUpdateable,
-//                    createRobot(clock, FmsFrcDriverStation(fms, Alliance.RED, DriverStationLocation.LEFT, ""), contentStage, worldManager),
                     UpdateableMultiplexer(updateableList),
                     worldManager
             )),

@@ -1,5 +1,9 @@
 package com.first1444.sim.gdx
 
+import com.badlogic.gdx.scenes.scene2d.EventListener
+import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.first1444.sim.api.Vector2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -15,6 +19,21 @@ val com.badlogic.gdx.math.Vector2.sim: Vector2
     get() = Vector2(x.toDouble(), y.toDouble())
 
 fun com.badlogic.gdx.math.Vector2.set(vector2: Vector2): com.badlogic.gdx.math.Vector2 = set(vector2.x.toFloat(), vector2.y.toFloat())
+
+fun clickDownListener(onClick: () -> Unit): EventListener = object : InputListener() {
+    override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+        onClick()
+        return true
+    }
+}
+fun clickUpListener(onClick: () -> Unit): EventListener = object : InputListener() {
+    override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+        return true
+    }
+    override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
+        onClick()
+    }
+}
 
 object GdxUtil {
     @JvmStatic
