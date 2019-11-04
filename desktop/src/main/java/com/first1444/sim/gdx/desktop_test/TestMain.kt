@@ -197,7 +197,7 @@ private fun createScreen(additionalInit: (clock: Clock, uiStage: Stage, contentS
     val uiStage = Stage(UIViewport(640f))
 
     val updateableList = mutableListOf<Updateable>()
-    for(i in 0..24) {
+    for(i in 1..24) {
         val cargo = CargoEntity(contentStage, worldManager.world)
         cargo.position = gdxVector(3.0f, 3.0f)
         updateableList.add(cargo)

@@ -1,9 +1,11 @@
 @file:JvmName("GdxUtil")
 package com.first1444.sim.gdx
 
+import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.EventListener
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.first1444.sim.api.Vector2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -32,6 +34,15 @@ fun clickUpListener(onClick: () -> Unit): EventListener = object : InputListener
     }
     override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
         onClick()
+    }
+}
+fun changeEventListener(onChange: (ChangeListener.ChangeEvent) -> Unit): EventListener = object : EventListener {
+    override fun handle(event: Event): Boolean {
+        if(event is ChangeListener.ChangeEvent){
+            onChange(event)
+            return true
+        }
+        return false
     }
 }
 

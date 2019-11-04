@@ -1,48 +1,81 @@
 package com.first1444.sim.gdx.ui
 
-import com.badlogic.gdx.scenes.scene2d.ui.Skin
-import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton
-import com.badlogic.gdx.scenes.scene2d.ui.TextField
+import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.first1444.sim.api.frc.Alliance
 import com.first1444.sim.api.frc.DriverStationLocation
 import com.first1444.sim.api.frc.sim.MutableFrcDriverStation
-import com.first1444.sim.gdx.clickDownListener
+import com.first1444.sim.gdx.changeEventListener
 
 object DriverStationConfig {
     @JvmStatic
     fun populateTable(table: Table, driverStation: MutableFrcDriverStation, uiSkin: Skin){
-
-        table.add(Table().apply {
-            add(TextButton("1", uiSkin).apply {
-                addListener(clickDownListener {
-                    driverStation.driverStationLocation = DriverStationLocation.LEFT
+        // block for driver station location
+        run {
+            val location = driverStation.driverStationLocation
+            val buttonGroup = ButtonGroup(
+                    CheckBox("1", uiSkin).apply {
+                        if (location == DriverStationLocation.LEFT) {
+                            isChecked = true
+                        }
+                    },
+                    CheckBox("2", uiSkin).apply {
+                        if (location == DriverStationLocation.MIDDLE) {
+                            isChecked = true
+                        }
+                    },
+                    CheckBox("3", uiSkin).apply {
+                        if (location == DriverStationLocation.RIGHT) {
+                            isChecked = true
+                        }
+                    }
+            )
+            buttonGroup.setMaxCheckCount(1)
+            buttonGroup.setMinCheckCount(1)
+            table.add(Table().apply {
+                for (button in buttonGroup.buttons) {
+                    add(button)
+                }
+                addListener(changeEventListener {
+                    val checkedIndex = buttonGroup.checkedIndex
+                    if (checkedIndex != -1) {
+                        driverStation.driverStationLocationValue = checkedIndex + 1
+                    }
                 })
             })
-            add(TextButton("2", uiSkin).apply {
-                addListener(clickDownListener {
-                    driverStation.driverStationLocation = DriverStationLocation.MIDDLE
-                })
-            })
-            add(TextButton("3", uiSkin).apply {
-                addListener(clickDownListener {
-                    driverStation.driverStationLocation = DriverStationLocation.RIGHT
-                })
-            })
-        })
+        }
         table.row()
-        table.add(Table().apply {
-            add(TextButton("Red", uiSkin).apply {
-                addListener(clickDownListener {
-                    driverStation.alliance = Alliance.RED
+        run {
+            val alliance = driverStation.alliance
+            val buttonGroup = ButtonGroup(
+                    CheckBox("Red", uiSkin).apply {
+                        if(alliance == Alliance.RED) {
+                            isChecked = true
+                        }
+                    },
+                    CheckBox("Blue", uiSkin).apply {
+                        if(alliance == Alliance.BLUE) {
+                            isChecked = true
+                        }
+                    }
+            )
+            buttonGroup.setMaxCheckCount(1)
+            buttonGroup.setMinCheckCount(1)
+            table.add(Table().apply {
+                for(button in buttonGroup.buttons){
+                    add(button)
+                }
+                addListener(changeEventListener {
+                    val checkedIndex = buttonGroup.checkedIndex
+                    if (checkedIndex != -1) {
+                        driverStation.alliance = when(checkedIndex){
+                            0 -> Alliance.RED
+                            1 -> Alliance.BLUE
+                            else -> error("Unknown index: $checkedIndex")
+                        }
+                    }
                 })
             })
-            add(TextButton("Blue", uiSkin).apply {
-                addListener(clickDownListener {
-                    driverStation.alliance = Alliance.BLUE
-                })
-            })
-        })
+        }
         table.row()
         val textLabel = TextField("", uiSkin)
         textLabel.setTextFieldListener { _, _ ->
