@@ -21,13 +21,13 @@ import com.first1444.sim.api.RunnableCreator
 import com.first1444.sim.api.Vector2
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
-import com.first1444.sim.api.frc.*
+import com.first1444.sim.api.frc.FrcDriverStation
+import com.first1444.sim.api.frc.FrcMode
+import com.first1444.sim.api.frc.MatchInfo
 import com.first1444.sim.api.frc.sim.FmsFrcDriverStation
 import com.first1444.sim.api.frc.sim.MatchFmsSimulator
 import com.first1444.sim.api.frc.sim.MutableFrcDriverStation
 import com.first1444.sim.gdx.*
-import com.first1444.sim.gdx.GdxUtil.GDX_ZERO
-import com.first1444.sim.gdx.GdxUtil.gdxVector
 import com.first1444.sim.gdx.drivetrain.swerve.BodySwerveModule
 import com.first1444.sim.gdx.entity.ActorBodyEntity
 import com.first1444.sim.gdx.entity.EntityOrientation
@@ -83,6 +83,7 @@ private fun createSelectionScreen(game: Game): Screen{
                         val driverStation = FmsFrcDriverStation(fms, config.alliance, config.driverStationLocation, config.gameSpecificMessage)
                         val sideTable = Table()
                         uiStage.addActor(sideTable)
+                        sideTable.setFillParent(true)
                         sideTable.left()
                         sideTable.add(TextButton("Start", uiSkin).apply {
                             addListener(clickDownListener {
@@ -122,7 +123,7 @@ private fun createRobot(clock: Clock, driverStation: FrcDriverStation, contentSt
     }, listOf(FixtureDef().apply {
         restitution = .2f
         shape = PolygonShape().apply {
-            setAsBox((wheelBase / 2).toFloat(), (trackWidth / 2).toFloat(), GDX_ZERO, 0.0f)
+            setAsBox((wheelBase / 2).toFloat(), (trackWidth / 2).toFloat(), ZERO, 0.0f)
         }
         val area = wheelBase * trackWidth
         density = 1.0f / area.toFloat()
@@ -135,7 +136,7 @@ private fun createRobot(clock: Clock, driverStation: FrcDriverStation, contentSt
         val wheelWidth = inchesToMeters(1.0f)
         val area = wheelDiameter * wheelWidth
         shape = PolygonShape().apply {
-            setAsBox(wheelDiameter / 2, wheelWidth / 2, GDX_ZERO, 0.0f) // 4 inches by 1 inch
+            setAsBox(wheelDiameter / 2, wheelWidth / 2, ZERO, 0.0f) // 4 inches by 1 inch
         }
         density = 1.0f / area
     }

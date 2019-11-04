@@ -3,7 +3,7 @@ package com.first1444.sim.gdx.implementations.deepspace2019
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.physics.box2d.*
 import com.first1444.sim.api.MeasureUtil.inchesToMeters
-import com.first1444.sim.gdx.GdxUtil.gdxVector
+import com.first1444.sim.gdx.gdxVector
 
 object Field2019 {
     @JvmField

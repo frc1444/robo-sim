@@ -6,7 +6,7 @@ import com.first1444.sim.api.Clock
 import com.first1444.sim.api.MathUtil.minChange
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
 import com.first1444.sim.api.event.EventHandler
-import com.first1444.sim.gdx.GdxUtil.gdxVectorFromRadians
+import com.first1444.sim.gdx.gdxVectorFromRadians
 import com.first1444.sim.gdx.velocity.SetPointHandler
 import kotlin.math.absoluteValue
 
