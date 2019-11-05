@@ -18,41 +18,4 @@ import com.first1444.sim.gdx.render.ResetRenderable
 import com.first1444.sim.gdx.render.StageRenderable
 
 object RealSimulationConfig {
-    @JvmSynthetic
-    fun createScreen(uiSkin: Skin, finishListener: (config: Config) -> Unit): Screen = createScreen(uiSkin, object : FinishListener {
-        override fun finished(config: Config) {
-            finishListener(config)
-        }
-    })
-
-    @JvmStatic
-    fun createScreen(uiSkin: Skin, finishListener: FinishListener): Screen {
-        val stage = Stage(UIViewport(640f))
-        val table = Table()
-        table.setFillParent(true)
-        stage.addActor(table)
-        val driverStation = MutableFrcDriverStation()
-        driverStation.alliance = Alliance.RED
-        DriverStationConfig.populateTable(table, driverStation, uiSkin)
-        table.add(TextButton("done", uiSkin).apply {
-            addListener(clickUpListener {
-                finishListener.finished(Config(driverStation.driverStationLocation, driverStation.alliance ?: Alliance.RED, driverStation.gameSpecificMessage))
-            })
-        })
-        return SimpleScreen(Updateable {
-            stage.act(it)
-            Gdx.input.inputProcessor = stage
-        }, RenderableMultiplexer(listOf(
-                ResetRenderable(Color.BLACK),
-                StageRenderable(stage)
-        )))
-    }
-    class Config(
-            val driverStationLocation: DriverStationLocation,
-            val alliance: Alliance,
-            val gameSpecificMessage: String
-    )
-    interface FinishListener {
-        fun finished(config: Config)
-    }
 }
