@@ -38,10 +38,7 @@ class FieldScreenCreator(
 
         return SimpleScreen(
                 UpdateableMultiplexer(listOf(
-                        Updateable {
-                            Gdx.input.inputProcessor = uiStage
-                            uiStage.act(it)
-                        },
+                        StageActUpdateable(uiStage, true),
                         clock,
                         additionalUpdateable,
                         worldManager

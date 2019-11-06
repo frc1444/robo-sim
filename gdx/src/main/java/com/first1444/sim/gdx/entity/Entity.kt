@@ -1,8 +1,11 @@
 package com.first1444.sim.gdx.entity
 
 import com.badlogic.gdx.math.Vector2
+import com.first1444.sim.api.Transform
 import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.gdx
+import com.first1444.sim.gdx.set
+import com.first1444.sim.gdx.sim
 
 
 // TODO think about whether or not an entity needs to be able to be removed
@@ -11,6 +14,12 @@ interface Entity : Updateable {
     var position: Vector2
     var rotationDegrees: Float
     var rotationRadians: Float
+    var simVector: com.first1444.sim.api.Vector2
+        get() = position.sim
+        set(value){
+            position.set(value)
+        }
+    var simTransform: Transform
 
     fun setTransformRadians(position: Vector2, rotationRadians: Float)
     fun setTransformRadians(position: com.first1444.sim.api.Vector2, rotationRadians: Float)

@@ -3,10 +3,7 @@ package com.first1444.sim.api
 import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
 import java.text.DecimalFormat
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.hypot
-import kotlin.math.sin
+import kotlin.math.*
 
 
 data class Vector2(
@@ -16,6 +13,8 @@ data class Vector2(
     companion object {
         @JvmField
         val ZERO = Vector2(0.0, 0.0)
+        @JvmField
+        val DEFAULT_EPSILON = 0.000_000_000_000_001 // 0.000_000_000_000_000_1
 
         private val FORMAT = DecimalFormat(" #0.0000000000000000;-#0.0000000000000000")
     }
@@ -23,6 +22,11 @@ data class Vector2(
     val angleRadians: Double by lazy { atan2(y, x) }
     val angleDegrees: Double
         get() = toDegrees(angleRadians)
+
+    @JvmOverloads
+    fun epsilonEquals(other: Vector2, precision: Double = DEFAULT_EPSILON): Boolean {
+        return (x - other.x).absoluteValue <= precision && (y - other.y).absoluteValue <= precision
+    }
 
     operator fun plus(vector: Vector2): Vector2{
         return Vector2(x + vector.x, y + vector.y)

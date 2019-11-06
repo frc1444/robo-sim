@@ -34,7 +34,8 @@ dependencies {
     implementation "com.github.frc1444.robo-sim:gdx:v0.0.1"
 }
 ```
+### TODO    
 
-### TODO
-Have a start screen to choose from practice or real simulation. Practice simulation allows the changing
+### Completed TODO
+* Have a start screen to choose from practice or real simulation. Practice simulation allows the changing
 of teams and the quick start of teleop, autonomous and test modes. A real simulation simulates an entire game
