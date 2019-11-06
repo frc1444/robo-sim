@@ -23,6 +23,13 @@ class RealConfigScreenCreator(
         private val uiSkin: Skin,
         private val finishListener: FinishListener
 ) : ScreenCreator {
+
+    constructor(uiSkin: Skin, finishListener: (changer: ScreenChanger, config: RealConfig) -> Unit) : this(uiSkin, object : FinishListener {
+        override fun finished(changer: ScreenChanger, config: RealConfig) {
+            finishListener(changer, config)
+        }
+    })
+
     override fun create(changer: ScreenChanger): Screen {
         val stage = Stage(UIViewport(640f))
         val table = Table()
@@ -33,7 +40,7 @@ class RealConfigScreenCreator(
         DriverStationConfig.populateTable(table, driverStation, uiSkin)
         table.add(TextButton("done", uiSkin).apply {
             addListener(clickUpListener {
-                finishListener.finished(changer, Config(driverStation.driverStationLocation, driverStation.alliance ?: Alliance.RED, driverStation.gameSpecificMessage))
+                finishListener.finished(changer, RealConfig(driverStation.driverStationLocation, driverStation.alliance ?: Alliance.RED, driverStation.gameSpecificMessage))
             })
         })
         return SimpleScreen(Updateable {
@@ -45,12 +52,7 @@ class RealConfigScreenCreator(
         )))
     }
 
-    class Config(
-            val driverStationLocation: DriverStationLocation,
-            val alliance: Alliance,
-            val gameSpecificMessage: String
-    )
     interface FinishListener {
-        fun finished(changer: ScreenChanger, config: Config)
+        fun finished(changer: ScreenChanger, config: RealConfig)
     }
 }

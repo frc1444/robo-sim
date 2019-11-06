@@ -7,8 +7,17 @@ import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.WorldManager
 
 interface UpdateableCreator {
-
     fun create(data: Data): Updateable
+
+    companion object {
+        operator fun invoke(lambda: (data: Data) -> Updateable): UpdateableCreator {
+            return object : UpdateableCreator {
+                override fun create(data: Data): Updateable {
+                    return lambda(data)
+                }
+            }
+        }
+    }
 
     class Data(
             val uiSkin: Skin,

@@ -7,6 +7,11 @@ class SimpleGame(
     private val screenCreator: ScreenCreator
 ) : Game(), ScreenChanger {
     private var newScreen: Screen? = null
+
+    constructor(screenCreator: (changer: ScreenChanger) -> Screen) : this(object : ScreenCreator {
+        override fun create(changer: ScreenChanger): Screen = screenCreator(changer)
+    })
+
     override fun change(screen: Screen) {
         newScreen = screen
     }

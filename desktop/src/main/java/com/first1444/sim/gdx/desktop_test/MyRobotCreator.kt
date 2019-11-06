@@ -23,7 +23,7 @@ import me.retrodaredevil.controller.implementations.BaseStandardControllerInput
 import me.retrodaredevil.controller.implementations.mappings.DefaultStandardControllerInputCreator
 import me.retrodaredevil.controller.options.OptionValues
 
-class MyRobotCreator : RobotCreator {
+object MyRobotCreator : RobotCreator {
     override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): Updateable {
 
         val maxVelocity = 3.35

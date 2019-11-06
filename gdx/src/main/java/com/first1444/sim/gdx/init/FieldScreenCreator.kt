@@ -34,14 +34,6 @@ class FieldScreenCreator(
         val contentStage = Stage(viewport)
         val uiStage = Stage(UIViewport(640f))
 
-        val updateableList = mutableListOf<Updateable>()
-        for(i in 1..24) {
-            val cargo = CargoEntity(contentStage, worldManager.world)
-            cargo.position = gdxVector(3.0f, 3.0f)
-            updateableList.add(cargo)
-        }
-        Field2019.createField(worldManager.world)
-
         val additionalUpdateable = updateableCreator.create(UpdateableCreator.Data(uiSkin, clock, uiStage, contentStage, worldManager))
 
         return SimpleScreen(
@@ -52,7 +44,6 @@ class FieldScreenCreator(
                         },
                         clock,
                         additionalUpdateable,
-                        UpdateableMultiplexer(updateableList),
                         worldManager
                 )),
                 RenderableMultiplexer(listOf(

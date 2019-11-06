@@ -14,7 +14,7 @@ import com.first1444.sim.gdx.ui.scoreboard.ScoreboardUpdateable
 
 class RealUpdateableCreator(
         private val uiSkin: Skin,
-        private val config: RealConfigScreenCreator.Config,
+        private val config: RealConfig,
         private val robotCreator: RobotCreator
 ) : UpdateableCreator {
     override fun create(data: UpdateableCreator.Data): Updateable {

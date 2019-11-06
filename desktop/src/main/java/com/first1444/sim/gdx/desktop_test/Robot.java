@@ -18,7 +18,6 @@ import com.first1444.sim.api.scheduler.match.MatchTime;
 import com.first1444.sim.api.sensors.DefaultMutableOrientation;
 import com.first1444.sim.api.sensors.MutableOrientation;
 import com.first1444.sim.api.sensors.Orientation;
-import com.first1444.sim.gdx.init.ScreenChanger;
 import me.retrodaredevil.controller.ControlConfig;
 import me.retrodaredevil.controller.MutableControlConfig;
 import me.retrodaredevil.controller.input.JoystickPart;
