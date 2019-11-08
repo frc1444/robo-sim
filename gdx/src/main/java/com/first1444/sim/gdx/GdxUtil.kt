@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.EventListener
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
+import com.first1444.sim.api.Transform
+import com.first1444.sim.api.Transform.Companion.transformRadians
 import com.first1444.sim.api.Vector2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -21,6 +23,17 @@ val com.badlogic.gdx.math.Vector2.sim: Vector2
     get() = Vector2(x.toDouble(), y.toDouble())
 
 fun com.badlogic.gdx.math.Vector2.set(vector2: Vector2): com.badlogic.gdx.math.Vector2 = set(vector2.x.toFloat(), vector2.y.toFloat())
+
+val Transform.gdx: com.badlogic.gdx.physics.box2d.Transform
+    get() {
+        return com.badlogic.gdx.physics.box2d.Transform(position.gdx, rotationRadians.toFloat())
+    }
+
+val com.badlogic.gdx.physics.box2d.Transform.sim: Transform
+    get() {
+        val position = position
+        return transformRadians(position.x.toDouble(), position.y.toDouble(), rotation.toDouble())
+    }
 
 fun clickDownListener(onClick: () -> Unit): EventListener = object : InputListener() {
     override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {

@@ -4,7 +4,7 @@ import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.UpdateableMultiplexer
 import com.first1444.sim.gdx.gdxVector
 import com.first1444.sim.gdx.implementations.deepspace2019.CargoEntity
-import com.first1444.sim.gdx.implementations.deepspace2019.Field2019
+import com.first1444.sim.gdx.implementations.deepspace2019.FieldSetup2019
 
 object Field2019Creator : UpdateableCreator {
     override fun create(data: UpdateableCreator.Data): Updateable {
@@ -14,7 +14,8 @@ object Field2019Creator : UpdateableCreator {
             cargo.position = gdxVector(3.0f, 3.0f)
             updateableList.add(cargo)
         }
-        Field2019.createField(data.worldManager.world)
+        FieldSetup2019.createField(data.worldManager.world)
+        FieldSetup2019.createVisionTargets(data.worldManager.world)
         return UpdateableMultiplexer(updateableList)
     }
 

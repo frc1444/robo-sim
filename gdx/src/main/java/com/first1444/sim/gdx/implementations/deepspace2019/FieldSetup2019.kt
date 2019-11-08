@@ -3,13 +3,34 @@ package com.first1444.sim.gdx.implementations.deepspace2019
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.physics.box2d.*
 import com.first1444.sim.api.MeasureUtil.inchesToMeters
+import com.first1444.sim.api.frc.implementations.deepspace.Field2019
 import com.first1444.sim.gdx.gdxVector
+import com.first1444.sim.gdx.set
 
-object Field2019 {
+object FieldSetup2019 {
     @JvmField
-    val FIELD_WIDTH_METERS: Float = inchesToMeters(27 * 12f)
+    val FIELD_WIDTH_METERS: Float = Field2019.WIDTH.toFloat()
     @JvmField
-    val FIELD_LENGTH_METERS: Float = inchesToMeters(54 * 12f)
+    val FIELD_LENGTH_METERS: Float = Field2019.LENGTH.toFloat()
+
+    @JvmStatic
+    fun createVisionTargets(world: World){
+        for(target in Field2019.VISION_TARGETS){
+            val transform = target.transform
+            world.createBody(BodyDef().apply {
+                position.set(transform.position)
+                angle = transform.rotationRadians.toFloat()
+            }).createFixture(FixtureDef().apply {
+                isSensor = true
+                shape = EdgeShape().apply {
+                    set(
+                            -0.03f, 0.2f,
+                            -0.03f, -0.2f
+                    )
+                }
+            })
+        }
+    }
 
     @JvmStatic
     fun createField(world: World){
@@ -47,10 +68,8 @@ object Field2019 {
     }
     @JvmStatic
     fun createCargoShip(world: World): Body {
-        val totalLength = inchesToMeters(95.88f)
-        val bumperLength = totalLength - inchesToMeters(7.38f)
-        val bumperWidth = inchesToMeters(45.5f)
-        val totalWidth = bumperWidth + 2 * inchesToMeters(5.23f)
+        val bumperLength = Field2019.CARGO_SHIP_BUMPER_LENGTH.toFloat()
+        val bumperWidth = Field2019.CARGO_SHIP_BUMPER_WIDTH.toFloat()
 
         return world.createBody(BodyDef()).apply {
             createFixture(FixtureDef().apply {

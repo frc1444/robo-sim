@@ -1,15 +1,11 @@
 package com.first1444.sim.gdx.init
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.viewport.ExtendViewport
-import com.first1444.sim.api.Clock
 import com.first1444.sim.gdx.*
-import com.first1444.sim.gdx.implementations.deepspace2019.CargoEntity
-import com.first1444.sim.gdx.implementations.deepspace2019.Field2019
 import com.first1444.sim.gdx.render.RenderableMultiplexer
 import com.first1444.sim.gdx.render.ResetRenderable
 import com.first1444.sim.gdx.render.StageRenderable

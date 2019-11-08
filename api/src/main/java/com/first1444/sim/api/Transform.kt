@@ -1,3 +1,4 @@
+@file:JvmName("Transforms")
 package com.first1444.sim.api
 
 import java.lang.Math.toDegrees
@@ -12,12 +13,36 @@ private constructor(
         val rotationDegrees: Double
 ) {
     companion object {
-        fun fromRadians(position: Vector2, rotationRadians: Double): Transform {
-            return Transform(position, rotationRadians, toDegrees(rotationRadians))
+        @JvmField
+        val ZERO = Transform(Vector2.ZERO, 0.0, 0.0)
+
+        /**
+         * Creates a [Transform] using [rotationRadians] as the rotation
+         * @return A new transform with position and rotationRadians
+         */
+        @JvmStatic fun transformRadians(position: Vector2, rotationRadians: Double): Transform =
+                Transform(position, rotationRadians, toDegrees(rotationRadians))
+        /**
+         * Creates a [Transform] using [rotationRadians] as the rotation
+         * @return A new transform with x and y position and rotationRadians
+         */
+        @JvmStatic fun transformRadians(x: Double, y: Double, rotationRadians: Double): Transform = transformRadians(Vector2(x, y), rotationRadians)
+        /**
+         * Creates a [Transform] using [rotationDegrees] as the rotation
+         * @return A new transform with position and rotationDegrees
+         */
+        @JvmStatic fun transformDegrees(position: Vector2, rotationDegrees: Double): Transform =
+                Transform(position, toRadians(rotationDegrees), rotationDegrees)
+        /**
+         * Creates a [Transform] using [rotationDegrees] as the rotation
+         * @return A new transform with x and y position and rotationDegrees
+         */
+        @JvmStatic fun transformDegrees(x: Double, y: Double, rotationDegrees: Double): Transform = Transform(Vector2(x, y), toRadians(rotationDegrees), rotationDegrees)
+
+        @JvmStatic fun transform(position: Vector2, rotation: Vector2): Transform {
+            return transformRadians(position, rotation.angleRadians)
         }
-        fun fromDegrees(position: Vector2, rotationDegrees: Double): Transform {
-            return Transform(position, toRadians(rotationDegrees), rotationDegrees)
-        }
+
     }
 
     val x: Double
@@ -26,10 +51,10 @@ private constructor(
         get() = position.y
 
     fun rotateRadians(angle: Double): Transform {
-        return fromRadians(position.rotateRadians(angle), rotationRadians + angle)
+        return transformRadians(position.rotateRadians(angle), rotationRadians + angle)
     }
     fun rotateDegrees(angle: Double): Transform {
-        return fromDegrees(position.rotateDegrees(angle), rotationDegrees + angle)
+        return transformDegrees(position.rotateDegrees(angle), rotationDegrees + angle)
     }
 
     /**

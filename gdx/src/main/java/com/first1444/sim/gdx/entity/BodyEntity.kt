@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.first1444.sim.api.Transform
+import com.first1444.sim.api.Transform.Companion.transformRadians
 
 interface BodyEntity : Entity {
     val body: Body
@@ -26,7 +27,7 @@ interface BodyEntity : Entity {
         }
 
     override var simTransform: Transform
-        get() = Transform.fromRadians(simVector, body.angle.toDouble())
+        get() = transformRadians(simVector, body.angle.toDouble())
         set(value) {
             setTransformRadians(value.position, value.rotationRadians.toFloat())
         }

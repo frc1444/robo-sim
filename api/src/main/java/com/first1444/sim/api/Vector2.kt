@@ -13,8 +13,7 @@ data class Vector2(
     companion object {
         @JvmField
         val ZERO = Vector2(0.0, 0.0)
-        @JvmField
-        val DEFAULT_EPSILON = 0.000_000_000_000_001 // 0.000_000_000_000_000_1
+        const val DEFAULT_EPSILON = 0.000_000_000_000_001 // 0.000_000_000_000_000_1
 
         private val FORMAT = DecimalFormat(" #0.0000000000000000;-#0.0000000000000000")
     }
@@ -22,6 +21,9 @@ data class Vector2(
     val angleRadians: Double by lazy { atan2(y, x) }
     val angleDegrees: Double
         get() = toDegrees(angleRadians)
+
+    val normalized: Vector2
+        get() = Vector2(x / magnitude, y / magnitude)
 
     @JvmOverloads
     fun epsilonEquals(other: Vector2, precision: Double = DEFAULT_EPSILON): Boolean {
