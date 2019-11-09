@@ -13,6 +13,9 @@ data class Vector2(
     companion object {
         @JvmField
         val ZERO = Vector2(0.0, 0.0)
+        @JvmField
+        val ONE = Vector2(1.0, 1.0)
+
         const val DEFAULT_EPSILON = 0.000_000_000_000_001 // 0.000_000_000_000_000_1
 
         private val FORMAT = DecimalFormat(" #0.0000000000000000;-#0.0000000000000000")
@@ -33,8 +36,14 @@ data class Vector2(
     operator fun plus(vector: Vector2): Vector2{
         return Vector2(x + vector.x, y + vector.y)
     }
+    fun plus(x: Double, y: Double): Vector2 {
+        return Vector2(this.x - x, this.y - y)
+    }
     operator fun minus(vector: Vector2): Vector2{
         return Vector2(x - vector.x, y - vector.y)
+    }
+    fun minus(x: Double, y: Double): Vector2 {
+        return Vector2(this.x - x, this.y - y)
     }
     operator fun unaryMinus(): Vector2 {
         return Vector2(-x, -y)
@@ -48,11 +57,17 @@ data class Vector2(
     operator fun times(scaleValue: Double): Vector2 {
         return Vector2(x * scaleValue, y * scaleValue)
     }
+    fun times(x: Double, y: Double): Vector2{
+        return Vector2(this.x * x, this.y * y)
+    }
     operator fun div(vector: Vector2): Vector2 {
         return Vector2(x / vector.x, y / vector.y)
     }
     operator fun div(value: Double): Vector2{
         return Vector2(x / value, y / value)
+    }
+    fun div(x: Double, y: Double): Vector2 {
+        return Vector2(this.x / x, this.y / y)
     }
     @JvmOverloads fun rotateRadians(radians: Double, origin: Vector2 = ZERO): Vector2 {
         val cos = cos(radians)

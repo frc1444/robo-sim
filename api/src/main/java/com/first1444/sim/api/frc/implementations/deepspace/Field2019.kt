@@ -2,6 +2,7 @@ package com.first1444.sim.api.frc.implementations.deepspace
 
 import com.first1444.sim.api.MeasureUtil.inchesToMeters
 import com.first1444.sim.api.Transform.Companion.transformDegrees
+import com.first1444.sim.api.Vector2
 
 object Field2019 {
     @JvmField
@@ -35,13 +36,24 @@ object Field2019 {
     @JvmField val CARGO_SHIP_RIGHT_2 = VisionTarget(transformDegrees(CARGO_SHIP_TOTAL_WIDTH / 2, -(CARGO_SHIP_HALF_GAP + CARGO_SHIP_BAY_SPACING * 3 / 2), 180.0), VisionType.CARGO_SHIP)
     @JvmField val CARGO_SHIP_RIGHT_1 = VisionTarget(transformDegrees(CARGO_SHIP_TOTAL_WIDTH / 2, -(CARGO_SHIP_HALF_GAP + CARGO_SHIP_BAY_SPACING * 5 / 2), 180.0), VisionType.CARGO_SHIP)
 
-    // TODO add rocket ship vision targets
+    @JvmField val ROCKET_LEFT_POSITION = Vector2(-WIDTH / 2, inchesToMeters(-96.0))
+    @JvmField val ROCKET_RIGHT_POSITION = ROCKET_LEFT_POSITION.times(-1.0, 1.0)
+    private val ROCKET_HATCH_OFFSET = Vector2(inchesToMeters((8.83 + 26.36) / 2), inchesToMeters(56.0 / 2 - (9.5 + 19) / 2))
+
+    @JvmField val ROCKET_SHIP_LEFT_HATCH_FAR = VisionTarget(transformDegrees(ROCKET_LEFT_POSITION + ROCKET_HATCH_OFFSET * Vector2.ONE, 61.23 - 180), VisionType.ROCKET_HATCH)
+    @JvmField val ROCKET_SHIP_LEFT_HATCH_NEAR = VisionTarget(transformDegrees(ROCKET_LEFT_POSITION + ROCKET_HATCH_OFFSET.times(1.0, -1.0), 180 - 61.23), VisionType.ROCKET_HATCH)
+
+    @JvmField val ROCKET_SHIP_RIGHT_HATCH_FAR = VisionTarget(transformDegrees(ROCKET_RIGHT_POSITION + ROCKET_HATCH_OFFSET.times(-1.0, 1.0), 180 - 61.23), VisionType.ROCKET_HATCH)
+    @JvmField val ROCKET_SHIP_RIGHT_HATCH_NEAR = VisionTarget(transformDegrees(ROCKET_RIGHT_POSITION + ROCKET_HATCH_OFFSET.times(-1.0, -1.0), 61.23 - 180), VisionType.ROCKET_HATCH)
+
 
     @JvmField val VISION_TARGETS = listOf(
             LOADING_LEFT, LOADING_RIGHT,
             CARGO_SHIP_CENTER_LEFT, CARGO_SHIP_CENTER_RIGHT,
             CARGO_SHIP_LEFT_1, CARGO_SHIP_LEFT_2, CARGO_SHIP_LEFT_3,
-            CARGO_SHIP_RIGHT_1, CARGO_SHIP_RIGHT_2, CARGO_SHIP_RIGHT_3
+            CARGO_SHIP_RIGHT_1, CARGO_SHIP_RIGHT_2, CARGO_SHIP_RIGHT_3,
+            ROCKET_SHIP_LEFT_HATCH_FAR, ROCKET_SHIP_LEFT_HATCH_NEAR,
+            ROCKET_SHIP_RIGHT_HATCH_FAR, ROCKET_SHIP_RIGHT_HATCH_NEAR
     )
 
 }

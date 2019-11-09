@@ -3,9 +3,13 @@ package com.first1444.sim.gdx.implementations.deepspace2019
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.physics.box2d.*
 import com.first1444.sim.api.MeasureUtil.inchesToMeters
+import com.first1444.sim.api.Transform.Companion.transformRadians
+import com.first1444.sim.api.Vector2
 import com.first1444.sim.api.frc.implementations.deepspace.Field2019
 import com.first1444.sim.gdx.gdxVector
 import com.first1444.sim.gdx.set
+import com.first1444.sim.gdx.setTransformRadians
+import com.first1444.sim.gdx.simTransform
 
 object FieldSetup2019 {
     @JvmField
@@ -16,29 +20,31 @@ object FieldSetup2019 {
     @JvmStatic
     fun createVisionTargets(world: World){
         for(target in Field2019.VISION_TARGETS){
-            val transform = target.transform
-            world.createBody(BodyDef().apply {
-                position.set(transform.position)
-                angle = transform.rotationRadians.toFloat()
-            }).createFixture(FixtureDef().apply {
-                isSensor = true
-                shape = EdgeShape().apply {
-                    set(
-                            -0.03f, 0.2f,
-                            -0.03f, -0.2f
-                    )
-                }
-            })
+            val originalTransform = target.transform
+            for(transform in listOf(originalTransform, -originalTransform)) {
+                world.createBody(BodyDef().apply {
+                    position.set(transform.position)
+                    angle = transform.rotationRadians.toFloat()
+                }).createFixture(FixtureDef().apply {
+                    isSensor = true
+                    shape = EdgeShape().apply {
+                        set(
+                                -0.03f, 0.2f,
+                                -0.03f, -0.2f
+                        )
+                    }
+                })
+            }
         }
     }
 
     @JvmStatic
     fun createField(world: World){
         createFieldBounds(world)
-        createRocket(world).setTransform(-FIELD_WIDTH_METERS / 2, inchesToMeters(-96.0f), 0.0f)
-        createRocket(world).setTransform(FIELD_WIDTH_METERS / 2, inchesToMeters(-96.0f), MathUtils.PI)
-        createRocket(world).setTransform(-FIELD_WIDTH_METERS / 2, inchesToMeters(96.0f), 0.0f)
-        createRocket(world).setTransform(FIELD_WIDTH_METERS / 2, inchesToMeters(96.0f), MathUtils.PI)
+        createRocket(world).setTransformRadians(Field2019.ROCKET_LEFT_POSITION, 0.0) // left alliance
+        createRocket(world).setTransformRadians(Field2019.ROCKET_RIGHT_POSITION, Math.PI) // right alliance
+        createRocket(world).setTransformRadians(Field2019.ROCKET_LEFT_POSITION.times(1.0, -1.0), 0.0) // left enemy
+        createRocket(world).setTransformRadians(Field2019.ROCKET_RIGHT_POSITION.times(1.0, -1.0), Math.PI) // right enemy
         createCargoShip(world).setTransform(0f, 0f, 0f)
         createCargoShip(world).setTransform(0f, 0f, MathUtils.PI)
         createHab(world).setTransform(0f, -FIELD_LENGTH_METERS / 2, 0f)

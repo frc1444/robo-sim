@@ -57,6 +57,10 @@ private constructor(
         return transformDegrees(position.rotateDegrees(angle), rotationDegrees + angle)
     }
 
+    operator fun unaryMinus(): Transform {
+        return Transform(-position, Math.PI + rotationRadians, 180 + rotationDegrees)
+    }
+
     /**
      * NOTE: [Transform] always equals [Transform.reversed].[reversed]
      *
