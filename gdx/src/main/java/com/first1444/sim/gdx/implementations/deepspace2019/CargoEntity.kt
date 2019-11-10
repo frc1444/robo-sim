@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.first1444.sim.api.MeasureUtil.inchesToMeters
+import com.first1444.sim.api.inchesToMeters
 import com.first1444.sim.gdx.entity.ActorBodyEntity
 
 class CargoEntity(

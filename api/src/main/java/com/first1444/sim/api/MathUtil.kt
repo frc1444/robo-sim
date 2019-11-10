@@ -42,14 +42,19 @@ fun mod(a: Long, b: Long): Long {
 
 /**
  * returns a - b or, when |a - b| > wrap / 2, it finds a quicker way
- * <br></br> <br></br>
+ *
  * minChange(1, 5, 4) == 0 <br></br>
+ *
  * minChange(1, 5, 5) == 1 <br></br>
+ *
  * minChange(5, 1, 5) == -1 <br></br>
- * <br></br>
+ *
  * minChange(30, 300, 360) == 90 <br></br>
+ *
  * minChange(180, 0, 360) == 180 <br></br>
+ *
  * minChange(181, 0, 360) == -179 <br></br>
+ *
  * @param a Usually the desired variable to get to
  * @param b Usually the current variable to change
  * @param wrap The number that it "wraps" at. Ex: if wrap is 10, 2 is the same as 12

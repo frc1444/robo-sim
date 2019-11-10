@@ -32,6 +32,20 @@ data class Vector2(
     fun epsilonEquals(other: Vector2, precision: Double = DEFAULT_EPSILON): Boolean {
         return (x - other.x).absoluteValue <= precision && (y - other.y).absoluteValue <= precision
     }
+    fun distance2(otherX: Double, otherY: Double): Double {
+        val x = this.x - otherX
+        val y = this.y - otherY
+        return x * x + y * y
+    }
+    fun distance2(other: Vector2): Double {
+        return distance2(other.x, other.y)
+    }
+    fun distance(otherX: Double, otherY: Double): Double {
+        return hypot(x - otherX, y - otherY)
+    }
+    fun distance(other: Vector2): Double {
+        return distance(other.x, other.y)
+    }
 
     operator fun plus(vector: Vector2): Vector2{
         return Vector2(x + vector.x, y + vector.y)

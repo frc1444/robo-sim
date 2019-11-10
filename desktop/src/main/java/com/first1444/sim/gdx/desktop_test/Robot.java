@@ -18,6 +18,7 @@ import com.first1444.sim.api.scheduler.match.MatchTime;
 import com.first1444.sim.api.sensors.DefaultMutableOrientation;
 import com.first1444.sim.api.sensors.MutableOrientation;
 import com.first1444.sim.api.sensors.Orientation;
+import com.first1444.sim.api.surroundings.SurroundingProvider;
 import me.retrodaredevil.controller.ControlConfig;
 import me.retrodaredevil.controller.MutableControlConfig;
 import me.retrodaredevil.controller.input.JoystickPart;
@@ -31,6 +32,7 @@ public class Robot extends BasicRobotRunnable {
     private final SwerveDrive swerveDrive;
     private final MutableOrientation orientation;
     private final StandardControllerInput controller;
+    private final SurroundingProvider surroundingProvider;
 
     private final MatchSchedulerRunnable scheduler;
     private final ControlConfig controlConfig;
@@ -41,14 +43,15 @@ public class Robot extends BasicRobotRunnable {
             Clock clock,
             FourWheelSwerveDriveData swerveDriveData,
             Orientation orientation,
-            StandardControllerInput controller
-    ) {
+            StandardControllerInput controller,
+            SurroundingProvider surroundingProvider) {
         super(driverStation);
         this.driverStation = driverStation;
         this.clock = clock;
         this.swerveDrive = new FourWheelSwerveDrive(swerveDriveData);
         this.orientation = new DefaultMutableOrientation(orientation);
         this.controller = controller;
+        this.surroundingProvider = surroundingProvider;
 
         this.scheduler = new DefaultMatchScheduler(driverStation, clock);
         MutableControlConfig config = new MutableControlConfig();
@@ -76,6 +79,7 @@ public class Robot extends BasicRobotRunnable {
 
         updateSwerve();
         swerveDrive.run();
+        System.out.println("Surroundings: " + surroundingProvider.getSurroundings());
     }
     private void updateSwerve(){
         JoystickPart leftJoy = controller.getLeftJoy();
@@ -89,9 +93,9 @@ public class Robot extends BasicRobotRunnable {
         }
         Vector2 translation;
         if(controller.getLeftBumper().isDown()){ // first person
-            translation = new Vector2(-y, x);
+            translation = new Vector2(y, -x);
         } else {
-            translation = new Vector2(-y, x).rotateRadians(-orientation.getOrientationRadians());
+            translation = new Vector2(x, y).rotateRadians(-orientation.getOrientationRadians());
         }
 
         if(translation.getMagnitude() > 1){
@@ -101,11 +105,11 @@ public class Robot extends BasicRobotRunnable {
         if(controller.getRightJoy().isXDeadzone()){
             rotate = 0;
         } else {
-            rotate =  controller.getRightJoy().getX();
+            rotate = controller.getRightJoy().getX();
         }
         double speed = controller.getRightTrigger().getPosition();
 
-        swerveDrive.setControl(translation.getY(), translation.getX(), rotate, speed);
+        swerveDrive.setControl(translation.getX(), -translation.getY(), rotate, speed);
 
     }
 }
