@@ -3,7 +3,7 @@ package com.first1444.sim.gdx.drivetrain.swerve
 import com.badlogic.gdx.physics.box2d.Body
 import com.first1444.sim.api.EnabledState
 import com.first1444.sim.api.Clock
-import com.first1444.sim.api.MathUtil.minChange
+import com.first1444.sim.api.minChange
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
 import com.first1444.sim.api.event.EventHandler
 import com.first1444.sim.gdx.gdxVectorFromRadians

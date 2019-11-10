@@ -77,7 +77,18 @@ data class Vector2(
                 origin.y + sin * (x - origin.x) + cos * (y - origin.y)
         )
     }
-    @JvmOverloads fun rotateDegrees(degrees: Double, origin: Vector2 = ZERO): Vector2 = rotateRadians(toRadians(degrees))
+
+    /**
+     * @param amount The number of times to rotate 90 degrees in a certain direction. A positive value is counter clockwise, a negative clockwise, zero unchanged.
+     */
+    fun rotate90(amount: Int): Vector2 = when(val value = mod(amount, 4)){
+        0 -> this
+        1 -> Vector2(-y, x) // 90
+        2 -> Vector2(-x, -y) // 180
+        3 -> Vector2(y, -x) // 270
+        else -> error("modulo of 4 of amount=$amount gave bad value=$value")
+    }
+    @JvmOverloads fun rotateDegrees(degrees: Double, origin: Vector2 = ZERO): Vector2 = rotateRadians(toRadians(degrees), origin)
     override fun toString(): String {
         return "Vector2(x=${FORMAT.format(x)}, y=${FORMAT.format(y)})"
     }

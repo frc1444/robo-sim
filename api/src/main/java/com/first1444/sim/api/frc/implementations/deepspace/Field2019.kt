@@ -1,6 +1,6 @@
 package com.first1444.sim.api.frc.implementations.deepspace
 
-import com.first1444.sim.api.MeasureUtil.inchesToMeters
+import com.first1444.sim.api.inchesToMeters
 import com.first1444.sim.api.Transform.Companion.transformDegrees
 import com.first1444.sim.api.Vector2
 
@@ -9,6 +9,10 @@ object Field2019 {
     val WIDTH: Double = inchesToMeters(27 * 12.0)
     @JvmField
     val LENGTH: Double = inchesToMeters(54 * 12.0)
+
+    @JvmField val HAB_LEVEL_1_LENGTH = inchesToMeters(36.0)
+    @JvmField val HAB_LIP_MEASUREMENT = inchesToMeters(11.5)
+    @JvmField val HAB_CARGO_BAY_EXTEND = inchesToMeters(26.0)
 
     @JvmField val CARGO_SHIP_TOTAL_LENGTH = inchesToMeters(95.88)
     @JvmField val CARGO_SHIP_BUMPER_LENGTH = CARGO_SHIP_TOTAL_LENGTH - inchesToMeters(7.38)
@@ -42,18 +46,23 @@ object Field2019 {
 
     @JvmField val ROCKET_SHIP_LEFT_HATCH_FAR = VisionTarget(transformDegrees(ROCKET_LEFT_POSITION + ROCKET_HATCH_OFFSET * Vector2.ONE, 61.23 - 180), VisionType.ROCKET_HATCH)
     @JvmField val ROCKET_SHIP_LEFT_HATCH_NEAR = VisionTarget(transformDegrees(ROCKET_LEFT_POSITION + ROCKET_HATCH_OFFSET.times(1.0, -1.0), 180 - 61.23), VisionType.ROCKET_HATCH)
+    @JvmField val ROCKET_SHIP_LEFT_CARGO = VisionTarget(transformDegrees(ROCKET_LEFT_POSITION.plus(inchesToMeters(-26.36), 0.0), 180.0), VisionType.ROCKET_CARGO)
 
-    @JvmField val ROCKET_SHIP_RIGHT_HATCH_FAR = VisionTarget(transformDegrees(ROCKET_RIGHT_POSITION + ROCKET_HATCH_OFFSET.times(-1.0, 1.0), 180 - 61.23), VisionType.ROCKET_HATCH)
-    @JvmField val ROCKET_SHIP_RIGHT_HATCH_NEAR = VisionTarget(transformDegrees(ROCKET_RIGHT_POSITION + ROCKET_HATCH_OFFSET.times(-1.0, -1.0), 61.23 - 180), VisionType.ROCKET_HATCH)
+    @JvmField val ROCKET_SHIP_RIGHT_HATCH_FAR = VisionTarget(transformDegrees(ROCKET_RIGHT_POSITION + ROCKET_HATCH_OFFSET.times(-1.0, 1.0), -61.23), VisionType.ROCKET_HATCH)
+    @JvmField val ROCKET_SHIP_RIGHT_HATCH_NEAR = VisionTarget(transformDegrees(ROCKET_RIGHT_POSITION + ROCKET_HATCH_OFFSET.times(-1.0, -1.0), 61.23), VisionType.ROCKET_HATCH)
+    @JvmField val ROCKET_SHIP_RIGHT_CARGO = VisionTarget(transformDegrees(ROCKET_RIGHT_POSITION.plus(inchesToMeters(26.36), 0.0), 0.0), VisionType.ROCKET_CARGO)
 
 
-    @JvmField val VISION_TARGETS = listOf(
+    @JvmField val ALLIANCE_VISION_TARGETS = listOf(
             LOADING_LEFT, LOADING_RIGHT,
             CARGO_SHIP_CENTER_LEFT, CARGO_SHIP_CENTER_RIGHT,
             CARGO_SHIP_LEFT_1, CARGO_SHIP_LEFT_2, CARGO_SHIP_LEFT_3,
             CARGO_SHIP_RIGHT_1, CARGO_SHIP_RIGHT_2, CARGO_SHIP_RIGHT_3,
             ROCKET_SHIP_LEFT_HATCH_FAR, ROCKET_SHIP_LEFT_HATCH_NEAR,
-            ROCKET_SHIP_RIGHT_HATCH_FAR, ROCKET_SHIP_RIGHT_HATCH_NEAR
+            ROCKET_SHIP_RIGHT_HATCH_FAR, ROCKET_SHIP_RIGHT_HATCH_NEAR,
+            ROCKET_SHIP_LEFT_CARGO, ROCKET_SHIP_RIGHT_CARGO
     )
+    @JvmField val ENEMY_VISION_TARGETS = ALLIANCE_VISION_TARGETS.map { VisionTarget(-it.transform, it.visionType) }
+    @JvmField val ALL_VISION_TARGETS = ALLIANCE_VISION_TARGETS + ENEMY_VISION_TARGETS
 
 }

@@ -1,4 +1,3 @@
-@file:JvmName("Transforms")
 package com.first1444.sim.api
 
 import java.lang.Math.toDegrees
@@ -9,19 +8,31 @@ import kotlin.math.sin
 class Transform
 private constructor(
         val position: Vector2,
-        val rotationRadians: Double,
-        val rotationDegrees: Double
+        rotationRadians: Double
 ) {
+    val rotationRadians: Double
+    val rotationDegrees: Double
+
+    init {
+        var angle = mod(rotationRadians, Math.PI * 2)
+        if(angle == Math.PI){
+            angle = -Math.PI
+        } else if (angle > Math.PI){ // Angle is in range [-pi/2..pi/2)
+            angle -= Math.PI * 2
+        }
+        this.rotationRadians = angle
+        this.rotationDegrees = toDegrees(angle)
+    }
+
     companion object {
         @JvmField
-        val ZERO = Transform(Vector2.ZERO, 0.0, 0.0)
+        val ZERO = Transform(Vector2.ZERO, 0.0)
 
         /**
          * Creates a [Transform] using [rotationRadians] as the rotation
          * @return A new transform with position and rotationRadians
          */
-        @JvmStatic fun transformRadians(position: Vector2, rotationRadians: Double): Transform =
-                Transform(position, rotationRadians, toDegrees(rotationRadians))
+        @JvmStatic fun transformRadians(position: Vector2, rotationRadians: Double): Transform = Transform(position, rotationRadians)
         /**
          * Creates a [Transform] using [rotationRadians] as the rotation
          * @return A new transform with x and y position and rotationRadians
@@ -31,17 +42,14 @@ private constructor(
          * Creates a [Transform] using [rotationDegrees] as the rotation
          * @return A new transform with position and rotationDegrees
          */
-        @JvmStatic fun transformDegrees(position: Vector2, rotationDegrees: Double): Transform =
-                Transform(position, toRadians(rotationDegrees), rotationDegrees)
+        @JvmStatic fun transformDegrees(position: Vector2, rotationDegrees: Double): Transform = transformRadians(position, toRadians(rotationDegrees))
         /**
          * Creates a [Transform] using [rotationDegrees] as the rotation
          * @return A new transform with x and y position and rotationDegrees
          */
-        @JvmStatic fun transformDegrees(x: Double, y: Double, rotationDegrees: Double): Transform = Transform(Vector2(x, y), toRadians(rotationDegrees), rotationDegrees)
+        @JvmStatic fun transformDegrees(x: Double, y: Double, rotationDegrees: Double): Transform = transformDegrees(Vector2(x, y), rotationDegrees)
 
-        @JvmStatic fun transform(position: Vector2, rotation: Vector2): Transform {
-            return transformRadians(position, rotation.angleRadians)
-        }
+        @JvmStatic fun transform(position: Vector2, rotation: Vector2): Transform = transformRadians(position, rotation.angleRadians)
 
     }
 
@@ -58,7 +66,7 @@ private constructor(
     }
 
     operator fun unaryMinus(): Transform {
-        return Transform(-position, Math.PI + rotationRadians, 180 + rotationDegrees)
+        return Transform(-position, Math.PI + rotationRadians)
     }
 
     /**
@@ -78,7 +86,7 @@ private constructor(
             return Transform(Vector2(
                     -(x * cos - y * sin),
                     -(x * sin + y * cos)
-            ), rotationRadians, rotationDegrees)
+            ), rotationRadians)
         }
 
 
@@ -90,8 +98,6 @@ private constructor(
 
         if (position != other.position) return false
         if (rotationRadians != other.rotationRadians) return false
-        // we don't need to check rotationDegrees
-
         return true
     }
 
