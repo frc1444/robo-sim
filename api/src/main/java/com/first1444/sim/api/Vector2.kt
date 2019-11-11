@@ -25,8 +25,17 @@ data class Vector2(
     val angleDegrees: Double
         get() = toDegrees(angleRadians)
 
+    /**
+     * @return The normalized [Vector2] or a [Vector2] with x=0 and y=0 if [magnitude] is 0
+     */
     val normalized: Vector2
-        get() = Vector2(x / magnitude, y / magnitude)
+        get() {
+            val magnitude = this.magnitude
+            if(magnitude == 0.0){
+                return ZERO
+            }
+            return Vector2(x / magnitude, y / magnitude)
+        }
 
     @JvmOverloads
     fun epsilonEquals(other: Vector2, precision: Double = DEFAULT_EPSILON): Boolean {

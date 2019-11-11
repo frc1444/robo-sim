@@ -68,6 +68,12 @@ private constructor(
     operator fun unaryMinus(): Transform {
         return Transform(-position, Math.PI + rotationRadians)
     }
+    operator fun plus(vector: Vector2): Transform {
+        return Transform(position + vector, rotationRadians)
+    }
+    operator fun minus(vector: Vector2): Transform {
+        return Transform(position - vector, rotationRadians)
+    }
 
     /**
      * NOTE: [Transform] always equals [Transform.reversed].[reversed]
@@ -78,7 +84,6 @@ private constructor(
     val reversed: Transform
         get() {
             val rotationRadians = -rotationRadians
-            val rotationDegrees = -rotationDegrees
             val sin = sin(rotationRadians)
             val cos = cos(rotationRadians)
             val x = this.x

@@ -1,6 +1,7 @@
 package com.first1444.sim.gdx.desktop_test;
 
 import com.first1444.sim.api.Clock;
+import com.first1444.sim.api.Transform;
 import com.first1444.sim.api.Vector2;
 import com.first1444.sim.api.distance.DeltaDistanceAccumulator;
 import com.first1444.sim.api.distance.DistanceAccumulator;
@@ -18,6 +19,7 @@ import com.first1444.sim.api.scheduler.match.MatchTime;
 import com.first1444.sim.api.sensors.DefaultMutableOrientation;
 import com.first1444.sim.api.sensors.MutableOrientation;
 import com.first1444.sim.api.sensors.Orientation;
+import com.first1444.sim.api.surroundings.Surrounding;
 import com.first1444.sim.api.surroundings.SurroundingProvider;
 import me.retrodaredevil.controller.ControlConfig;
 import me.retrodaredevil.controller.MutableControlConfig;
@@ -79,6 +81,11 @@ public class Robot extends BasicRobotRunnable {
 
         updateSwerve();
         swerveDrive.run();
+        Vector2 position = distanceAccumulator.getPosition();
+        for(Surrounding surrounding : surroundingProvider.getSurroundings()){
+            Transform transform = surrounding.getTransform();
+            Transform visionTransform = transform.rotateRadians(-orientation.getOrientationRadians()).plus(position);
+        }
         System.out.println("Surroundings: " + surroundingProvider.getSurroundings());
     }
     private void updateSwerve(){
