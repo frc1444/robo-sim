@@ -11,10 +11,10 @@ data class Vector2(
         val y: Double
 ) {
     companion object {
-        @JvmField
-        val ZERO = Vector2(0.0, 0.0)
-        @JvmField
-        val ONE = Vector2(1.0, 1.0)
+        @JvmField val ZERO = Vector2(0.0, 0.0)
+        @JvmField val ONE = Vector2(1.0, 1.0)
+        @JvmField val X = Vector2(1.0, 0.0)
+        @JvmField val Y = Vector2(0.0, 1.0)
 
         const val DEFAULT_EPSILON = 0.000_000_000_000_001 // 0.000_000_000_000_000_1
 

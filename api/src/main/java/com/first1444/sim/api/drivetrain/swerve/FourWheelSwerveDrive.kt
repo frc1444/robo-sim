@@ -1,19 +1,19 @@
 package com.first1444.sim.api.drivetrain.swerve
 
+import com.first1444.sim.api.Vector2
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.hypot
 import kotlin.math.max
 
 private data class ControlData(
-        val forward: Double,
-        val strafe: Double,
+        val translation: Vector2,
         val turnAmount: Double,
         val speed: Double
 ) {
-    init  {
-        require(abs(forward) <= 1) { "forward must be in range [-1..1]" }
-        require(abs(strafe) <= 1) { "strafe must be in range [-1..1]" }
+    init {
+        require(abs(translation.x) <= 1) { "x must be in range [-1..1]" }
+        require(abs(translation.y) <= 1) { "y must be in range [-1..1]" }
         require(abs(turnAmount) <= 1) { "turnAmount must be in range [-1..1]" }
         require(abs(speed) <= 1) { "speed must be in range [-1..1]" }
     }
@@ -22,8 +22,8 @@ private data class ControlData(
 class FourWheelSwerveDrive(
         override val drivetrainData: FourWheelSwerveDriveData
 ) : SwerveDrive {
-    companion object {
-        private val CONTROL_ZERO: ControlData = ControlData(0.0, 0.0, 0.0, 0.0)
+    private companion object {
+        private val CONTROL_ZERO: ControlData = ControlData(Vector2.ZERO, 0.0, 0.0)
     }
 
 
@@ -40,8 +40,8 @@ class FourWheelSwerveDrive(
         sinA = drivetrainData.trackWidth / diagonal
     }
 
-    override fun setControl(forward: Double, strafe: Double, turnAmount: Double, speed: Double) {
-        controlData = ControlData(forward, strafe, turnAmount, speed)
+    override fun setControl(translation: Vector2, turnAmount: Double, speed: Double) {
+        controlData = ControlData(translation, turnAmount, speed)
     }
     override fun run() {
         /*
@@ -59,12 +59,12 @@ class FourWheelSwerveDrive(
         val controlData = this.controlData
         this.controlData = controlData.copy(speed = 0.0)
 
-        val forward = controlData.forward // FWD
-        val strafe = controlData.strafe // STR
+        val x = controlData.translation.x // FWD
+        val y = controlData.translation.y // STR
         val turnAmount = controlData.turnAmount // RCW
         val speed = controlData.speed
 
-        if (forward == 0.0 && strafe == 0.0 && turnAmount == 0.0) {
+        if (x == 0.0 && y == 0.0 && turnAmount == 0.0) {
             drivetrainData.apply {
                 frontRight.setTargetSpeed(0.0)
                 frontLeft.setTargetSpeed(0.0)
@@ -76,15 +76,15 @@ class FourWheelSwerveDrive(
             val sinA = this.sinA // wheel base // L/R
             val cosA = this.cosA // track width// W/R
 
-            val A = strafe - turnAmount * sinA
-            val B = strafe + turnAmount * sinA
-            val C = forward - turnAmount * cosA
-            val D = forward + turnAmount * cosA
+            val A = y - turnAmount * sinA
+            val B = y + turnAmount * sinA
+            val C = x - turnAmount * cosA
+            val D = x + turnAmount * cosA
 
-            var frSpeed = hypot(B, C) * speed // ws1
-            var flSpeed = hypot(B, D) * speed // ws2
-            var rlSpeed = hypot(A, D) * speed // ws3
-            var rrSpeed = hypot(A, C) * speed // ws4
+            var frSpeed = hypot(A, C) * speed // ws1
+            var flSpeed = hypot(A, D) * speed // ws2
+            var rlSpeed = hypot(B, D) * speed // ws3
+            var rrSpeed = hypot(B, C) * speed // ws4
 
             val max = max(max(frSpeed, flSpeed), max(rlSpeed, rrSpeed))
             if (max > 1) {
@@ -94,12 +94,10 @@ class FourWheelSwerveDrive(
                 rrSpeed /= max
             }
 
-            // These are all negative because we want these to be regular counter clock wise angles
-            // The tutorial/diagram that was followed had angles that were clock wise angles, which we don't want
-            val frAngle = -atan2(B, C) // wa1
-            val flAngle = -atan2(B, D) // wa2
-            val rlAngle = -atan2(A, D) // wa3
-            val rrAngle = -atan2(A, C) // wa4
+            val frAngle = atan2(A, C)
+            val flAngle = atan2(A, D)
+            val rlAngle = atan2(B, D)
+            val rrAngle = atan2(B, C)
 
             drivetrainData.apply {
                 frontRight.setTargetAngleRadians(frAngle)

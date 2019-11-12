@@ -1,5 +1,6 @@
 package com.first1444.sim.api.drivetrain.swerve
 
+import com.first1444.sim.api.Vector2
 import com.first1444.sim.api.event.EventHandler
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -15,7 +16,7 @@ class SwerveTest {
                 1.0, 0.0
         )
         val drive = FourWheelSwerveDrive(data)
-        drive.setControl(1.0, 0.0, 0.0, 1.0)
+        drive.setControl(Vector2.X, 0.0, 1.0)
         drive.run()
     }
     @Test
@@ -27,7 +28,7 @@ class SwerveTest {
                 1.0, -90.0
         )
         val drive = FourWheelSwerveDrive(data)
-        drive.setControl(0.0, 1.0, 0.0, 1.0)
+        drive.setControl(-Vector2.Y, 0.0, 1.0)
         drive.run()
     }
     @Test
@@ -40,7 +41,7 @@ class SwerveTest {
                 1.0, 270 + 45.0 - 360
         )
         val drive = FourWheelSwerveDrive(data)
-        drive.setControl(0.0, 0.0, -1.0, 1.0)
+        drive.setControl(Vector2.ZERO, -1.0, 1.0)
         drive.run()
     }
 

@@ -98,6 +98,7 @@ public class Robot extends BasicRobotRunnable {
                 }
             }
             System.out.println("We see: " + best + " distance error: " + Math.sqrt(closest2) + " yaw error: " + Math.abs(visionTransform.getRotationDegrees() - best.getTransform().getRotationDegrees()));
+            // If you're doing this on a robot, you might also want to check the raw error.
             distanceAccumulator.setPosition(best.getTransform().getPosition().minus(transform.getPosition().rotateRadians(orientation.getOrientationRadians())));
         }
         System.out.println("Position: " + distanceAccumulator.getPosition());
@@ -131,7 +132,7 @@ public class Robot extends BasicRobotRunnable {
         }
         double speed = controller.getRightTrigger().getPosition();
 
-        swerveDrive.setControl(translation.getX(), -translation.getY(), rotate, speed);
+        swerveDrive.setControl(translation, rotate, speed);
 
     }
 }
