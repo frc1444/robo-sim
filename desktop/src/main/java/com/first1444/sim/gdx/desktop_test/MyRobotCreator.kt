@@ -28,8 +28,8 @@ import java.lang.Math.toRadians
 
 object MyRobotCreator : RobotCreator {
     override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): Updateable {
-        val startingPosition = Vector2(0.0, -5.0)
-        val startingAngleRadians = toRadians(45.0)
+        val startingPosition = Vector2(0.0, -6.6)
+        val startingAngleRadians = toRadians(90.0)
 
         val maxVelocity = 3.35
         val wheelBase = inchesToMeters(22.75) // length

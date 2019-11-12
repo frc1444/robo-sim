@@ -3,16 +3,15 @@ package com.first1444.sim.gdx.desktop_test;
 import com.first1444.sim.api.Clock;
 import com.first1444.sim.api.Transform;
 import com.first1444.sim.api.Vector2;
-import com.first1444.sim.api.distance.DeltaDistanceAccumulator;
-import com.first1444.sim.api.distance.DistanceAccumulator;
-import com.first1444.sim.api.distance.OrientationDeltaDistanceCalculator;
-import com.first1444.sim.api.distance.SwerveDeltaDistanceCalculator;
+import com.first1444.sim.api.distance.*;
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDrive;
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData;
 import com.first1444.sim.api.drivetrain.swerve.SwerveDrive;
 import com.first1444.sim.api.frc.BasicRobotRunnable;
 import com.first1444.sim.api.frc.FrcDriverStation;
 import com.first1444.sim.api.frc.FrcMode;
+import com.first1444.sim.api.frc.implementations.deepspace.Field2019;
+import com.first1444.sim.api.frc.implementations.deepspace.VisionTarget;
 import com.first1444.sim.api.scheduler.match.DefaultMatchScheduler;
 import com.first1444.sim.api.scheduler.match.MatchSchedulerRunnable;
 import com.first1444.sim.api.scheduler.match.MatchTime;
@@ -28,6 +27,8 @@ import me.retrodaredevil.controller.types.StandardControllerInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static com.first1444.sim.api.MeasureUtil.inchesToMeters;
+
 public class Robot extends BasicRobotRunnable {
     private final FrcDriverStation driverStation;
     private final Clock clock;
@@ -38,7 +39,7 @@ public class Robot extends BasicRobotRunnable {
 
     private final MatchSchedulerRunnable scheduler;
     private final ControlConfig controlConfig;
-    private final DistanceAccumulator distanceAccumulator;
+    private final MutableDistanceAccumulator distanceAccumulator;
 
     public Robot(
             FrcDriverStation driverStation,
@@ -60,6 +61,7 @@ public class Robot extends BasicRobotRunnable {
         config.fullAnalogDeadzone = .03;
         this.controlConfig = config;
         distanceAccumulator = new DeltaDistanceAccumulator(new OrientationDeltaDistanceCalculator(new SwerveDeltaDistanceCalculator(swerveDriveData), orientation));
+        distanceAccumulator.setPosition(new Vector2(0, -6.6));
     }
 
     @Override
@@ -84,8 +86,21 @@ public class Robot extends BasicRobotRunnable {
         Vector2 position = distanceAccumulator.getPosition();
         for(Surrounding surrounding : surroundingProvider.getSurroundings()){
             Transform transform = surrounding.getTransform();
-            Transform visionTransform = transform.rotateRadians(-orientation.getOrientationRadians()).plus(position);
+            Transform visionTransform = transform.rotateRadians(orientation.getOrientationRadians()).plus(position);
+            VisionTarget best = null;
+            double closest2 = Double.MAX_VALUE;
+            for(VisionTarget target : Field2019.ALL_VISION_TARGETS){
+                Transform targetTransform = target.getTransform();
+                double distance2 = targetTransform.getPosition().distance2(visionTransform.getPosition());
+                if(distance2 < closest2){
+                    best = target;
+                    closest2 = distance2;
+                }
+            }
+            System.out.println("We see: " + best + " distance error: " + Math.sqrt(closest2) + " yaw error: " + Math.abs(visionTransform.getRotationDegrees() - best.getTransform().getRotationDegrees()));
+            distanceAccumulator.setPosition(best.getTransform().getPosition().minus(transform.getPosition().rotateRadians(orientation.getOrientationRadians())));
         }
+        System.out.println("Position: " + distanceAccumulator.getPosition());
         System.out.println("Surroundings: " + surroundingProvider.getSurroundings());
     }
     private void updateSwerve(){
