@@ -14,6 +14,17 @@ dependencies {
 
     implementation "com.github.retrodaredevil.abstract-controller-lib:api:v2.2.4"
     implementation "com.github.retrodaredevil.abstract-controller-lib:gdx:v2.2.4"
+
+    implementation "edu.wpi.first.ntcore:ntcore-java:$wpiLibVersion"
+    implementation "edu.wpi.first.ntcore:ntcore-jni:$wpiLibVersion"
+    implementation "edu.wpi.first.ntcore:ntcore-jni:$wpiLibVersion:linuxx86-64"
+    implementation "edu.wpi.first.wpilibj:wpilibj-java:$wpiLibVersion"
+    implementation "edu.wpi.first.wpiutil:wpiutil-java:$wpiLibVersion"
+    implementation "edu.wpi.first.cscore:cscore-java:$wpiLibVersion"
+    implementation "edu.wpi.first.hal:hal-java:$wpiLibVersion"
+    implementation "edu.wpi.first.hal:hal-jni:$wpiLibVersion"
+    implementation "edu.wpi.first.hal:hal-jni:$wpiLibVersion:linuxx86-64"
+
 }
 
 task run(dependsOn: classes, type: JavaExec) {

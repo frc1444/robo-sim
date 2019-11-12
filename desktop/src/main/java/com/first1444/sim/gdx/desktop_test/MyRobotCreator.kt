@@ -19,6 +19,8 @@ import com.first1444.sim.gdx.implementations.deepspace2019.surroundings.VisionPr
 import com.first1444.sim.gdx.init.RobotCreator
 import com.first1444.sim.gdx.init.UpdateableCreator
 import com.first1444.sim.gdx.velocity.AccelerateSetPointHandler
+import edu.wpi.first.networktables.NetworkTableInstance
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import me.retrodaredevil.controller.gdx.GdxControllerPartCreator
 import me.retrodaredevil.controller.gdx.IndexedControllerProvider
 import me.retrodaredevil.controller.implementations.BaseStandardControllerInput
@@ -104,6 +106,7 @@ object MyRobotCreator : RobotCreator {
         val creator = GdxControllerPartCreator(provider, true)
         val joystick = BaseStandardControllerInput(DefaultStandardControllerInputCreator(), creator, OptionValues.createImmutableBooleanOptionValue(true), OptionValues.createImmutableBooleanOptionValue(false))
         val robotCreator = RunnableCreator.wrap {
+            NetworkTableInstance.getDefault().startServer()
             Robot(data.driverStation, updateableData.clock, swerveDriveData, EntityOrientation(entity), joystick, VisionProvider(entity, 2.0, updateableData.clock))
         }
         return UpdateableMultiplexer(listOf(

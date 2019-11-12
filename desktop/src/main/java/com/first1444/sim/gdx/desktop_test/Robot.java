@@ -3,7 +3,10 @@ package com.first1444.sim.gdx.desktop_test;
 import com.first1444.sim.api.Clock;
 import com.first1444.sim.api.Transform;
 import com.first1444.sim.api.Vector2;
-import com.first1444.sim.api.distance.*;
+import com.first1444.sim.api.distance.DeltaDistanceAccumulator;
+import com.first1444.sim.api.distance.MutableDistanceAccumulator;
+import com.first1444.sim.api.distance.OrientationDeltaDistanceCalculator;
+import com.first1444.sim.api.distance.SwerveDeltaDistanceCalculator;
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDrive;
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData;
 import com.first1444.sim.api.drivetrain.swerve.SwerveDrive;
@@ -20,14 +23,16 @@ import com.first1444.sim.api.sensors.MutableOrientation;
 import com.first1444.sim.api.sensors.Orientation;
 import com.first1444.sim.api.surroundings.Surrounding;
 import com.first1444.sim.api.surroundings.SurroundingProvider;
+import edu.wpi.first.wpilibj.SendableBase;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import me.retrodaredevil.controller.ControlConfig;
 import me.retrodaredevil.controller.MutableControlConfig;
 import me.retrodaredevil.controller.input.JoystickPart;
 import me.retrodaredevil.controller.types.StandardControllerInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import static com.first1444.sim.api.MeasureUtil.inchesToMeters;
 
 public class Robot extends BasicRobotRunnable {
     private final FrcDriverStation driverStation;
@@ -62,10 +67,19 @@ public class Robot extends BasicRobotRunnable {
         this.controlConfig = config;
         distanceAccumulator = new DeltaDistanceAccumulator(new OrientationDeltaDistanceCalculator(new SwerveDeltaDistanceCalculator(swerveDriveData), orientation));
         distanceAccumulator.setPosition(new Vector2(0, -6.6));
+
+        Shuffleboard.getTab("dash").add("name", new SendableBase() {
+            @Override
+            public void initSendable(SendableBuilder builder) {
+                builder.addDoubleProperty("time", clock::getTimeSeconds, null);
+            }
+        });
+        Shuffleboard.getTab("dash").add("hello", "hello");
     }
 
     @Override
     protected void update(@NotNull FrcMode mode, @Nullable FrcMode previousMode) {
+        Shuffleboard.update();
         if(previousMode != mode){
             System.out.println("New mode: " + mode);
             if(mode == FrcMode.AUTONOMOUS){
