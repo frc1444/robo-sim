@@ -1,9 +1,11 @@
 package com.first1444.sim.api.frc
 
-abstract class IterativeRobotRunnable(
+class IterativeRobotRunnable(
         private val iterativeRobot: IterativeRobot,
         modeGetter: () -> FrcMode
 ) : BasicRobotRunnable(modeGetter) {
+
+    constructor(iterativeRobot: IterativeRobot, driverStation: FrcDriverStation) : this(iterativeRobot, driverStation::mode)
 
     override fun update(mode: FrcMode, previousMode: FrcMode?) {
         if(mode != previousMode){
