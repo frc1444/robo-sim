@@ -1,10 +1,7 @@
 package com.first1444.sim.api.drivetrain.swerve
 
 import com.first1444.sim.api.Vector2
-import kotlin.math.abs
-import kotlin.math.atan2
-import kotlin.math.hypot
-import kotlin.math.max
+import kotlin.math.*
 
 private data class ControlData(
         val translation: Vector2,
@@ -86,7 +83,7 @@ class FourWheelSwerveDrive(
             var rlSpeed = hypot(B, D) * speed // ws3
             var rrSpeed = hypot(B, C) * speed // ws4
 
-            val max = max(max(frSpeed, flSpeed), max(rlSpeed, rrSpeed))
+            val max = max(max(frSpeed.absoluteValue, flSpeed.absoluteValue), max(rlSpeed.absoluteValue, rrSpeed.absoluteValue))
             if (max > 1) {
                 frSpeed /= max
                 flSpeed /= max

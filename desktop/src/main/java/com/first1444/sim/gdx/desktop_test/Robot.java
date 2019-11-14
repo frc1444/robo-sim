@@ -144,7 +144,7 @@ public class Robot extends BasicRobotRunnable {
         } else {
             rotate = controller.getRightJoy().getX();
         }
-        double speed = controller.getRightTrigger().getPosition();
+        double speed = controller.getRightTrigger().getPosition() - controller.getLeftTrigger().getPosition();
 
         swerveDrive.setControl(translation, rotate, speed);
 
