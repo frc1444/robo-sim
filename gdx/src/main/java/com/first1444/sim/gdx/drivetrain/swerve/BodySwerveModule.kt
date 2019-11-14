@@ -52,8 +52,7 @@ class BodySwerveModule(
             if(isEnabled) {
                 // speed stuff
                 val speed = this.speed
-                val maxVelocity = this.maxVelocity
-                val velocity = (speed * maxVelocity).absoluteValue
+                val velocity = speed * maxVelocity
                 driveVelocitySetPointHandler.setDesired(velocity.toFloat())
             } else {
                 driveVelocitySetPointHandler.setDesired(0.0f)

@@ -7,6 +7,3 @@ dependencies {
 //    api "edu.wpi.first.cscore:cscore-java:$wpiLibVersion"
     api "edu.wpi.first.wpilibj:wpilibj-java:$wpiLibVersion"
 }
-jar {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}
