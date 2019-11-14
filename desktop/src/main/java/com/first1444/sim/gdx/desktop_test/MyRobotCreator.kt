@@ -6,11 +6,10 @@ import com.badlogic.gdx.physics.box2d.EdgeShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef
-import com.first1444.sim.api.RunnableCreator
-import com.first1444.sim.api.Vector2
+import com.first1444.sim.api.*
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
-import com.first1444.sim.api.inchesToMeters
+import com.first1444.sim.api.frc.BasicRobotRunnable
 import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.drivetrain.swerve.BodySwerveModule
 import com.first1444.sim.gdx.entity.ActorBodyEntity
@@ -20,6 +19,7 @@ import com.first1444.sim.gdx.init.RobotCreator
 import com.first1444.sim.gdx.init.UpdateableCreator
 import com.first1444.sim.gdx.velocity.AccelerateSetPointHandler
 import edu.wpi.first.networktables.NetworkTableInstance
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import me.retrodaredevil.controller.gdx.GdxControllerPartCreator
 import me.retrodaredevil.controller.gdx.IndexedControllerProvider
@@ -107,7 +107,15 @@ object MyRobotCreator : RobotCreator {
         val joystick = BaseStandardControllerInput(DefaultStandardControllerInputCreator(), creator, OptionValues.createImmutableBooleanOptionValue(true), OptionValues.createImmutableBooleanOptionValue(false))
         val robotCreator = RunnableCreator.wrap {
             NetworkTableInstance.getDefault().startServer()
-            Robot(data.driverStation, updateableData.clock, swerveDriveData, EntityOrientation(entity), joystick, VisionProvider(entity, 2.0, updateableData.clock))
+            RobotRunnableMultiplexer(listOf(
+                BasicRobotRunnable(
+                    Robot(data.driverStation, updateableData.clock, swerveDriveData, EntityOrientation(entity), joystick, VisionProvider(entity, 2.0, updateableData.clock)),
+                    data.driverStation
+                ),
+                RobotRunnable.wrap {
+                    Shuffleboard.update()
+                }
+            ))
         }
         return UpdateableMultiplexer(listOf(
                 entity,

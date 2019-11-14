@@ -20,6 +20,11 @@ class WpiTimedRobot @JvmOverloads constructor(
     override fun robotPeriodic() {
         runnable.run()
     }
+
+    override fun close() {
+        super.close()
+
+    }
     override fun disabledInit() {}
     override fun disabledPeriodic() {}
     override fun autonomousInit() {}

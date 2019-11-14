@@ -9,16 +9,16 @@ interface RunnableCreator {
     /**
      * In the WPI implementation, this should be called when robotInit() is called
      */
-    fun createRunnable(): Runnable
+    fun createRunnable(): RobotRunnable
 
     companion object {
         @JvmStatic
-        fun wrap(creator: () -> Runnable): RunnableCreator{
+        fun wrap(creator: () -> RobotRunnable): RunnableCreator{
             return object : RunnableCreator {
                 override fun prematureInit() {
                 }
 
-                override fun createRunnable(): Runnable {
+                override fun createRunnable(): RobotRunnable {
                     return creator()
                 }
 

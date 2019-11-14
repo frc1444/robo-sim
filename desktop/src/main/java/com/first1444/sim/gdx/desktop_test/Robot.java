@@ -10,7 +10,7 @@ import com.first1444.sim.api.distance.SwerveDeltaDistanceCalculator;
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDrive;
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData;
 import com.first1444.sim.api.drivetrain.swerve.SwerveDrive;
-import com.first1444.sim.api.frc.BasicRobotRunnable;
+import com.first1444.sim.api.frc.BasicRobot;
 import com.first1444.sim.api.frc.FrcDriverStation;
 import com.first1444.sim.api.frc.FrcMode;
 import com.first1444.sim.api.frc.implementations.deepspace.Field2019;
@@ -26,7 +26,6 @@ import com.first1444.sim.api.surroundings.SurroundingProvider;
 import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import me.retrodaredevil.controller.ControlConfig;
 import me.retrodaredevil.controller.MutableControlConfig;
 import me.retrodaredevil.controller.input.JoystickPart;
@@ -34,7 +33,7 @@ import me.retrodaredevil.controller.types.StandardControllerInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Robot extends BasicRobotRunnable {
+public class Robot implements BasicRobot {
     private final FrcDriverStation driverStation;
     private final Clock clock;
     private final SwerveDrive swerveDrive;
@@ -53,7 +52,6 @@ public class Robot extends BasicRobotRunnable {
             Orientation orientation,
             StandardControllerInput controller,
             SurroundingProvider surroundingProvider) {
-        super(driverStation);
         this.driverStation = driverStation;
         this.clock = clock;
         this.swerveDrive = new FourWheelSwerveDrive(swerveDriveData);
@@ -78,8 +76,11 @@ public class Robot extends BasicRobotRunnable {
     }
 
     @Override
-    protected void update(@NotNull FrcMode mode, @Nullable FrcMode previousMode) {
-        Shuffleboard.update();
+    public void close() throws Exception {
+    }
+
+    @Override
+    public void update(@NotNull FrcMode mode, @Nullable FrcMode previousMode) {
         if(previousMode != mode){
             System.out.println("New mode: " + mode);
             if(mode == FrcMode.AUTONOMOUS){

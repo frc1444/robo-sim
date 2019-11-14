@@ -1,18 +1,15 @@
 package com.first1444.sim.api.frc
 
-abstract class BasicRobotRunnable(
+import com.first1444.sim.api.RobotRunnable
+
+open class BasicRobotRunnable(
+        private val basicRobot: BasicRobot,
         private val modeGetter: () -> FrcMode
-) : Runnable {
+) : RobotRunnable {
 
     private var lastMode: FrcMode? = null
 
-    constructor(driverStation: FrcDriverStation) : this(driverStation::mode)
-
-    /**
-     * @param mode The current [FrcMode]
-     * @param previousMode The last [FrcMode]. May be the same as [mode]
-     */
-    protected abstract fun update(mode: FrcMode, previousMode: FrcMode?)
+    constructor(basicRobot: BasicRobot, driverStation: FrcDriverStation) : this(basicRobot, driverStation::mode)
 
     override fun run() {
         val lastMode = this.lastMode
@@ -20,6 +17,10 @@ abstract class BasicRobotRunnable(
         if(currentMode != lastMode){
             this.lastMode = currentMode
         }
-        update(currentMode, lastMode)
+        basicRobot.update(currentMode, lastMode)
+    }
+    @Throws(Exception::class)
+    override fun close() {
+        basicRobot.close()
     }
 }
