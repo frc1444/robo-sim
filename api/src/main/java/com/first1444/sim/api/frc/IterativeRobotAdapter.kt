@@ -1,6 +1,10 @@
 package com.first1444.sim.api.frc
 
 open class IterativeRobotAdapter : IterativeRobot {
+    @Throws(Exception::class)
+    override fun close() {
+    }
+
     override fun robotPeriodic() {
     }
     override fun disabledInit() {
