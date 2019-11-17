@@ -1,10 +1,11 @@
 package com.first1444.sim.api.selections
 
-class HighestValueSelector<T>(
-        private val valueProvider: ValueProvider<T>
+class HighestValueSelector<T>
+@JvmOverloads constructor(
+        private val valueProvider: ValueProvider<T>,
+        private val valueAllower: ValueAllower<T> = ValueAllower.createAlwaysAllow()
 ) : Selector<T> {
-    override fun select(collection: Collection<T>): T {
-        require(collection.isNotEmpty()) { "collection cannot be empty" }
+    override fun select(collection: Collection<T>): T? {
 
         var bestThing: T? = null
         var bestValue: Double? = null
@@ -15,7 +16,12 @@ class HighestValueSelector<T>(
                 bestValue = value
             }
         }
-        return bestThing ?: error("bestThing shouldn't be null! collection: $collection")
+        bestThing ?: return null
+        bestValue!!
+        if(!valueAllower.isAllowed(bestThing, bestValue)){
+            return null
+        }
+        return bestThing
     }
 
 }

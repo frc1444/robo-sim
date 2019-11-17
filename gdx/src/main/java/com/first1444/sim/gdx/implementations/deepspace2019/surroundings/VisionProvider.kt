@@ -29,7 +29,7 @@ class VisionProvider(
                 r.add(Surrounding(
                         transformRadians(offset, angle).rotateRadians(-transform.rotationRadians),
                         clock.timeSeconds,
-                        Surrounding3DExtra(vision.identifier.location.bayType.visionType.centerHeight, 0.0, 0.0)
+                        Surrounding3DExtra.fromRadians(vision.identifier.location.bayType.visionType.centerHeight, 0.0, 0.0)
                 ))
             }
             return r
