@@ -12,7 +12,7 @@ interface SwerveModule : Runnable {
     val eventHandler: EventHandler
 
     /**
-     * @param speed A number in range `[-1..1]` representing the speed as a percentage
+     * @param speed A number in range [-1..1] representing the speed as a percentage
      */
     fun setTargetSpeed(speed: Double)
 

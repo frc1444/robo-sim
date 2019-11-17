@@ -87,7 +87,6 @@ subprojects {
         publications {
             mavenAar(MavenPublication) {
                 afterEvaluate {
-                    artifactId = jar.archiveBaseName
                     artifact packageSources
                     artifact javadocJar
                 }
