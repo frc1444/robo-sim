@@ -71,39 +71,36 @@ subprojects {
 //        classifier = 'javadoc'
 //    }
     task packageSources(type: Jar) {
-        def classifier = "${jar.archiveBaseName.get()}-sources"
-        println(classifier)
-        archiveClassifier.set(classifier)
+        archiveClassifier.set("sources")
         from sourceSets.main.allSource
+    }
+    task javadocJar(type: Jar, dependsOn: dokka) {
+        from dokka.outputDirectory
+        archiveClassifier.set("javadoc")
     }
     artifacts {
 //        archives packageJavadoc
+        archives javadocJar
         archives packageSources
     }
     publishing {
         publications {
             mavenAar(MavenPublication) {
                 afterEvaluate {
+                    artifactId = jar.archiveBaseName
                     artifact packageSources
+                    artifact javadocJar
                 }
             }
         }
     }
 }
-task javadocJar(type: Jar, dependsOn: dokka) {
-    from dokka.outputDirectory
-    archiveClassifier.set("javadoc")
-}
-artifacts {
-    archives javadocJar
-}
 publishing {
     publications {
         mavenAar(MavenPublication) {
-//            groupId "com.first1444.sim"
             from components.java
             afterEvaluate {
-                artifact javadocJar
+//                artifact dokkaJar
             }
         }
     }
