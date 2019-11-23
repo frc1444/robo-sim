@@ -1,15 +1,16 @@
 package com.first1444.sim.gdx.init
 
 import com.first1444.sim.api.frc.FrcDriverStation
+import com.first1444.sim.gdx.CloseableUpdateable
 import com.first1444.sim.gdx.Updateable
 
 interface RobotCreator {
-    fun create(data: Data, updateableData: UpdateableCreator.Data): Updateable
+    fun create(data: Data, updateableData: UpdateableCreator.Data): CloseableUpdateable
 
     companion object {
-        operator fun invoke(lambda: (data: Data, updateableData: UpdateableCreator.Data) -> Updateable): RobotCreator {
+        operator fun invoke(lambda: (data: Data, updateableData: UpdateableCreator.Data) -> CloseableUpdateable): RobotCreator {
             return object : RobotCreator {
-                override fun create(data: Data, updateableData: UpdateableCreator.Data): Updateable {
+                override fun create(data: Data, updateableData: UpdateableCreator.Data): CloseableUpdateable {
                     return lambda(data, updateableData)
                 }
             }

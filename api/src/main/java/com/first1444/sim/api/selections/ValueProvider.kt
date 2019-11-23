@@ -1,6 +1,6 @@
 package com.first1444.sim.api.selections
 
-interface ValueProvider<T> {
+interface ValueProvider<in T> {
     fun getValue(thing: T): Double
     companion object {
         @JvmSynthetic

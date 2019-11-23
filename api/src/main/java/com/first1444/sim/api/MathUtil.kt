@@ -61,18 +61,18 @@ fun mod(a: Long, b: Long): Long {
  * @return A positive or negative number that if added to b is the smallest change to get to a.
  */
 fun minChange(a: Double, b: Double, wrap: Double): Double {
-    val aa = mod(a, wrap)
-    val bb = mod(b, wrap)
-
-    var change = aa - bb
-    if (change.absoluteValue > wrap / 2.0f) {
-        if (change < 0) {
-            change += wrap
+    return halfMod(a - b, wrap)
+}
+fun halfMod(a: Double, wrap: Double): Double {
+    var aa = mod(a, wrap)
+    if (aa.absoluteValue > wrap / 2.0f) {
+        if (aa < 0) {
+            aa += wrap
         } else {
-            change -= wrap
+            aa -= wrap
         }
     }
-    return change
+    return aa
 }
 
 /**

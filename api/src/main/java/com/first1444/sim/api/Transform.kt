@@ -71,8 +71,14 @@ private constructor(
     operator fun plus(vector: Vector2): Transform {
         return Transform(position + vector, rotationRadians)
     }
+    fun plus(x: Double, y: Double): Transform{
+        return Transform(position.plus(x, y), rotationRadians)
+    }
     operator fun minus(vector: Vector2): Transform {
         return Transform(position - vector, rotationRadians)
+    }
+    fun minus(x: Double, y: Double): Transform {
+        return Transform(position.minus(x, y), rotationRadians)
     }
 
     /**

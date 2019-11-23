@@ -1,5 +1,6 @@
 package com.first1444.sim.gdx
 
+import com.first1444.sim.api.RobotRunnable
 import com.first1444.sim.api.RunnableCreator
 
 class RobotUpdateable
@@ -8,8 +9,9 @@ class RobotUpdateable
  */
 (
         private val runnableCreator: RunnableCreator
-) : Updateable {
-    private var runnable: Runnable? = null
+) : CloseableUpdateable {
+
+    private var runnable: RobotRunnable? = null
     init {
         runnableCreator.prematureInit()
     }
@@ -20,6 +22,10 @@ class RobotUpdateable
             this.runnable = runnable
         }
         runnable.run()
+    }
+    @Throws(Exception::class)
+    override fun close() {
+        runnable?.close()
     }
 
 }

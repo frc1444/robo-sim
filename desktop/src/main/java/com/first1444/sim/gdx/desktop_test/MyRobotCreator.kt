@@ -29,7 +29,7 @@ import me.retrodaredevil.controller.options.OptionValues
 import java.lang.Math.toRadians
 
 object MyRobotCreator : RobotCreator {
-    override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): Updateable {
+    override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): CloseableUpdateable {
         val startingPosition = Vector2(0.0, -6.6)
         val startingAngleRadians = toRadians(90.0)
 
@@ -117,8 +117,8 @@ object MyRobotCreator : RobotCreator {
                 }
             ))
         }
-        return UpdateableMultiplexer(listOf(
-                entity,
+        return CloseableUpdateableMultiplexer(listOf(
+                CloseableUpdateable.fromUpdateable(entity),
                 RobotUpdateable(robotCreator)
         ))
     }

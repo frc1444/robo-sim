@@ -21,6 +21,7 @@ data class Vector2(
         private val FORMAT = DecimalFormat(" #0.0000000000000000;-#0.0000000000000000")
     }
     val magnitude: Double by lazy { hypot(x, y) }
+    val magnitude2: Double = x * x + y * y
     val angleRadians: Double by lazy { atan2(y, x) }
     val angleDegrees: Double
         get() = toDegrees(angleRadians)
