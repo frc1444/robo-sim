@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.first1444.sim.gdx.CloseableUpdateable
 import com.first1444.sim.gdx.SimpleScreen
 import com.first1444.sim.gdx.StageActUpdateable
 import com.first1444.sim.gdx.render.RenderableMultiplexer
@@ -37,7 +38,7 @@ class SelectionScreenCreator(
         table.add(Label("Made by Joshua Shannon from Lightning 1444", uiSkin))
 
         stage.addActor(table)
-        return SimpleScreen(StageActUpdateable(stage, true), RenderableMultiplexer(listOf(ResetRenderable(Color.BLACK), StageRenderable(stage))))
+        return SimpleScreen(CloseableUpdateable.fromUpdateable(StageActUpdateable(stage, true)), RenderableMultiplexer(listOf(ResetRenderable(Color.BLACK), StageRenderable(stage))))
     }
 
 }

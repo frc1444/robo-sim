@@ -1,6 +1,6 @@
 package com.first1444.sim.gdx.desktop_test
 
-import com.badlogic.gdx.Game
+import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.first1444.sim.gdx.init.*
@@ -27,7 +27,7 @@ private fun createSelectionCreator(uiSkin: Skin, changer: ScreenChanger): Screen
     )
 }
 
-fun createScreen(): Game {
+fun createScreen(): ApplicationListener {
     return SimpleGame { changer ->
         val uiSkin = Skin(Gdx.files.classpath("skins/sgx/sgx-ui.json"))
         createSelectionCreator(uiSkin, changer).create(changer)

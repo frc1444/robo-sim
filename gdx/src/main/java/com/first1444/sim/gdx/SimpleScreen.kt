@@ -4,7 +4,7 @@ import com.badlogic.gdx.ScreenAdapter
 
 class SimpleScreen
 @JvmOverloads constructor(
-    private val updateable: Updateable,
+    private val updateable: CloseableUpdateable,
     private val renderable: Renderable,
     private val pauseable: Pauseable = Pauseable.NOTHING
 ) : ScreenAdapter() {
@@ -27,6 +27,8 @@ class SimpleScreen
     }
 
     override fun dispose() {
+        updateable.close()
         renderable.dispose()
+        println("Did dispose!")
     }
 }

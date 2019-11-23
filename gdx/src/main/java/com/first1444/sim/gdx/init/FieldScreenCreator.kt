@@ -30,14 +30,14 @@ class FieldScreenCreator(
         val contentStage = Stage(viewport)
         val uiStage = Stage(UIViewport(640f))
 
-        val additionalUpdateable = updateableCreator.create(UpdateableCreator.Data(uiSkin, clock, uiStage, contentStage, worldManager))
+        val additionalCloseableUpdateable = updateableCreator.create(UpdateableCreator.Data(uiSkin, clock, uiStage, contentStage, worldManager))
 
         return SimpleScreen(
-                UpdateableMultiplexer(listOf(
-                        StageActUpdateable(uiStage, true),
-                        clock,
-                        additionalUpdateable,
-                        worldManager
+                CloseableUpdateableMultiplexer(listOf(
+                        CloseableUpdateable.fromUpdateable(StageActUpdateable(uiStage, true)),
+                        CloseableUpdateable.fromUpdateable(clock),
+                        additionalCloseableUpdateable,
+                        CloseableUpdateable.fromUpdateable(worldManager)
                 )),
                 RenderableMultiplexer(listOf(
                         ResetRenderable(Color.BLACK),

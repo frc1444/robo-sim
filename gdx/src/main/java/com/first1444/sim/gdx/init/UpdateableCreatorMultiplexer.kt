@@ -1,16 +1,18 @@
 package com.first1444.sim.gdx.init
 
+import com.first1444.sim.gdx.CloseableUpdateable
+import com.first1444.sim.gdx.CloseableUpdateableMultiplexer
 import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.UpdateableMultiplexer
 
 class UpdateableCreatorMultiplexer(
         private val updateableCreatorList: List<UpdateableCreator>
 ) : UpdateableCreator {
-    override fun create(data: UpdateableCreator.Data): Updateable {
-        val list = ArrayList<Updateable>()
+    override fun create(data: UpdateableCreator.Data): CloseableUpdateable {
+        val list = ArrayList<CloseableUpdateable>()
         for(creator in updateableCreatorList){
             list.add(creator.create(data))
         }
-        return UpdateableMultiplexer(list)
+        return CloseableUpdateableMultiplexer(list)
     }
 }

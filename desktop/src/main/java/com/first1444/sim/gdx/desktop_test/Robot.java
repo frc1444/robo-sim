@@ -77,6 +77,7 @@ public class Robot implements BasicRobot {
 
     @Override
     public void close() throws Exception {
+        System.out.println("It closed!");
     }
 
     @Override
@@ -116,8 +117,8 @@ public class Robot implements BasicRobot {
             // If you're doing this on a robot, you might also want to check the raw error.
             distanceAccumulator.setPosition(best.getTransform().getPosition().minus(transform.getPosition().rotateRadians(orientation.getOrientationRadians())));
         }
-        System.out.println("Position: " + distanceAccumulator.getPosition());
-        System.out.println("Surroundings: " + surroundingProvider.getSurroundings());
+//        System.out.println("Position: " + distanceAccumulator.getPosition());
+//        System.out.println("Surroundings: " + surroundingProvider.getSurroundings());
     }
     private void updateSwerve(){
         JoystickPart leftJoy = controller.getLeftJoy();

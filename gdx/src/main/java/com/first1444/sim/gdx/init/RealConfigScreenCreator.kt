@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.first1444.sim.api.frc.Alliance
 import com.first1444.sim.api.frc.DriverStationLocation
 import com.first1444.sim.api.frc.sim.MutableFrcDriverStation
+import com.first1444.sim.gdx.CloseableUpdateable
 import com.first1444.sim.gdx.SimpleScreen
 import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.clickUpListener
@@ -43,10 +44,10 @@ class RealConfigScreenCreator(
                 finishListener.finished(changer, RealConfig(driverStation.driverStationLocation, driverStation.alliance ?: Alliance.RED, driverStation.gameSpecificMessage))
             })
         })
-        return SimpleScreen(Updateable {
+        return SimpleScreen(CloseableUpdateable.fromUpdateable(Updateable {
             stage.act(it)
             Gdx.input.inputProcessor = stage
-        }, RenderableMultiplexer(listOf(
+        }), RenderableMultiplexer(listOf(
                 ResetRenderable(Color.BLACK),
                 StageRenderable(stage)
         )))
