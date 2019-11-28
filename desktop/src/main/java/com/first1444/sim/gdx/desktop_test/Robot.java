@@ -27,6 +27,8 @@ import com.first1444.sim.api.scheduler.match.MatchTime;
 import com.first1444.sim.api.sensors.DefaultMutableOrientation;
 import com.first1444.sim.api.sensors.MutableOrientation;
 import com.first1444.sim.api.sensors.Orientation;
+import com.first1444.sim.api.sound.Sound;
+import com.first1444.sim.api.sound.SoundCreator;
 import com.first1444.sim.api.surroundings.Surrounding;
 import com.first1444.sim.api.surroundings.SurroundingProvider;
 import me.retrodaredevil.controller.ControlConfig;
@@ -49,6 +51,10 @@ public class Robot implements BasicRobot {
     private final ControlConfig controlConfig;
     private final MutableDistanceAccumulator distanceAccumulator;
 
+    private final Sound soundMatchStart;
+    private final Sound soundTeleopStart;
+    private final Sound soundTeleopFiveSecondsLeft;
+
     public Robot(
             FrcDriverStation driverStation,
             Clock clock,
@@ -56,7 +62,8 @@ public class Robot implements BasicRobot {
             FourWheelSwerveDriveData swerveDriveData,
             Orientation orientation,
             StandardControllerInput controller,
-            SurroundingProvider surroundingProvider) {
+            SurroundingProvider surroundingProvider,
+            SoundCreator soundCreator) {
         this.driverStation = driverStation;
         this.clock = clock;
         this.shuffleboard = shuffleboard;
@@ -73,6 +80,10 @@ public class Robot implements BasicRobot {
         distanceAccumulator.setPosition(new Vector2(0, -6.6));
 
         shuffleboard.get("dash").add("time", new SendableComponent<>(new ClockSendable(clock)));
+
+        soundMatchStart = soundCreator.create("match_start.wav");
+        soundTeleopStart = soundCreator.create("teleop_start.wav");
+        soundTeleopFiveSecondsLeft = soundCreator.create("warning.wav");
     }
 
     @Override
@@ -85,9 +96,13 @@ public class Robot implements BasicRobot {
         if(previousMode != mode){
             System.out.println("New mode: " + mode);
             if(mode == FrcMode.AUTONOMOUS){
+                soundMatchStart.play();
+                scheduler.schedule(new MatchTime(0.0, MatchTime.Mode.TELEOP, MatchTime.Type.AFTER_START), soundTeleopStart::play);
+                scheduler.schedule(new MatchTime(5.0, MatchTime.Mode.TELEOP, MatchTime.Type.FROM_END), soundTeleopFiveSecondsLeft::play);
+
                 scheduler.schedule(new MatchTime(1.0, MatchTime.Mode.AUTONOMOUS, MatchTime.Type.AFTER_START), () -> {
                     System.out.println("1 second after auto beginning!");
-//                    shuffleboard.get("dash").remove("time");
+                    shuffleboard.get("dash").remove("time");
                 });
                 scheduler.schedule(new MatchTime(1.0, MatchTime.Mode.AUTONOMOUS, MatchTime.Type.FROM_END), () -> {
                     System.out.println("1 second from auto being over!");
