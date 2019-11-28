@@ -1,6 +1,12 @@
 package com.first1444.sim.gdx.desktop_test;
 
+import com.first1444.dashboard.ActiveComponent;
+import com.first1444.dashboard.BasicDashboard;
+import com.first1444.dashboard.advanced.Sendable;
+import com.first1444.dashboard.shuffleboard.SendableComponent;
+import com.first1444.dashboard.shuffleboard.Shuffleboard;
 import com.first1444.sim.api.Clock;
+import com.first1444.sim.api.ClockSendable;
 import com.first1444.sim.api.Transform;
 import com.first1444.sim.api.Vector2;
 import com.first1444.sim.api.distance.DeltaDistanceAccumulator;
@@ -23,9 +29,6 @@ import com.first1444.sim.api.sensors.MutableOrientation;
 import com.first1444.sim.api.sensors.Orientation;
 import com.first1444.sim.api.surroundings.Surrounding;
 import com.first1444.sim.api.surroundings.SurroundingProvider;
-import edu.wpi.first.wpilibj.SendableBase;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import me.retrodaredevil.controller.ControlConfig;
 import me.retrodaredevil.controller.MutableControlConfig;
 import me.retrodaredevil.controller.input.JoystickPart;
@@ -36,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 public class Robot implements BasicRobot {
     private final FrcDriverStation driverStation;
     private final Clock clock;
+    private final Shuffleboard shuffleboard;
     private final SwerveDrive swerveDrive;
     private final MutableOrientation orientation;
     private final StandardControllerInput controller;
@@ -48,12 +52,14 @@ public class Robot implements BasicRobot {
     public Robot(
             FrcDriverStation driverStation,
             Clock clock,
+            Shuffleboard shuffleboard,
             FourWheelSwerveDriveData swerveDriveData,
             Orientation orientation,
             StandardControllerInput controller,
             SurroundingProvider surroundingProvider) {
         this.driverStation = driverStation;
         this.clock = clock;
+        this.shuffleboard = shuffleboard;
         this.swerveDrive = new FourWheelSwerveDrive(swerveDriveData);
         this.orientation = new DefaultMutableOrientation(orientation);
         this.controller = controller;
@@ -66,13 +72,7 @@ public class Robot implements BasicRobot {
         distanceAccumulator = new DeltaDistanceAccumulator(new OrientationDeltaDistanceCalculator(new SwerveDeltaDistanceCalculator(swerveDriveData), orientation));
         distanceAccumulator.setPosition(new Vector2(0, -6.6));
 
-        Shuffleboard.getTab("dash").add("name", new SendableBase() {
-            @Override
-            public void initSendable(SendableBuilder builder) {
-                builder.addDoubleProperty("time", clock::getTimeSeconds, null);
-            }
-        });
-        Shuffleboard.getTab("dash").add("hello", "hello");
+        shuffleboard.get("dash").add("time", new SendableComponent<>(new ClockSendable(clock)));
     }
 
     @Override
@@ -87,6 +87,7 @@ public class Robot implements BasicRobot {
             if(mode == FrcMode.AUTONOMOUS){
                 scheduler.schedule(new MatchTime(1.0, MatchTime.Mode.AUTONOMOUS, MatchTime.Type.AFTER_START), () -> {
                     System.out.println("1 second after auto beginning!");
+//                    shuffleboard.get("dash").remove("time");
                 });
                 scheduler.schedule(new MatchTime(1.0, MatchTime.Mode.AUTONOMOUS, MatchTime.Type.FROM_END), () -> {
                     System.out.println("1 second from auto being over!");

@@ -6,6 +6,9 @@ import com.badlogic.gdx.physics.box2d.EdgeShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef
+import com.first1444.dashboard.shuffleboard.Shuffleboard
+import com.first1444.dashboard.shuffleboard.implementations.DefaultShuffleboard
+import com.first1444.dashboard.wpi.NetworkTableInstanceBasicDashboard
 import com.first1444.sim.api.*
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
@@ -19,8 +22,6 @@ import com.first1444.sim.gdx.init.RobotCreator
 import com.first1444.sim.gdx.init.UpdateableCreator
 import com.first1444.sim.gdx.velocity.AccelerateSetPointHandler
 import edu.wpi.first.networktables.NetworkTableInstance
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab
 import me.retrodaredevil.controller.gdx.GdxControllerPartCreator
 import me.retrodaredevil.controller.gdx.IndexedControllerProvider
 import me.retrodaredevil.controller.implementations.BaseStandardControllerInput
@@ -106,14 +107,23 @@ object MyRobotCreator : RobotCreator {
         val creator = GdxControllerPartCreator(provider, true)
         val joystick = BaseStandardControllerInput(DefaultStandardControllerInputCreator(), creator, OptionValues.createImmutableBooleanOptionValue(true), OptionValues.createImmutableBooleanOptionValue(false))
         val robotCreator = RunnableCreator.wrap {
-            NetworkTableInstance.getDefault().startServer()
+            val networkTable = NetworkTableInstance.getDefault()
+            networkTable.startServer()
+            val rootDashboard = NetworkTableInstanceBasicDashboard(networkTable)
+            val shuffleboard = DefaultShuffleboard(rootDashboard)
             RobotRunnableMultiplexer(listOf(
                 BasicRobotRunnable(
-                    Robot(data.driverStation, updateableData.clock, swerveDriveData, EntityOrientation(entity), joystick, VisionProvider(entity, 2.0, updateableData.clock)),
+                    Robot(data.driverStation, updateableData.clock, shuffleboard, swerveDriveData, EntityOrientation(entity), joystick, VisionProvider(entity, 2.0, updateableData.clock)),
                     data.driverStation
                 ),
-                RobotRunnable.wrap {
-                    Shuffleboard.update()
+                object : RobotRunnable {
+                    override fun run() {
+                        shuffleboard.update()
+                    }
+                    override fun close() {
+                        shuffleboard.onRemove()
+                    }
+
                 }
             ))
         }

@@ -14,6 +14,8 @@ dependencies {
 
     implementation "com.github.retrodaredevil.abstract-controller-lib:api:v2.2.5"
     implementation "com.github.retrodaredevil.abstract-controller-lib:gdx:v2.2.5"
+    implementation "com.github.frc1444.abstract-dashboard:core:$abstractDashboardVersion"
+    implementation "com.github.frc1444.abstract-dashboard:wpi:$abstractDashboardVersion"
 
     implementation "edu.wpi.first.ntcore:ntcore-java:$wpiLibVersion"
     implementation "edu.wpi.first.ntcore:ntcore-jni:$wpiLibVersion"

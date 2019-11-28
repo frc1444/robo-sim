@@ -8,12 +8,12 @@ dependencies {
 //    api "edu.wpi.first.wpilibj:wpilibj-java:$wpiLibVersion"
 
     api "edu.wpi.first.ntcore:ntcore-java:$wpiLibVersion"
-    api "edu.wpi.first.ntcore:ntcore-jni:$wpiLibVersion"
-    api "edu.wpi.first.ntcore:ntcore-jni:$wpiLibVersion:linuxx86-64"
+    implementation "edu.wpi.first.ntcore:ntcore-jni:$wpiLibVersion"
+//    api "edu.wpi.first.ntcore:ntcore-jni:$wpiLibVersion:linuxx86-64"
     api "edu.wpi.first.wpilibj:wpilibj-java:$wpiLibVersion"
     api "edu.wpi.first.wpiutil:wpiutil-java:$wpiLibVersion"
     api "edu.wpi.first.cscore:cscore-java:$wpiLibVersion"
     api "edu.wpi.first.hal:hal-java:$wpiLibVersion"
-    api "edu.wpi.first.hal:hal-jni:$wpiLibVersion"
-    api "edu.wpi.first.hal:hal-jni:$wpiLibVersion:linuxx86-64"
+    implementation "edu.wpi.first.hal:hal-jni:$wpiLibVersion"
+//    api "edu.wpi.first.hal:hal-jni:$wpiLibVersion:linuxx86-64"
 }
