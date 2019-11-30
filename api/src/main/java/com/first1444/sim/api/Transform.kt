@@ -1,38 +1,24 @@
 package com.first1444.sim.api
 
-import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
-import kotlin.math.cos
-import kotlin.math.sin
 
 class Transform
 private constructor(
         val position: Vector2,
-        rotationRadians: Double
+        val rotation: Rotation
 ) {
-    val rotationRadians: Double
-    val rotationDegrees: Double
-
-    init {
-        var angle = mod(rotationRadians, Math.PI * 2)
-        if(angle == Math.PI){
-            angle = -Math.PI
-        } else if (angle > Math.PI){ // Angle is in range [-pi/2..pi/2)
-            angle -= Math.PI * 2
-        }
-        this.rotationRadians = angle
-        this.rotationDegrees = toDegrees(angle)
-    }
+    val rotationRadians: Double get() = rotation.radians
+    val rotationDegrees: Double get() = rotation.degrees
 
     companion object {
         @JvmField
-        val ZERO = Transform(Vector2.ZERO, 0.0)
+        val ZERO = Transform(Vector2.ZERO, Rotation.ZERO)
 
         /**
          * Creates a [Transform] using [rotationRadians] as the rotation
          * @return A new transform with position and rotationRadians
          */
-        @JvmStatic fun transformRadians(position: Vector2, rotationRadians: Double): Transform = Transform(position, rotationRadians)
+        @JvmStatic fun transformRadians(position: Vector2, rotationRadians: Double): Transform = Transform(position, Rotation.rotationRadians(rotationRadians))
         /**
          * Creates a [Transform] using [rotationRadians] as the rotation
          * @return A new transform with x and y position and rotationRadians
@@ -66,19 +52,19 @@ private constructor(
     }
 
     operator fun unaryMinus(): Transform {
-        return Transform(-position, Math.PI + rotationRadians)
+        return Transform(-position, rotation.plusRadians(Math.PI))
     }
     operator fun plus(vector: Vector2): Transform {
-        return Transform(position + vector, rotationRadians)
+        return Transform(position + vector, rotation)
     }
     fun plus(x: Double, y: Double): Transform{
-        return Transform(position.plus(x, y), rotationRadians)
+        return Transform(position.plus(x, y), rotation)
     }
     operator fun minus(vector: Vector2): Transform {
-        return Transform(position - vector, rotationRadians)
+        return Transform(position - vector, rotation)
     }
     fun minus(x: Double, y: Double): Transform {
-        return Transform(position.minus(x, y), rotationRadians)
+        return Transform(position.minus(x, y), rotation)
     }
 
     /**
@@ -89,15 +75,13 @@ private constructor(
      */
     val reversed: Transform
         get() {
-            val rotationRadians = -rotationRadians
-            val sin = sin(rotationRadians)
-            val cos = cos(rotationRadians)
+            val rotation = -rotation
             val x = this.x
             val y = this.y
             return Transform(Vector2(
-                    -(x * cos - y * sin),
-                    -(x * sin + y * cos)
-            ), rotationRadians)
+                    -(x * rotation.cos - y * rotation.sin),
+                    -(x * rotation.sin + y * rotation.cos)
+            ), rotation)
         }
 
 
@@ -113,18 +97,17 @@ private constructor(
     }
 
     fun epsilonEquals(other: Transform): Boolean {
-        return position.epsilonEquals(other.position) && rotationRadians == other.rotationRadians
+        return position.epsilonEquals(other.position) && rotation == rotation
     }
 
     override fun hashCode(): Int {
         var result = position.hashCode()
-        result = 31 * result + rotationRadians.hashCode()
-        result = 31 * result + rotationDegrees.hashCode()
+        result = 31 * result + rotation.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "Transform(position=$position, rotationRadians=$rotationRadians, rotationDegrees=$rotationDegrees)"
+        return "Transform(position=$position, rotation=$rotation)"
     }
 
 }

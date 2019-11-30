@@ -93,13 +93,19 @@ data class Vector2(
     fun div(x: Double, y: Double): Vector2 {
         return Vector2(this.x / x, this.y / y)
     }
-    @JvmOverloads fun rotateRadians(radians: Double, origin: Vector2 = ZERO): Vector2 {
-        val cos = cos(radians)
-        val sin = sin(radians)
+    @JvmOverloads fun rotate(cos: Double, sin: Double, origin: Vector2 = ZERO): Vector2 {
         return Vector2(
                 origin.x + cos * (x - origin.x) - sin * (y - origin.y),
                 origin.y + sin * (x - origin.x) + cos * (y - origin.y)
         )
+    }
+    @JvmOverloads fun rotate(rotation: Rotation, origin: Vector2 = ZERO): Vector2 {
+        return rotate(rotation.cos, rotation.sin, origin)
+    }
+    @JvmOverloads fun rotateRadians(radians: Double, origin: Vector2 = ZERO): Vector2 {
+        val cos = cos(radians)
+        val sin = sin(radians)
+        return rotate(cos, sin, origin)
     }
 
     /**

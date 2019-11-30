@@ -63,14 +63,15 @@ fun mod(a: Long, b: Long): Long {
 fun minChange(a: Double, b: Double, wrap: Double): Double {
     return halfMod(a - b, wrap)
 }
+
+/**
+ * @return a value in range `[-wrap / 2, wrap)` where `mod(a, wrap) == mod(value, wrap)`
+ */
 fun halfMod(a: Double, wrap: Double): Double {
     var aa = mod(a, wrap)
-    if (aa.absoluteValue > wrap / 2.0f) {
-        if (aa < 0) {
-            aa += wrap
-        } else {
-            aa -= wrap
-        }
+    val halfWrap = wrap / 2.0
+    if(aa >= halfWrap){
+        aa -= wrap
     }
     return aa
 }
