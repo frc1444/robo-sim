@@ -7,7 +7,7 @@ import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.sin
 
-class Rotation
+class Rotation2
 private constructor(
         radians: Double,
         val cos: Double,
@@ -18,50 +18,61 @@ private constructor(
 
     companion object {
         @JvmField
-        val ZERO = Rotation(0.0, 1.0, 0.0)
+        val ZERO = Rotation2(0.0, 1.0, 0.0)
+        /** pi radians or 180 degrees*/
+        @JvmField
+        val DEG_180 = Rotation2(Math.PI, -1.0, 0.0)
+
+        @JvmField
+        val DEG_90 = Rotation2(Math.PI / 2.0, 0.0, 1.0)
 
         @JvmStatic
-        fun rotationRadians(radians: Double) = Rotation(radians, cos(radians), sin(radians))
+        fun fromRadians(radians: Double) = Rotation2(radians, cos(radians), sin(radians))
         @JvmStatic
-        fun rotationDegrees(degrees: Double) = rotationRadians(toRadians(degrees))
+        fun fromDegrees(degrees: Double) = fromRadians(toRadians(degrees))
 
         @JvmStatic
-        fun fromVector(x: Double, y: Double): Rotation {
+        fun fromVector(vector: Vector2): Rotation2 = fromVector(vector.x, vector.y)
+        @JvmStatic
+        fun fromVector(x: Double, y: Double): Rotation2 {
             if(y == 0.0){
+                if(x < 0){
+                    return DEG_180
+                }
                 return ZERO
             }
             val angle = atan2(y, x)
             val magnitude = hypot(x, y)
             if(magnitude <= 1e-6){
-                return Rotation(angle, 1.0, 0.0)
+                return ZERO
             }
-            return Rotation(angle, x / magnitude, y / magnitude)
+            return Rotation2(angle, x / magnitude, y / magnitude)
         }
     }
 
-    operator fun unaryMinus() = rotationRadians(-radians)
+    operator fun unaryMinus() = fromRadians(-radians)
     operator fun unaryPlus() = this
-    operator fun plus(other: Rotation): Rotation {
+    operator fun plus(other: Rotation2): Rotation2 {
         val newCos = cos * other.cos - sin * other.sin
         val newSin = cos * other.sin + sin * other.cos
-        return Rotation(atan2(newSin, newCos), newCos, newSin)
+        return Rotation2(atan2(newSin, newCos), newCos, newSin)
     }
-    operator fun minus(other: Rotation): Rotation {
+    operator fun minus(other: Rotation2): Rotation2 {
         val newCos = cos * -other.cos + sin * other.sin
         val newSin = cos * -other.sin - sin * other.cos
-        return Rotation(atan2(newSin, newCos), newCos, newSin)
+        return Rotation2(atan2(newSin, newCos), newCos, newSin)
     }
 
-    fun plusRadians(otherRadians: Double) = rotationRadians(radians + otherRadians)
-    fun plusDegrees(otherDegrees: Double) = rotationDegrees(degrees + otherDegrees)
-    fun minusRadians(otherRadians: Double) = rotationRadians(radians - otherRadians)
-    fun minusDegrees(otherDegrees: Double) = rotationDegrees(degrees - otherDegrees)
+    fun plusRadians(otherRadians: Double) = fromRadians(radians + otherRadians)
+    fun plusDegrees(otherDegrees: Double) = fromDegrees(degrees + otherDegrees)
+    fun minusRadians(otherRadians: Double) = fromRadians(radians - otherRadians)
+    fun minusDegrees(otherDegrees: Double) = fromDegrees(degrees - otherDegrees)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Rotation
+        other as Rotation2
 
         if (radians != other.radians) return false
 

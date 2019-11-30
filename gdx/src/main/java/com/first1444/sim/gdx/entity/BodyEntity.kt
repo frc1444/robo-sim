@@ -3,8 +3,8 @@ package com.first1444.sim.gdx.entity
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
-import com.first1444.sim.api.Transform
-import com.first1444.sim.api.Transform.Companion.transformRadians
+import com.first1444.sim.api.Transform2
+import com.first1444.sim.api.Transform2.Companion.fromRadians
 
 interface BodyEntity : Entity {
     val body: Body
@@ -26,8 +26,8 @@ interface BodyEntity : Entity {
             rotationRadians = value * MathUtils.degreesToRadians
         }
 
-    override var simTransform: Transform
-        get() = transformRadians(simVector, body.angle.toDouble())
+    override var simTransform: Transform2
+        get() = fromRadians(simVector, body.angle.toDouble())
         set(value) {
             setTransformRadians(value.position, value.rotationRadians.toFloat())
         }

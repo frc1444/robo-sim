@@ -1,12 +1,11 @@
 package com.first1444.sim.api
 
-import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
 import java.text.DecimalFormat
 import kotlin.math.*
 
 
-data class Vector2(
+class Vector2(
         val x: Double,
         val y: Double
 ) {
@@ -22,20 +21,16 @@ data class Vector2(
     }
     val magnitude: Double by lazy { hypot(x, y) }
     val magnitude2: Double = x * x + y * y
-    val angleRadians: Double by lazy { atan2(y, x) }
-    val angleDegrees: Double
-        get() = toDegrees(angleRadians)
+    val angle: Rotation2 by lazy { Rotation2.fromVector(this) }
+    val angleRadians: Double get() = angle.radians
+    val angleDegrees: Double get() = angle.degrees
 
     /**
      * @return The normalized [Vector2] or a [Vector2] with x=0 and y=0 if [magnitude] is 0
      */
     val normalized: Vector2
         get() {
-            val magnitude = this.magnitude
-            if(magnitude == 0.0){
-                return ZERO
-            }
-            return Vector2(x / magnitude, y / magnitude)
+            return Vector2(angle.cos, angle.sin)
         }
 
     @JvmOverloads
@@ -99,7 +94,7 @@ data class Vector2(
                 origin.y + sin * (x - origin.x) + cos * (y - origin.y)
         )
     }
-    @JvmOverloads fun rotate(rotation: Rotation, origin: Vector2 = ZERO): Vector2 {
+    @JvmOverloads fun rotate(rotation: Rotation2, origin: Vector2 = ZERO): Vector2 {
         return rotate(rotation.cos, rotation.sin, origin)
     }
     @JvmOverloads fun rotateRadians(radians: Double, origin: Vector2 = ZERO): Vector2 {
@@ -122,4 +117,23 @@ data class Vector2(
     override fun toString(): String {
         return "Vector2(x=${FORMAT.format(x)}, y=${FORMAT.format(y)})"
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Vector2
+
+        if (x != other.x) return false
+        if (y != other.y) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = x.hashCode()
+        result = 31 * result + y.hashCode()
+        return result
+    }
+
 }

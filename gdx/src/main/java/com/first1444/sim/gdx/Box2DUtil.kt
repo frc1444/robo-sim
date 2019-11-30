@@ -1,11 +1,11 @@
 package com.first1444.sim.gdx
 
 import com.badlogic.gdx.physics.box2d.Body
-import com.first1444.sim.api.Transform
+import com.first1444.sim.api.Transform2
 import com.first1444.sim.api.Vector2
 import java.lang.Math.toRadians
 
-var Body.simTransform: Transform
+var Body.simTransform: Transform2
     get() = transform.sim
     set(value){
         setTransform(value.x.toFloat(), value.y.toFloat(), value.rotationRadians.toFloat())

@@ -1,8 +1,7 @@
 package com.first1444.sim.gdx.implementations.deepspace2019.surroundings
 
 import com.first1444.sim.api.Clock
-import com.first1444.sim.api.Transform
-import com.first1444.sim.api.Transform.Companion.transformRadians
+import com.first1444.sim.api.Transform2.Companion.fromRadians
 import com.first1444.sim.api.frc.implementations.deepspace.Field2019
 import com.first1444.sim.api.surroundings.Surrounding
 import com.first1444.sim.api.surroundings.Surrounding3DExtra
@@ -27,7 +26,7 @@ class VisionProvider(
                 val offset = visionTransform.position - transform.position
                 val angle = visionTransform.rotationRadians
                 r.add(Surrounding(
-                        transformRadians(offset, angle).rotateRadians(-transform.rotationRadians),
+                        fromRadians(offset, angle).rotateRadians(-transform.rotationRadians),
                         clock.timeSeconds,
                         Surrounding3DExtra.fromRadians(vision.identifier.location.bayType.visionType.centerHeight, 0.0, 0.0)
                 ))

@@ -1,7 +1,7 @@
 package com.first1444.sim.gdx.entity
 
 import com.badlogic.gdx.math.Vector2
-import com.first1444.sim.api.Transform
+import com.first1444.sim.api.Transform2
 import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.gdx
 import com.first1444.sim.gdx.set
@@ -19,7 +19,7 @@ interface Entity : Updateable {
         set(value){
             position.set(value)
         }
-    var simTransform: Transform
+    var simTransform: Transform2
 
     fun setTransformRadians(position: Vector2, rotationRadians: Float)
     fun setTransformRadians(position: com.first1444.sim.api.Vector2, rotationRadians: Float)
