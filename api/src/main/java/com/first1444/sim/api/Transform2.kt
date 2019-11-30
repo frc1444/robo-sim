@@ -6,6 +6,7 @@ class Transform2(
         val position: Vector2,
         val rotation: Rotation2
 ) {
+    constructor(x: Double, y: Double, rotation: Rotation2) : this(Vector2(x, y), rotation)
     companion object {
         @JvmField
         val ZERO = Transform2(Vector2.ZERO, Rotation2.ZERO)
