@@ -1,5 +1,6 @@
 package com.first1444.sim.api.drivetrain.swerve
 
+import com.first1444.sim.api.Rotation2
 import com.first1444.sim.api.sensors.DefaultMutableOrientation
 import com.first1444.sim.api.sensors.Orientation
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -22,6 +23,7 @@ class OrientationTest {
     private fun createDegrees(valueDegrees: Double): Orientation {
         val valueRadians = toRadians(valueDegrees)
         return object : Orientation {
+            override val orientation: Rotation2 = Rotation2.fromDegrees(valueDegrees)
             override val orientationDegrees: Double
                 get() = valueDegrees
             override val orientationRadians: Double

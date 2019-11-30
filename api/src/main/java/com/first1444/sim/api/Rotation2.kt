@@ -15,6 +15,7 @@ private constructor(
 ) {
     val radians: Double = halfMod(radians, Math.PI * 2)
     val degrees: Double = toDegrees(this.radians)
+    val tan: Double get() = sin / cos
 
     companion object {
         @JvmField
@@ -22,9 +23,13 @@ private constructor(
         /** pi radians or 180 degrees*/
         @JvmField
         val DEG_180 = Rotation2(Math.PI, -1.0, 0.0)
-
         @JvmField
         val DEG_90 = Rotation2(Math.PI / 2.0, 0.0, 1.0)
+        @JvmField
+        val DEG_45 = fromRadians(Math.PI / 4.0)
+        /** 270 degrees or -90 degrees */
+        @JvmField
+        val DEG_270 = Rotation2(-Math.PI / 2.0, 0.0, -1.0)
 
         @JvmStatic
         fun fromRadians(radians: Double) = Rotation2(radians, cos(radians), sin(radians))

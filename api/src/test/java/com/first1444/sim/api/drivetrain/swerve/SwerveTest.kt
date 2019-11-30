@@ -1,5 +1,6 @@
 package com.first1444.sim.api.drivetrain.swerve
 
+import com.first1444.sim.api.Rotation2
 import com.first1444.sim.api.Vector2
 import com.first1444.sim.api.event.EventHandler
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -73,7 +74,9 @@ private class TestSwerveModule(
     override fun setTargetSpeed(speed: Double) {
         assertEquals(expectedSpeed, speed, 0.0001) { "$name got unexpected speed" }
     }
-
+    override fun setTargetAngle(position: Rotation2) {
+        throw AssertionError("Although it is normally valid to call this method, we don't expect anyone to use this while testing")
+    }
     override fun setTargetAngleDegrees(positionDegrees: Double) {
         throw AssertionError("Although it is normally valid to call this method, we don't expect anyone to use this while testing")
     }
@@ -82,6 +85,8 @@ private class TestSwerveModule(
         assertEquals(expectedAngleRadians, positionRadians, 0.0001) { "$name got unexpected target angle" }
     }
 
+    override val currentAngle: Rotation2
+        get() = throw UnsupportedOperationException()
     override val currentAngleDegrees: Double
         get() = throw UnsupportedOperationException()
     override val currentAngleRadians: Double

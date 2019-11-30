@@ -1,5 +1,6 @@
 package com.first1444.sim.api.drivetrain.swerve
 
+import com.first1444.sim.api.Rotation2
 import com.first1444.sim.api.event.EventHandler
 
 interface SwerveModule : Runnable {
@@ -16,9 +17,11 @@ interface SwerveModule : Runnable {
      */
     fun setTargetSpeed(speed: Double)
 
+    fun setTargetAngle(position: Rotation2)
     fun setTargetAngleDegrees(positionDegrees: Double)
     fun setTargetAngleRadians(positionRadians: Double)
 
+    val currentAngle: Rotation2
     val currentAngleDegrees: Double
     val currentAngleRadians: Double
 

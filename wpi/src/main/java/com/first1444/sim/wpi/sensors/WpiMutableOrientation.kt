@@ -1,5 +1,6 @@
 package com.first1444.sim.wpi.sensors
 
+import com.first1444.sim.api.Rotation2
 import com.first1444.sim.api.sensors.MutableOrientation
 import edu.wpi.first.wpilibj.interfaces.Gyro
 import java.lang.Math.toDegrees
@@ -20,6 +21,9 @@ class WpiMutableOrientation @JvmOverloads constructor(
 
     private var offset = 0.0
 
+    override var orientation: Rotation2
+        get() = Rotation2.fromDegrees(orientationDegrees)
+        set(value) { orientationDegrees = value.degrees }
     override var orientationDegrees: Double
         get() = if(isGyroReversed){
             offset - gyro.angle

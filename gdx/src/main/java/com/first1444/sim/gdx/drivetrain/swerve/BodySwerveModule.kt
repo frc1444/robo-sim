@@ -3,6 +3,7 @@ package com.first1444.sim.gdx.drivetrain.swerve
 import com.badlogic.gdx.physics.box2d.Body
 import com.first1444.sim.api.EnabledState
 import com.first1444.sim.api.Clock
+import com.first1444.sim.api.Rotation2
 import com.first1444.sim.api.minChange
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
 import com.first1444.sim.api.event.EventHandler
@@ -71,6 +72,9 @@ class BodySwerveModule(
         this.speed = speed
     }
 
+    override fun setTargetAngle(position: Rotation2) {
+        setTargetAngleRadians(position.radians)
+    }
     override fun setTargetAngleDegrees(positionDegrees: Double) {
         setTargetAngleRadians(Math.toRadians(positionDegrees))
     }
@@ -79,6 +83,8 @@ class BodySwerveModule(
         angle = positionRadians
     }
 
+    override val currentAngle: Rotation2
+        get() = Rotation2.fromRadians(currentAngleRadians)
     override val currentAngleDegrees: Double
         get() = Math.toDegrees(currentAngleRadians)
     override val currentAngleRadians: Double
