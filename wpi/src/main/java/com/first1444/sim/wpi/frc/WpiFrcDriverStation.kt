@@ -28,7 +28,7 @@ class WpiFrcDriverStation(
                     DriverStation.MatchType.Elimination -> MatchType.ELIMINATION
                     DriverStation.MatchType.Qualification -> MatchType.QUALIFICATION
                     DriverStation.MatchType.Practice -> MatchType.PRACTICE
-                    DriverStation.MatchType.None -> null
+                    DriverStation.MatchType.None -> MatchType.NONE
                 },
                 station.matchNumber,
                 station.replayNumber

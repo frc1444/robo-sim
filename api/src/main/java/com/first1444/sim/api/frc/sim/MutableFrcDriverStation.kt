@@ -10,7 +10,7 @@ open class MutableFrcDriverStation : FrcDriverStation {
 
     override var mode: FrcMode = FrcMode.DISABLED
 
-    override var matchInfo: MatchInfo = MatchInfo("", null, 0, 0)
+    override var matchInfo: MatchInfo = MatchInfo("", MatchType.NONE, 0, 0)
     override var gameSpecificMessage: String = ""
 
     override var isDriverStationAttached: Boolean = true

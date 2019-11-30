@@ -3,6 +3,7 @@ package com.first1444.sim.gdx.desktop_test;
 import com.first1444.dashboard.ActiveComponent;
 import com.first1444.dashboard.BasicDashboard;
 import com.first1444.dashboard.advanced.Sendable;
+import com.first1444.dashboard.bundle.DashboardBundle;
 import com.first1444.dashboard.shuffleboard.SendableComponent;
 import com.first1444.dashboard.shuffleboard.Shuffleboard;
 import com.first1444.sim.api.Clock;
@@ -41,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 public class Robot implements BasicRobot {
     private final FrcDriverStation driverStation;
     private final Clock clock;
-    private final Shuffleboard shuffleboard;
+    private final DashboardBundle bundle;
     private final SwerveDrive swerveDrive;
     private final MutableOrientation orientation;
     private final StandardControllerInput controller;
@@ -58,7 +59,7 @@ public class Robot implements BasicRobot {
     public Robot(
             FrcDriverStation driverStation,
             Clock clock,
-            Shuffleboard shuffleboard,
+            DashboardBundle bundle,
             FourWheelSwerveDriveData swerveDriveData,
             Orientation orientation,
             StandardControllerInput controller,
@@ -66,7 +67,7 @@ public class Robot implements BasicRobot {
             SoundCreator soundCreator) {
         this.driverStation = driverStation;
         this.clock = clock;
-        this.shuffleboard = shuffleboard;
+        this.bundle = bundle;
         this.swerveDrive = new FourWheelSwerveDrive(swerveDriveData);
         this.orientation = new DefaultMutableOrientation(orientation);
         this.controller = controller;
@@ -79,7 +80,7 @@ public class Robot implements BasicRobot {
         distanceAccumulator = new DeltaDistanceAccumulator(new OrientationDeltaDistanceCalculator(new SwerveDeltaDistanceCalculator(swerveDriveData), orientation));
         distanceAccumulator.setPosition(new Vector2(0, -6.6));
 
-        shuffleboard.get("dash").add("time", new SendableComponent<>(new ClockSendable(clock)));
+        bundle.getShuffleboard().get("dash").add("time", new SendableComponent<>(new ClockSendable(clock)));
 
         soundMatchStart = soundCreator.create("match_start.wav");
         soundTeleopStart = soundCreator.create("teleop_start.wav");
@@ -102,7 +103,6 @@ public class Robot implements BasicRobot {
 
                 scheduler.schedule(new MatchTime(1.0, MatchTime.Mode.AUTONOMOUS, MatchTime.Type.AFTER_START), () -> {
                     System.out.println("1 second after auto beginning!");
-                    shuffleboard.get("dash").remove("time");
                 });
                 scheduler.schedule(new MatchTime(1.0, MatchTime.Mode.AUTONOMOUS, MatchTime.Type.FROM_END), () -> {
                     System.out.println("1 second from auto being over!");

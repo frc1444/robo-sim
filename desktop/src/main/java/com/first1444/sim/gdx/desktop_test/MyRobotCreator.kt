@@ -7,15 +7,13 @@ import com.badlogic.gdx.physics.box2d.EdgeShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef
-import com.first1444.dashboard.shuffleboard.Shuffleboard
-import com.first1444.dashboard.shuffleboard.implementations.DefaultShuffleboard
+import com.first1444.dashboard.bundle.DefaultDashboardBundle
 import com.first1444.dashboard.wpi.NetworkTableInstanceBasicDashboard
 import com.first1444.sim.api.*
 import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
 import com.first1444.sim.api.frc.BasicRobotRunnable
-import com.first1444.sim.api.sound.SoundCreator
-import com.first1444.sim.api.sound.implementations.SimpleSound
+import com.first1444.sim.api.frc.sim.DriverStationSendable
 import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.drivetrain.swerve.BodySwerveModule
 import com.first1444.sim.gdx.entity.ActorBodyEntity
@@ -114,23 +112,25 @@ object MyRobotCreator : RobotCreator {
             val networkTable = NetworkTableInstance.getDefault()
             networkTable.startServer()
             val rootDashboard = NetworkTableInstanceBasicDashboard(networkTable)
-            val shuffleboard = DefaultShuffleboard(rootDashboard)
+            val bundle = DefaultDashboardBundle(rootDashboard)
+            val driverStationActiveComponent = DriverStationSendable(data.driverStation).init("FMSInfo", rootDashboard.getSubDashboard("FMSInfo"))
             RobotRunnableMultiplexer(listOf(
                 BasicRobotRunnable(
                     Robot(
-                            data.driverStation, updateableData.clock, shuffleboard, swerveDriveData,
+                            data.driverStation, updateableData.clock, bundle, swerveDriveData,
                             EntityOrientation(entity), joystick, VisionProvider(entity, 2.0, updateableData.clock),
-//                            SoundCreator.createWithoutClose { SimpleSound { println("sound=$it") } }
                             GdxSoundCreator { Gdx.files.internal(it) }
                     ),
                     data.driverStation
                 ),
                 object : RobotRunnable {
                     override fun run() {
-                        shuffleboard.update()
+                        bundle.update()
+                        driverStationActiveComponent.update()
                     }
                     override fun close() {
-                        shuffleboard.onRemove()
+                        bundle.onRemove()
+                        driverStationActiveComponent.onRemove()
                         networkTable.close()
                     }
 
