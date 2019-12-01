@@ -27,7 +27,9 @@ import edu.wpi.first.networktables.NetworkTableInstance
 import me.retrodaredevil.controller.gdx.GdxControllerPartCreator
 import me.retrodaredevil.controller.gdx.IndexedControllerProvider
 import me.retrodaredevil.controller.implementations.BaseStandardControllerInput
+import me.retrodaredevil.controller.implementations.InputUtil
 import me.retrodaredevil.controller.implementations.mappings.DefaultStandardControllerInputCreator
+import me.retrodaredevil.controller.implementations.mappings.LinuxPS4StandardControllerInputCreator
 import me.retrodaredevil.controller.options.OptionValues
 import java.lang.Math.toRadians
 
@@ -107,7 +109,20 @@ object MyRobotCreator : RobotCreator {
         )
         val provider = IndexedControllerProvider(0)
         val creator = GdxControllerPartCreator(provider, true)
-        val joystick = BaseStandardControllerInput(DefaultStandardControllerInputCreator(), creator, OptionValues.createImmutableBooleanOptionValue(true), OptionValues.createImmutableBooleanOptionValue(false))
+        val joystick = if("sony" in provider.name.toLowerCase()){
+            val osName = System.getProperty("os.name").toLowerCase()
+            if("nux" in osName || "nix" in osName || "aix" in osName || "mac" in osName) { // only Linux is tested, so feel free to change these if you need to add or remove one
+                println("*nix ps4")
+                InputUtil.createController(creator, LinuxPS4StandardControllerInputCreator())
+            } else {
+                println("regular ps4")
+                InputUtil.createPS4Controller(creator)
+            }
+        } else {
+            println("default controller")
+            // NOTE: I have "physicalLocationSwapped" set to true because I test with a Nintendo controller most of the time
+            BaseStandardControllerInput(DefaultStandardControllerInputCreator(), creator, OptionValues.createImmutableBooleanOptionValue(true), OptionValues.createImmutableBooleanOptionValue(false))
+        }
         val robotCreator = RunnableCreator.wrap {
             val networkTable = NetworkTableInstance.getDefault()
             networkTable.startServer()

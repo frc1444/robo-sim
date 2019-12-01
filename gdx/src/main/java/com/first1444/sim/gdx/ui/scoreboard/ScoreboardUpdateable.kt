@@ -20,7 +20,7 @@ class ScoreboardUpdateable(
 
     init {
         val scoreboardTable = Table()
-        val skin = Skin(Gdx.files.classpath("skins/scoreboard/skin.json")) // does classpath work? I don't know, I haven't tested this yet...
+        val skin = Skin(Gdx.files.classpath("skins/scoreboard/skin.json"))
         val font = skin.getFont("default")
         group.addActor(scoreboardTable)
         scoreboardTable.apply {

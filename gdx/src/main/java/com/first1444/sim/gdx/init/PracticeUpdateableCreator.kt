@@ -3,6 +3,7 @@ package com.first1444.sim.gdx.init
 import com.first1444.sim.api.frc.FrcMode
 import com.first1444.sim.api.frc.sim.MutableFrcDriverStation
 import com.first1444.sim.gdx.*
+import com.first1444.sim.gdx.ui.CoordinateUpdateable
 import com.first1444.sim.gdx.ui.PracticeSimulation
 import com.first1444.sim.gdx.ui.scoreboard.ScoreboardUpdateable
 
@@ -17,7 +18,8 @@ class PracticeUpdateableCreator(
                     driverStation.mode = FrcMode.DISABLED
                 }),
                 robotCreator.create(RobotCreator.Data(driverStation), data),
-                CloseableUpdateable.fromUpdateable(ScoreboardUpdateable(data.uiStage, driverStation))
+                CloseableUpdateable.fromUpdateable(ScoreboardUpdateable(data.uiStage, driverStation)),
+                CloseableUpdateable.fromUpdateable(CoordinateUpdateable(data.uiStage, data.contentStage))
         ))
     }
 

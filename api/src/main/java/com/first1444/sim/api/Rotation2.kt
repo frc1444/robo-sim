@@ -7,6 +7,9 @@ import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.sin
 
+/**
+ * Represents an angle in range `[-180..180)` degrees or `[-pi, pi)`
+ */
 class Rotation2
 private constructor(
         radians: Double,
@@ -55,7 +58,8 @@ private constructor(
         }
     }
 
-    operator fun unaryMinus() = fromRadians(-radians)
+    /** Negates [radians] */
+    operator fun unaryMinus() = Rotation2(-radians, cos, -sin)
     operator fun unaryPlus() = this
     operator fun plus(other: Rotation2): Rotation2 {
         val newCos = cos * other.cos - sin * other.sin
@@ -72,6 +76,17 @@ private constructor(
     fun plusDegrees(otherDegrees: Double) = fromDegrees(degrees + otherDegrees)
     fun minusRadians(otherRadians: Double) = fromRadians(radians - otherRadians)
     fun minusDegrees(otherDegrees: Double) = fromDegrees(degrees - otherDegrees)
+
+    /**
+     * @param amount The number of times to rotate 90 degrees in a certain direction. A positive value is counter clockwise, a negative clockwise, zero unchanged.
+     */
+    fun rotate90(amount: Int): Rotation2 = when(val value = mod(amount, 4)){
+        0 -> this
+        1 -> Rotation2(radians + Math.PI / 2, -sin, cos) // 90
+        2 -> Rotation2(radians + Math.PI, -cos, -sin) // 180
+        3 -> Rotation2(radians - Math.PI / 2, sin, -cos) // 270
+        else -> error("modulo of 4 of amount=$amount gave bad value=$value")
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
