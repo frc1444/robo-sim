@@ -78,7 +78,7 @@ public class Robot implements BasicRobot {
 
         bundle.getShuffleboard().get("dash").add("time", new SendableComponent<>(new ClockSendable(clock)));
 
-        soundMatchStart = soundCreator.create("match_start.wav");
+        soundMatchStart = soundCreator.create("match_start");
         soundTeleopStart = soundCreator.create("teleop_start.wav");
         soundTeleopFiveSecondsLeft = soundCreator.create("warning.wav");
     }
