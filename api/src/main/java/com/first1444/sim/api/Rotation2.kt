@@ -4,6 +4,7 @@ import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
 import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.tan
 import kotlin.math.hypot
 import kotlin.math.sin
 
@@ -19,6 +20,7 @@ private constructor(
     val radians: Double = halfMod(radians, Math.PI * 2)
     val degrees: Double = toDegrees(this.radians)
     val tan: Double get() = sin / cos
+    val exactTan: Double get() = tan(radians)
 
     companion object {
         @JvmField
@@ -64,12 +66,12 @@ private constructor(
     operator fun plus(other: Rotation2): Rotation2 {
         val newCos = cos * other.cos - sin * other.sin
         val newSin = cos * other.sin + sin * other.cos
-        return Rotation2(atan2(newSin, newCos), newCos, newSin)
+        return Rotation2(radians + other.radians, newCos, newSin)
     }
     operator fun minus(other: Rotation2): Rotation2 {
         val newCos = cos * -other.cos + sin * other.sin
         val newSin = cos * -other.sin - sin * other.cos
-        return Rotation2(atan2(newSin, newCos), newCos, newSin)
+        return Rotation2(radians - other.radians, newCos, newSin)
     }
 
     fun plusRadians(otherRadians: Double) = fromRadians(radians + otherRadians)
