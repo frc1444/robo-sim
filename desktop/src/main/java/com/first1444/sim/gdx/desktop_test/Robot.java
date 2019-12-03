@@ -6,7 +6,7 @@ import com.first1444.sim.api.Clock;
 import com.first1444.sim.api.ClockSendable;
 import com.first1444.sim.api.Transform2;
 import com.first1444.sim.api.Vector2;
-import com.first1444.sim.api.distance.DeltaDistanceAccumulator;
+import com.first1444.sim.api.distance.MutableDeltaDistanceAccumulator;
 import com.first1444.sim.api.distance.MutableDistanceAccumulator;
 import com.first1444.sim.api.distance.OrientationDeltaDistanceCalculator;
 import com.first1444.sim.api.distance.SwerveDeltaDistanceCalculator;
@@ -24,6 +24,7 @@ import com.first1444.sim.api.scheduler.match.MatchTime;
 import com.first1444.sim.api.sensors.DefaultMutableOrientation;
 import com.first1444.sim.api.sensors.MutableOrientation;
 import com.first1444.sim.api.sensors.Orientation;
+import com.first1444.sim.api.sensors.OrientationHandler;
 import com.first1444.sim.api.sound.Sound;
 import com.first1444.sim.api.sound.SoundCreator;
 import com.first1444.sim.api.surroundings.Surrounding;
@@ -57,7 +58,7 @@ public class Robot implements BasicRobot {
             Clock clock,
             DashboardBundle bundle,
             FourWheelSwerveDriveData swerveDriveData,
-            Orientation orientation,
+            OrientationHandler orientationHandler,
             StandardControllerInput controller,
             SurroundingProvider surroundingProvider,
             SoundCreator soundCreator) {
@@ -65,7 +66,7 @@ public class Robot implements BasicRobot {
         this.clock = clock;
         this.bundle = bundle;
         this.swerveDrive = new FourWheelSwerveDrive(swerveDriveData);
-        this.orientation = new DefaultMutableOrientation(orientation);
+        this.orientation = new DefaultMutableOrientation(orientationHandler.getOrientation());
         this.controller = controller;
         this.surroundingProvider = surroundingProvider;
 
@@ -73,7 +74,7 @@ public class Robot implements BasicRobot {
         MutableControlConfig config = new MutableControlConfig();
         config.fullAnalogDeadzone = .03;
         this.controlConfig = config;
-        distanceAccumulator = new DeltaDistanceAccumulator(new OrientationDeltaDistanceCalculator(new SwerveDeltaDistanceCalculator(swerveDriveData), orientation));
+        distanceAccumulator = new MutableDeltaDistanceAccumulator(new OrientationDeltaDistanceCalculator(new SwerveDeltaDistanceCalculator(swerveDriveData), orientation));
         distanceAccumulator.setPosition(new Vector2(0, -6.6));
 
         bundle.getShuffleboard().get("dash").add("time", new SendableComponent<>(new ClockSendable(clock)));

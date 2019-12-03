@@ -14,6 +14,7 @@ import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
 import com.first1444.sim.api.drivetrain.swerve.SwerveModule
 import com.first1444.sim.api.frc.BasicRobotRunnable
 import com.first1444.sim.api.frc.sim.DriverStationSendable
+import com.first1444.sim.api.sensors.DefaultOrientationHandler
 import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.drivetrain.swerve.BodySwerveModule
 import com.first1444.sim.gdx.entity.ActorBodyEntity
@@ -133,7 +134,7 @@ object MyRobotCreator : RobotCreator {
                 BasicRobotRunnable(
                     Robot(
                             data.driverStation, updateableData.clock, bundle, swerveDriveData,
-                            EntityOrientation(entity), joystick, VisionProvider(entity, 2.0, updateableData.clock),
+                            DefaultOrientationHandler(EntityOrientation(entity)), joystick, VisionProvider(entity, 2.0, updateableData.clock),
                             GdxSoundCreator { Gdx.files.internal(it) }
                     ),
                     data.driverStation
