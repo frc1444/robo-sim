@@ -69,8 +69,8 @@ private constructor(
         return Rotation2(radians + other.radians, newCos, newSin)
     }
     operator fun minus(other: Rotation2): Rotation2 {
-        val newCos = cos * -other.cos + sin * other.sin
-        val newSin = cos * -other.sin - sin * other.cos
+        val newCos = cos * other.cos - sin * -other.sin
+        val newSin = cos * -other.sin + sin * other.cos
         return Rotation2(radians - other.radians, newCos, newSin)
     }
 

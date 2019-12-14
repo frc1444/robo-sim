@@ -17,7 +17,9 @@ class PrintStreamFrcLogger(
     }
     override fun reportWarning(error: String, printTrace: Boolean) {
         warningStream.println(error)
-        warningStream.println(getTraceString(Throwable().stackTrace))
+        if(printTrace) {
+            warningStream.println(getTraceString(Throwable().stackTrace))
+        }
     }
 
     override fun reportWarning(error: String, stackTrace: Array<StackTraceElement>) {
@@ -27,7 +29,9 @@ class PrintStreamFrcLogger(
 
     override fun reportError(error: String, printTrace: Boolean) {
         errorStream.println(error)
-        errorStream.println(getTraceString(Throwable().stackTrace))
+        if(printTrace) {
+            errorStream.println(getTraceString(Throwable().stackTrace))
+        }
     }
 
     override fun reportError(error: String, stackTrace: Array<StackTraceElement>) {

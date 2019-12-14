@@ -10,6 +10,7 @@ import kotlin.math.*
 internal class Rotation2Test {
     @Test
     fun `test rotation`(){
+        validate(Rotation2.DEG_90 - fromDegrees(4.5))
         assertEquals(-180.0, validate(fromDegrees(-180.0)).degrees)
         assertEquals(-180.0, validate(fromDegrees(180.0)).degrees)
         assertEquals(0.0, validate(fromDegrees(360.0)).degrees)
