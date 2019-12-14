@@ -15,24 +15,35 @@ object PracticeSimulation {
         sideTable.left()
         sideTable.add(TextButton("TeleOp", uiSkin).apply {
             addListener(clickDownListener {
-                driverStation.mode = FrcMode.TELEOP
+                trySetMode(driverStation, FrcMode.TELEOP)
             })
         })
         sideTable.row()
         sideTable.add(TextButton("Autonomous", uiSkin).apply {
             addListener(clickDownListener {
-                driverStation.mode = FrcMode.AUTONOMOUS
+                trySetMode(driverStation, FrcMode.AUTONOMOUS)
             })
         })
         sideTable.row()
         sideTable.add(TextButton("Test", uiSkin).apply {
             addListener(clickDownListener {
-                driverStation.mode = FrcMode.TEST
+                trySetMode(driverStation, FrcMode.TEST)
             })
         })
         sideTable.row()
         DriverStationConfig.populateTable(sideTable, driverStation, uiSkin)
 
         return sideTable
+    }
+    private fun trySetMode(driverStation: MutableFrcDriverStation, mode: FrcMode) {
+        val currentMode = driverStation.mode
+        if(currentMode == mode){
+            return
+        }
+        if(currentMode == FrcMode.DISABLED){
+            driverStation.mode = mode
+        } else {
+            driverStation.mode = FrcMode.DISABLED
+        }
     }
 }
