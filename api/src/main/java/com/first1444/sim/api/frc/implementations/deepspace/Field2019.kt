@@ -57,11 +57,11 @@ object Field2019 {
 
     @JvmField val ROCKET_SHIP_LEFT_HATCH_FAR = VisionTarget(fromDegrees(ROCKET_LEFT_POSITION + ROCKET_HATCH_OFFSET * Vector2.ONE, 61.23 - 180), VisionIdentifier(isEnemy = false, isLeft = true, location = TargetLocation.ROCKET_FAR))
     @JvmField val ROCKET_SHIP_LEFT_HATCH_NEAR = VisionTarget(fromDegrees(ROCKET_LEFT_POSITION + ROCKET_HATCH_OFFSET.times(1.0, -1.0), 180 - 61.23), VisionIdentifier(isEnemy = false, isLeft = true, location = TargetLocation.ROCKET_NEAR))
-    @JvmField val ROCKET_SHIP_LEFT_CARGO = VisionTarget(fromDegrees(ROCKET_LEFT_POSITION.plus(inchesToMeters(-26.36), 0.0), 180.0), VisionIdentifier(isEnemy = false, isLeft = true, location = TargetLocation.ROCKET_FRONT))
+    @JvmField val ROCKET_SHIP_LEFT_CARGO = VisionTarget(fromDegrees(ROCKET_LEFT_POSITION.plus(inchesToMeters(26.36), 0.0), 180.0), VisionIdentifier(isEnemy = false, isLeft = true, location = TargetLocation.ROCKET_FRONT))
 
     @JvmField val ROCKET_SHIP_RIGHT_HATCH_FAR = VisionTarget(fromDegrees(ROCKET_RIGHT_POSITION + ROCKET_HATCH_OFFSET.times(-1.0, 1.0), -61.23), VisionIdentifier(isEnemy = false, isLeft = false, location = TargetLocation.ROCKET_FAR))
     @JvmField val ROCKET_SHIP_RIGHT_HATCH_NEAR = VisionTarget(fromDegrees(ROCKET_RIGHT_POSITION + ROCKET_HATCH_OFFSET.times(-1.0, -1.0), 61.23), VisionIdentifier(isEnemy = false, isLeft = false, location = TargetLocation.ROCKET_NEAR))
-    @JvmField val ROCKET_SHIP_RIGHT_CARGO = VisionTarget(fromDegrees(ROCKET_RIGHT_POSITION.plus(inchesToMeters(26.36), 0.0), 0.0), VisionIdentifier(isEnemy = false, isLeft = false, location = TargetLocation.ROCKET_FRONT))
+    @JvmField val ROCKET_SHIP_RIGHT_CARGO = VisionTarget(fromDegrees(ROCKET_RIGHT_POSITION.plus(inchesToMeters(-26.36), 0.0), 0.0), VisionIdentifier(isEnemy = false, isLeft = false, location = TargetLocation.ROCKET_FRONT))
 
     // endregion
 

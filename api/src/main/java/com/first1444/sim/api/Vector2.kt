@@ -8,7 +8,7 @@ import kotlin.math.*
 class Vector2(
         val x: Double,
         val y: Double
-) {
+) : Comparable<Vector2>{
     companion object {
         @JvmField val ZERO = Vector2(0.0, 0.0)
         @JvmField val ONE = Vector2(1.0, 1.0)
@@ -51,12 +51,22 @@ class Vector2(
     fun distance(other: Vector2): Double {
         return distance(other.x, other.y)
     }
+    operator fun compareTo(otherMagnitude: Double): Int {
+        val magnitude2 = magnitude2
+        val otherMagnitude2 = otherMagnitude * otherMagnitude
+        return magnitude2.compareTo(otherMagnitude2)
+    }
+    override operator fun compareTo(other: Vector2): Int {
+        val magnitude2 = magnitude2
+        val otherMagnitude2 = other.magnitude2
+        return magnitude2.compareTo(otherMagnitude2)
+    }
 
     operator fun plus(vector: Vector2): Vector2{
         return Vector2(x + vector.x, y + vector.y)
     }
     fun plus(x: Double, y: Double): Vector2 {
-        return Vector2(this.x - x, this.y - y)
+        return Vector2(this.x + x, this.y + y)
     }
     operator fun minus(vector: Vector2): Vector2{
         return Vector2(x - vector.x, y - vector.y)
@@ -113,6 +123,12 @@ class Vector2(
         3 -> Vector2(y, -x) // 270
         else -> error("modulo of 4 of amount=$amount gave bad value=$value")
     }
+
+    /** Keeps the y value and uses [x] as the new x value*/
+    fun withX(x: Double) = Vector2(x, this.y)
+    /** Keeps the x value and uses [y] as the new y value*/
+    fun withY(y: Double) = Vector2(this.x, y)
+
     @JvmOverloads fun rotateDegrees(degrees: Double, origin: Vector2 = ZERO): Vector2 = rotateRadians(toRadians(degrees), origin)
     override fun toString(): String {
         return "Vector2(x=${FORMAT.format(x)}, y=${FORMAT.format(y)})"
