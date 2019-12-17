@@ -51,7 +51,7 @@ fun mod(a: Long, b: Long): Long {
  *
  * minChange(30, 300, 360) == 90 <br></br>
  *
- * minChange(180, 0, 360) == 180 <br></br>
+ * minChange(180, 0, 360) == -180 <br></br>
  *
  * minChange(181, 0, 360) == -179 <br></br>
  *
@@ -65,7 +65,7 @@ fun minChange(a: Double, b: Double, wrap: Double): Double {
 }
 
 /**
- * @return a value in range `[-wrap / 2, wrap)` where `mod(a, wrap) == mod(value, wrap)`
+ * @return a value in range `[-wrap / 2, wrap / 2)` where `mod(a, wrap) == mod(value, wrap)`
  */
 fun halfMod(a: Double, wrap: Double): Double {
     var aa = mod(a, wrap)

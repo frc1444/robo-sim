@@ -50,6 +50,9 @@ class Transform2(
     fun rotate(angle: Rotation2): Transform2 {
         return Transform2(position.rotate(angle), rotation + angle)
     }
+    fun rotateClockwise(angle: Rotation2): Transform2 {
+        return Transform2(position.rotateClockwise(angle), rotation - angle)
+    }
 
     operator fun unaryMinus(): Transform2 {
         return Transform2(-position, rotation.plusRadians(Math.PI))
@@ -66,6 +69,10 @@ class Transform2(
     fun minus(x: Double, y: Double): Transform2 {
         return Transform2(position.minus(x, y), rotation)
     }
+    fun withX(x: Double) = Transform2(x, this.y, this.rotation)
+    fun withY(y: Double) = Transform2(this.x, y, this.rotation)
+    fun withPosition(position: Vector2) = Transform2(position, this.rotation)
+    fun withRotation(rotation: Rotation2) = Transform2(this.position, rotation)
 
     /**
      * NOTE: [Transform2] always equals [Transform2.reversed].[reversed]

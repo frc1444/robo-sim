@@ -112,6 +112,10 @@ class Vector2(
         val sin = sin(radians)
         return rotate(cos, sin, origin)
     }
+    @JvmOverloads fun rotateDegrees(degrees: Double, origin: Vector2 = ZERO): Vector2 = rotateRadians(toRadians(degrees), origin)
+    @JvmOverloads fun rotateClockwise(rotation: Rotation2, origin: Vector2 = ZERO): Vector2 {
+        return rotate(rotation.cos, -rotation.sin, origin)
+    }
 
     /**
      * @param amount The number of times to rotate 90 degrees in a certain direction. A positive value is counter clockwise, a negative clockwise, zero unchanged.
@@ -128,8 +132,14 @@ class Vector2(
     fun withX(x: Double) = Vector2(x, this.y)
     /** Keeps the x value and uses [y] as the new y value*/
     fun withY(y: Double) = Vector2(this.x, y)
+    val absoluteValue: Vector2
+        get() {
+            if(x >= 0 && y >= 0){
+                return this
+            }
+            return Vector2(x.absoluteValue, y.absoluteValue)
+        }
 
-    @JvmOverloads fun rotateDegrees(degrees: Double, origin: Vector2 = ZERO): Vector2 = rotateRadians(toRadians(degrees), origin)
     override fun toString(): String {
         return "Vector2(x=${FORMAT.format(x)}, y=${FORMAT.format(y)})"
     }
