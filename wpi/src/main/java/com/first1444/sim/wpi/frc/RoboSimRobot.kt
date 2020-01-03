@@ -5,9 +5,12 @@ import com.first1444.sim.api.RunnableCreator
 import edu.wpi.first.hal.FRCNetComm
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.hal.NotifierJNI
-import edu.wpi.first.wpilibj.*
+import edu.wpi.first.wpilibj.DriverStation
+import edu.wpi.first.wpilibj.RobotBase
+import edu.wpi.first.wpilibj.RobotController
+import edu.wpi.first.wpilibj.Watchdog
 
-class RoboSimRobot
+open class RoboSimRobot
 @JvmOverloads constructor(
         private val runnableCreator: RunnableCreator,
         private val period: Double = 0.02
@@ -18,7 +21,7 @@ class RoboSimRobot
     private var expirationTime = 0.0
 
     init {
-//        NotifierJNI.setNotifierName(notifier, "RoboSimRobot")
+        NotifierJNI.setNotifierName(notifier, "RoboSimRobot")
         HAL.report(FRCNetComm.tResourceType.kResourceType_Framework, FRCNetComm.tInstances.kFramework_Timed)
         runnableCreator.prematureInit()
     }
@@ -45,7 +48,10 @@ class RoboSimRobot
             loop(robotRunnable)
         }
     }
-    // TODO implement new endCompetition method for 2020
+
+    override fun endCompetition() {
+        NotifierJNI.stopNotifier(notifier)
+    }
 
     private fun loop(robotRunnable: RobotRunnable){
         watchdog.reset()
@@ -70,7 +76,7 @@ class RoboSimRobot
         NotifierJNI.cleanNotifier(notifier)
     }
 
-    private fun printLoopOverrunMessage() {
+    protected open fun printLoopOverrunMessage() {
         DriverStation.reportWarning("Loop time of " + period + "s overrun\n", false)
     }
     /**
