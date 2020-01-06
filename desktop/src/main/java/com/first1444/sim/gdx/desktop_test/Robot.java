@@ -36,6 +36,8 @@ import me.retrodaredevil.controller.types.StandardControllerInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static java.util.Objects.requireNonNull;
+
 public class Robot implements BasicRobot {
     private final FrcDriverStation driverStation;
     private final Clock clock;
@@ -126,7 +128,8 @@ public class Robot implements BasicRobot {
                     closest2 = distance2;
                 }
             }
-            System.out.println("We see: " + best + " distance error: " + Math.sqrt(closest2) + " yaw error: " + Math.abs(visionTransform.getRotationDegrees() - best.getTransform().getRotationDegrees()));
+            requireNonNull(best);
+//            System.out.println("We see: " + best + " distance error: " + Math.sqrt(closest2) + " yaw error: " + Math.abs(visionTransform.getRotationDegrees() - best.getTransform().getRotationDegrees()));
             // If you're doing this on a robot, you might also want to check the raw error.
             distanceAccumulator.setPosition(best.getTransform().getPosition().minus(transform.getPosition().rotateRadians(orientation.getOrientationRadians())));
         }

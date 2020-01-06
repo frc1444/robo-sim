@@ -15,11 +15,13 @@ import com.first1444.sim.api.drivetrain.swerve.SwerveModule
 import com.first1444.sim.api.frc.BasicRobotRunnable
 import com.first1444.sim.api.frc.sim.DriverStationSendable
 import com.first1444.sim.api.sensors.DefaultOrientationHandler
+import com.first1444.sim.api.surroundings.Surrounding
+import com.first1444.sim.api.surroundings.SurroundingProvider
 import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.drivetrain.swerve.BodySwerveModule
 import com.first1444.sim.gdx.entity.ActorBodyEntity
 import com.first1444.sim.gdx.entity.EntityOrientation
-import com.first1444.sim.gdx.implementations.deepspace2019.surroundings.VisionProvider
+import com.first1444.sim.gdx.implementations.deepspace2019.surroundings.VisionProvider2019
 import com.first1444.sim.gdx.init.RobotCreator
 import com.first1444.sim.gdx.init.UpdateableCreator
 import com.first1444.sim.gdx.sound.GdxSoundCreator
@@ -134,7 +136,12 @@ object MyRobotCreator : RobotCreator {
                 BasicRobotRunnable(
                     Robot(
                             data.driverStation, updateableData.clock, bundle, swerveDriveData,
-                            DefaultOrientationHandler(EntityOrientation(entity)), joystick, VisionProvider(entity, 2.0, updateableData.clock),
+                            DefaultOrientationHandler(EntityOrientation(entity)), joystick,
+//                            VisionProvider2019(entity, 2.0, updateableData.clock),
+                            object : SurroundingProvider {
+                                override val surroundings: List<Surrounding>
+                                    get() = emptyList()
+                            },
                             GdxSoundCreator { Gdx.files.internal(it) }
                     ),
                     data.driverStation

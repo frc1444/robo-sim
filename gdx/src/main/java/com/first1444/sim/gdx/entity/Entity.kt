@@ -19,7 +19,7 @@ interface Entity : Updateable {
     var simVector: com.first1444.sim.api.Vector2
         get() = position.sim
         set(value){
-            position.set(value)
+            position = value.gdx
         }
     var simTransform: Transform2
 

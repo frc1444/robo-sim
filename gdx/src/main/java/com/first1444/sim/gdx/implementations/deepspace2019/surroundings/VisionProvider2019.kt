@@ -9,7 +9,7 @@ import com.first1444.sim.api.surroundings.Surrounding3DExtra
 import com.first1444.sim.api.surroundings.SurroundingProvider
 import com.first1444.sim.gdx.entity.Entity
 
-class VisionProvider(
+class VisionProvider2019(
         private val entity: Entity,
         range: Double,
         private val clock: Clock
