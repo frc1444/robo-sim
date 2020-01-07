@@ -21,7 +21,7 @@ import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.drivetrain.swerve.BodySwerveModule
 import com.first1444.sim.gdx.entity.ActorBodyEntity
 import com.first1444.sim.gdx.entity.EntityOrientation
-import com.first1444.sim.gdx.implementations.deepspace2019.surroundings.VisionProvider2019
+import com.first1444.sim.gdx.implementations.infiniterecharge.FieldSetup2020
 import com.first1444.sim.gdx.init.RobotCreator
 import com.first1444.sim.gdx.init.UpdateableCreator
 import com.first1444.sim.gdx.sound.GdxSoundCreator
@@ -35,6 +35,7 @@ import me.retrodaredevil.controller.implementations.mappings.DefaultStandardCont
 import me.retrodaredevil.controller.implementations.mappings.LinuxPS4StandardControllerInputCreator
 import me.retrodaredevil.controller.options.OptionValues
 import java.lang.Math.toRadians
+import kotlin.experimental.or
 
 object MyRobotCreator : RobotCreator {
     override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): CloseableUpdateable {
@@ -48,15 +49,19 @@ object MyRobotCreator : RobotCreator {
             type = BodyDef.BodyType.DynamicBody
             position.set(startingPosition)
             angle = startingAngleRadians.toFloat()
-//            angle = 90 * MathUtils.degreesToRadians // start at 90 degrees to make this easy on the player. We will eventually add field centric controls
-        }, listOf(FixtureDef().apply {
+        }, listOf(FixtureDef().apply { // the main collision box. This is based on the swerve wheelBase and trackWidth, which we might want to change
             restitution = .2f
             shape = PolygonShape().apply {
                 setAsBox((wheelBase / 2).toFloat(), (trackWidth / 2).toFloat(), ZERO, 0.0f)
             }
             val area = wheelBase * trackWidth
             density = 1.0f / area.toFloat()
-        }, FixtureDef().apply {
+        }, FixtureDef().apply { // the box that collides with the trench
+            filter.categoryBits = FieldSetup2020.TRENCH_MASK_BITS or 1
+            shape = PolygonShape().apply {
+                setAsBox(inchesToMeters(15.0f / 2), inchesToMeters(15.0f / 2), ZERO, 0.0f)
+            }
+        }, FixtureDef().apply { // our nice line to show the forward direction
             isSensor = true
             shape = EdgeShape().apply {
                 set(0f, 0f, .5f, 0f)
