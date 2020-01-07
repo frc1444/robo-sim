@@ -18,6 +18,7 @@ import com.first1444.sim.api.frc.FrcDriverStation;
 import com.first1444.sim.api.frc.FrcMode;
 import com.first1444.sim.api.frc.implementations.deepspace.Field2019;
 import com.first1444.sim.api.frc.implementations.deepspace.VisionTarget;
+import com.first1444.sim.api.frc.implementations.infiniterecharge.WheelColor;
 import com.first1444.sim.api.scheduler.match.DefaultMatchScheduler;
 import com.first1444.sim.api.scheduler.match.MatchSchedulerRunnable;
 import com.first1444.sim.api.scheduler.match.MatchTime;
@@ -55,6 +56,8 @@ public class Robot implements BasicRobot {
     private final Sound soundTeleopStart;
     private final Sound soundTeleopFiveSecondsLeft;
 
+    private WheelColor lastColor = null;
+
     public Robot(
             FrcDriverStation driverStation,
             Clock clock,
@@ -74,10 +77,10 @@ public class Robot implements BasicRobot {
 
         this.scheduler = new DefaultMatchScheduler(driverStation, clock);
         MutableControlConfig config = new MutableControlConfig();
-        config.fullAnalogDeadzone = .03;
+        config.fullAnalogDeadzone = .1;
         this.controlConfig = config;
         distanceAccumulator = new MutableDeltaDistanceAccumulator(new OrientationDeltaDistanceCalculator(new SwerveDeltaDistanceCalculator(swerveDriveData), orientation));
-        distanceAccumulator.setPosition(new Vector2(0, -6.6));
+        distanceAccumulator.setPosition(new Vector2(0, 4.88));
 
         bundle.getShuffleboard().get("dash").add("time", new SendableComponent<>(new ClockSendable(clock)));
 
@@ -135,6 +138,12 @@ public class Robot implements BasicRobot {
         }
 //        System.out.println("Position: " + distanceAccumulator.getPosition());
 //        System.out.println("Surroundings: " + surroundingProvider.getSurroundings());
+        final WheelColor lastColor = this.lastColor;
+        WheelColor color = WheelColor.parseColorOrNull(driverStation.getGameSpecificMessage());
+        this.lastColor = color;
+        if(lastColor != color){
+            System.out.println("Color changed from " + lastColor + " to " + color);
+        }
     }
     private void updateSwerve(){
         JoystickPart leftJoy = controller.getLeftJoy();

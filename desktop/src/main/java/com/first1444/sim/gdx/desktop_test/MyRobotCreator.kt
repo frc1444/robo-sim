@@ -39,7 +39,7 @@ import kotlin.experimental.or
 
 object MyRobotCreator : RobotCreator {
     override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): CloseableUpdateable {
-        val startingPosition = Vector2(0.0, -6.6)
+        val startingPosition = Vector2(0.0, 4.88)
         val startingAngleRadians = toRadians(90.0)
 
         val maxVelocity = 3.35

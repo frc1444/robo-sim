@@ -1,8 +1,10 @@
 package com.first1444.sim.gdx.implementations.infiniterecharge
 
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.physics.box2d.*
 import com.first1444.sim.api.frc.implementations.infiniterecharge.Field2020
 import com.first1444.sim.api.inchesToMeters
+import com.first1444.sim.gdx.gdxVector
 
 /**
  * This has methods to help create Box2D elements to display interactive field components for the FRC 2020 field.
@@ -15,14 +17,19 @@ object FieldSetup2020 {
 
     private val HW = (Field2020.WIDTH / 2).toFloat()
     private val HL = (Field2020.LENGTH / 2).toFloat()
-    @JvmStatic fun createField(world: World){
+    @JvmStatic
+    fun createField(world: World) {
         createFieldBounds(world)
         createTargetZones(world)
         createLoadingZones(world)
         createTrenchRun(world)
         createTrench(world)
+        createShieldGenerator(world)
+        createInitiationLine(world)
     }
-    @JvmStatic fun createFieldBounds(world: World){
+
+    @JvmStatic
+    fun createFieldBounds(world: World) {
         val halfRailLength = HL - inchesToMeters(25.65f)
         val halfRailWidth = inchesToMeters(48 + 60 + 6 * 12.0f) / 2
 
@@ -38,6 +45,7 @@ object FieldSetup2020 {
         createLine(world, HW, halfRailLength, halfRailWidth, HL) // right to top
 
     }
+
     private fun createLine(world: World, v1X: Float, v1Y: Float, v2X: Float, v2Y: Float) {
         world.createBody(BodyDef()).createFixture(FixtureDef().apply {
             shape = EdgeShape().apply {
@@ -45,9 +53,11 @@ object FieldSetup2020 {
             }
         })
     }
+
     @JvmStatic
-    fun createTargetZones(world: World){
-        world.createBody(BodyDef()).createFixture(FixtureDef().apply { // alliance target zone (on enemy side of field)
+    fun createTargetZones(world: World) {
+        world.createBody(BodyDef()).createFixture(FixtureDef().apply {
+            // alliance target zone (on enemy side of field)
             isSensor = true
             shape = PolygonShape().apply {
                 set(floatArrayOf(
@@ -68,9 +78,11 @@ object FieldSetup2020 {
             }
         })
     }
+
     @JvmStatic
-    fun createLoadingZones(world: World){
-        world.createBody(BodyDef()).createFixture(FixtureDef().apply { // alliance loading zone (on alliance side of field)
+    fun createLoadingZones(world: World) {
+        world.createBody(BodyDef()).createFixture(FixtureDef().apply {
+            // alliance loading zone (on alliance side of field)
             isSensor = true
             shape = PolygonShape().apply {
                 set(floatArrayOf(
@@ -80,7 +92,8 @@ object FieldSetup2020 {
                 ))
             }
         })
-        world.createBody(BodyDef()).createFixture(FixtureDef().apply { // enemy loading zone (on enemy side of field)
+        world.createBody(BodyDef()).createFixture(FixtureDef().apply {
+            // enemy loading zone (on enemy side of field)
             isSensor = true
             shape = PolygonShape().apply {
                 set(floatArrayOf(
@@ -93,10 +106,11 @@ object FieldSetup2020 {
     }
 
     @JvmStatic
-    fun createTrenchRun(world: World){
+    fun createTrenchRun(world: World) {
         val halfLength = inchesToMeters(216.0f / 2)
         val width = inchesToMeters(55.5f)
-        world.createBody(BodyDef()).createFixture(FixtureDef().apply { // alliance loading zone (on alliance side of field)
+        world.createBody(BodyDef()).createFixture(FixtureDef().apply {
+            // alliance loading zone (on alliance side of field)
             isSensor = true
             shape = PolygonShape().apply {
                 set(floatArrayOf(
@@ -107,7 +121,8 @@ object FieldSetup2020 {
                 ))
             }
         })
-        world.createBody(BodyDef()).createFixture(FixtureDef().apply { // alliance loading zone (on alliance side of field)
+        world.createBody(BodyDef()).createFixture(FixtureDef().apply {
+            // alliance loading zone (on alliance side of field)
             isSensor = true
             shape = PolygonShape().apply {
                 set(floatArrayOf(
@@ -119,8 +134,9 @@ object FieldSetup2020 {
             }
         })
     }
+
     @JvmStatic
-    fun createTrench(world: World){
+    fun createTrench(world: World) {
         createLine(
                 world,
                 HW - inchesToMeters(55.5f), HL - inchesToMeters(369.18f),
@@ -155,5 +171,67 @@ object FieldSetup2020 {
                 ))
             }
         })
+    }
+
+    @JvmStatic
+    fun createShieldGenerator(world: World) {
+        val barrierSize = inchesToMeters(12.38f)
+        val zoneLength = inchesToMeters(145.99f)
+        val zoneWidth = inchesToMeters(134f) // this is an estimate
+//        val zoneSize = inchesToMeters(135f)
+
+        for (angle in listOf(
+                MathUtils.degreesToRadians * 22.0f, // this angle is an estimate
+                MathUtils.degreesToRadians * (22.0f + 180)
+        )) {
+            world.createBody(BodyDef().apply {
+                this.angle = angle
+            }).apply {
+                createFixture(FixtureDef().apply {
+                    // RV zone boundary
+                    isSensor = true
+                    shape = PolygonShape().apply {
+                        setAsBox(zoneWidth / 4, zoneLength / 2, gdxVector(zoneWidth / 4, 0f), 0f)
+                    }
+                })
+                createFixture(FixtureDef().apply {
+                    // line dividing zone into two
+                    isSensor = true
+                    shape = EdgeShape().apply {
+                        set(0f, 0f, zoneWidth / 2, 0f)
+                    }
+                })
+                createFixture(FixtureDef().apply {
+                    // top barrier
+                    shape = PolygonShape().apply {
+                        setAsBox(barrierSize / 2, barrierSize / 2, gdxVector(barrierSize / 2 + zoneWidth / 2, barrierSize / 2 + zoneLength / 2), 0f)
+                    }
+                })
+                createFixture(FixtureDef().apply {
+                    // lower barrier
+                    shape = PolygonShape().apply {
+                        setAsBox(barrierSize / 2, barrierSize / 2, gdxVector(barrierSize / 2 + zoneWidth / 2, -barrierSize / 2 - zoneLength / 2), 0f)
+                    }
+                })
+            }
+        }
+    }
+
+    @JvmStatic
+    fun createInitiationLine(world: World) {
+        world.createBody(BodyDef()).apply {
+            createFixture(FixtureDef().apply {
+                isSensor = true
+                shape = EdgeShape().apply {
+                    set(-HW, HL - inchesToMeters(120f), HW, HL - inchesToMeters(120f))
+                }
+            })
+            createFixture(FixtureDef().apply {
+                isSensor = true
+                shape = EdgeShape().apply {
+                    set(-HW, -HL + inchesToMeters(120f), HW, -HL + inchesToMeters(120f))
+                }
+            })
+        }
     }
 }
