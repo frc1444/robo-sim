@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.first1444.sim.api.frc.Alliance
-import com.first1444.sim.api.frc.DriverStationLocation
 import com.first1444.sim.api.frc.sim.MutableFrcDriverStation
 import com.first1444.sim.gdx.CloseableUpdateable
 import com.first1444.sim.gdx.SimpleScreen
@@ -41,7 +40,7 @@ class RealConfigScreenCreator(
         DriverStationConfig.populateTable(table, driverStation, uiSkin)
         table.add(TextButton("done", uiSkin).apply {
             addListener(clickUpListener {
-                finishListener.finished(changer, RealConfig(driverStation.driverStationLocation, driverStation.alliance ?: Alliance.RED, driverStation.gameSpecificMessage))
+                finishListener.finished(changer, RealConfig(driverStation.driverStationLocation, driverStation.alliance ?: Alliance.RED))
             })
         })
         return SimpleScreen(CloseableUpdateable.fromUpdateable(Updateable {

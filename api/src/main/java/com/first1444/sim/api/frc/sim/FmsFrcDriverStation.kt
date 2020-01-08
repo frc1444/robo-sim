@@ -6,7 +6,7 @@ class FmsFrcDriverStation(
         private val fms: Fms,
         override val alliance: Alliance?,
         override val driverStationLocation: DriverStationLocation,
-        override val gameSpecificMessage: String
+        private val gameSpecificMessageGetter: () -> String
 ): FrcDriverStation {
     override val driverStationLocationValue: Int = driverStationLocation.locationValue
 
@@ -21,4 +21,6 @@ class FmsFrcDriverStation(
     override val matchTime: Double?
         get() = fms.matchTime
 
+    override val gameSpecificMessage: String
+        get() = gameSpecificMessageGetter()
 }

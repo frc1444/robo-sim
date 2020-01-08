@@ -77,11 +77,16 @@ object DriverStationConfig {
             })
         }
         table.row()
+    }
+    @JvmStatic
+    fun populateGameSpecificMessage(table: Table, driverStation: MutableFrcDriverStation, uiSkin: Skin) = populateGameSpecificMessage(table, uiSkin) { driverStation.gameSpecificMessage = it }
+    @JvmStatic
+    fun populateGameSpecificMessage(table: Table, uiSkin: Skin, gameSpecificMessageSetter: (String) -> Unit) {
+        table.row()
         val textLabel = TextField("", uiSkin)
         textLabel.setTextFieldListener { _, _ ->
-            driverStation.gameSpecificMessage = textLabel.text
+            gameSpecificMessageSetter(textLabel.text)
         }
         table.add(textLabel)
-        table.row()
     }
 }

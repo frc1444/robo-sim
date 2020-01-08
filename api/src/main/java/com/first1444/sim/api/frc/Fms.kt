@@ -1,5 +1,8 @@
 package com.first1444.sim.api.frc
 
+/**
+ * A common interface for things that communicate things available from the FMS
+ */
 interface Fms {
     val mode: FrcMode
     val matchInfo: MatchInfo

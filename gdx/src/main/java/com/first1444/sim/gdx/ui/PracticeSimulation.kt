@@ -32,6 +32,7 @@ object PracticeSimulation {
         })
         sideTable.row()
         DriverStationConfig.populateTable(sideTable, driverStation, uiSkin)
+        DriverStationConfig.populateGameSpecificMessage(sideTable, driverStation, uiSkin)
 
         return sideTable
     }

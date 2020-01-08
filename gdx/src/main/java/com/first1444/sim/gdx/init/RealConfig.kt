@@ -5,6 +5,5 @@ import com.first1444.sim.api.frc.DriverStationLocation
 
 class RealConfig(
         val driverStationLocation: DriverStationLocation,
-        val alliance: Alliance,
-        val gameSpecificMessage: String
+        val alliance: Alliance
 )
