@@ -1,3 +1,4 @@
 include 'api', 'gdx', 'wpi'
 include 'desktop' // for testing purposes
+include 'wpi-controller'
 rootProject.name = "robo-sim"

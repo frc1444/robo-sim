@@ -8,6 +8,7 @@ buildscript {
         box2DLightsVersion = '1.4'
         dokka_version = "0.10.0"
         abstractDashboardVersion = "v1.1.0"
+        abstractControllerLibVersion = "v2.2.6"
     }
 
     repositories {
