@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.Viewport
 
-class WorldManager : Updateable, Disposable{
+class WorldManager : CloseableUpdateable {
 
     val world: World = World(Vector2.Zero, false) // TODO when we understand sleep better, we can enable it
 
@@ -19,7 +19,7 @@ class WorldManager : Updateable, Disposable{
         world.step(delta, 6, 2)
     }
 
-    override fun dispose() {
+    override fun close() {
         world.dispose()
     }
 

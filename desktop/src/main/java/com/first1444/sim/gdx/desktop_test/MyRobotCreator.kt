@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.EdgeShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef
+import com.first1444.dashboard.bundle.ActiveDashboardBundle
 import com.first1444.dashboard.bundle.DefaultDashboardBundle
 import com.first1444.dashboard.wpi.NetworkTableInstanceBasicDashboard
 import com.first1444.sim.api.*
@@ -37,7 +38,10 @@ import me.retrodaredevil.controller.options.OptionValues
 import java.lang.Math.toRadians
 import kotlin.experimental.or
 
-object MyRobotCreator : RobotCreator {
+class MyRobotCreator(
+        private val isSupplementary: Boolean,
+        private val dashboardBundle: ActiveDashboardBundle
+) : RobotCreator {
     override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): CloseableUpdateable {
         val startingPosition = Vector2(0.0, 4.88)
         val startingAngleRadians = toRadians(90.0)
@@ -94,7 +98,6 @@ object MyRobotCreator : RobotCreator {
                 Pair("rear left", rlPosition),
                 Pair("rear right", rrPosition))){
             val wheelEntity = ActorBodyEntity(updateableData.contentStage, updateableData.worldManager.world, wheelBody, listOf(wheelFixture))
-//            wheelEntity.setPosition(position)
             wheelEntity.setTransformRadians(position.rotateRadians(startingAngleRadians) + startingPosition, startingAngleRadians.toFloat())
             val joint = RevoluteJointDef().apply {
                 bodyA = entity.body
@@ -115,6 +118,27 @@ object MyRobotCreator : RobotCreator {
                 moduleList[0], moduleList[1], moduleList[2], moduleList[3],
                 wheelBase, trackWidth
         )
+        if(isSupplementary){
+            /*
+            What I'd like to do is to move all the above code to somewhere else and then not use a RunnableCreator here
+             */
+            val robotCreator = RunnableCreator.wrap {
+                val networkTable = NetworkTableInstance.getDefault()
+                networkTable.startClient("localhost", NetworkTableInstance.kDefaultPort) // TODO make this customizable
+                object : RobotRunnable {
+                    override fun run() {
+                    }
+
+                    override fun close() {
+                    }
+
+                }
+            }
+            return CloseableUpdateableMultiplexer(listOf(
+                    CloseableUpdateable.fromUpdateable(entity),
+                    RobotUpdateable(robotCreator)
+            ))
+        }
         val provider = IndexedControllerProvider(0)
         val creator = GdxControllerPartCreator(provider, true)
         val joystick = if("sony" in provider.name.toLowerCase()){
@@ -132,37 +156,35 @@ object MyRobotCreator : RobotCreator {
             BaseStandardControllerInput(DefaultStandardControllerInputCreator(), creator, OptionValues.createImmutableBooleanOptionValue(true), OptionValues.createImmutableBooleanOptionValue(false))
         }
         val robotCreator = RunnableCreator.wrap {
-            val networkTable = NetworkTableInstance.getDefault()
-            networkTable.startServer()
-            val rootDashboard = NetworkTableInstanceBasicDashboard(networkTable)
-            val bundle = DefaultDashboardBundle(rootDashboard)
+            NetworkTableInstance.getDefault().startServer()
+
+            val rootDashboard = dashboardBundle.rootDashboard
             val driverStationActiveComponent = DriverStationSendable(data.driverStation).init("FMSInfo", rootDashboard.getSubDashboard("FMSInfo"))
             RobotRunnableMultiplexer(listOf(
-                BasicRobotRunnable(
-                    Robot(
-                            data.driverStation, updateableData.clock, bundle, swerveDriveData,
-                            DefaultOrientationHandler(EntityOrientation(entity)), joystick,
-//                            VisionProvider2019(entity, 2.0, updateableData.clock),
-                            object : SurroundingProvider {
-                                override val surroundings: List<Surrounding>
-                                    get() = emptyList()
-                            },
-                            GdxSoundCreator { Gdx.files.internal(it) }
+                    BasicRobotRunnable(
+                            Robot(
+                                    data.driverStation, updateableData.clock, dashboardBundle, swerveDriveData,
+                                    DefaultOrientationHandler(EntityOrientation(entity)), joystick,
+                                    object : SurroundingProvider {
+                                        override val surroundings: List<Surrounding>
+                                            get() = emptyList()
+                                    },
+                                    GdxSoundCreator { Gdx.files.internal(it) }
+                            ),
+                            data.driverStation
                     ),
-                    data.driverStation
-                ),
-                object : RobotRunnable {
-                    override fun run() {
-                        bundle.update()
-                        driverStationActiveComponent.update()
-                    }
-                    override fun close() {
-                        bundle.onRemove()
-                        driverStationActiveComponent.onRemove()
-                        networkTable.close()
-                    }
+                    object : RobotRunnable {
+                        override fun run() {
+                            dashboardBundle.update()
+                            driverStationActiveComponent.update()
+                        }
+                        override fun close() {
+                            dashboardBundle.onRemove()
+                            driverStationActiveComponent.onRemove()
+                            NetworkTableInstance.getDefault().close()
+                        }
 
-                }
+                    }
             ))
         }
         return CloseableUpdateableMultiplexer(listOf(

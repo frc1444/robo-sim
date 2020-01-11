@@ -2,7 +2,8 @@ package com.first1444.sim.api
 
 interface RobotRunnable : Runnable, AutoCloseable {
     companion object {
-        fun wrap(runnable: () -> Unit): RobotRunnable {
+        @JvmStatic
+        inline fun wrap(crossinline runnable: () -> Unit): RobotRunnable {
             return object : RobotRunnable {
                 override fun run() {
                     runnable()
@@ -10,7 +11,6 @@ interface RobotRunnable : Runnable, AutoCloseable {
 
                 override fun close() {
                 }
-
             }
         }
     }

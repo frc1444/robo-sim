@@ -4,28 +4,45 @@ import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.controllers.Controllers
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.first1444.dashboard.bundle.DefaultDashboardBundle
+import com.first1444.dashboard.wpi.NetworkTableInstanceBasicDashboard
+import com.first1444.sim.api.frc.sim.DashboardFrcDriverStation
 import com.first1444.sim.gdx.init.*
+import edu.wpi.first.networktables.NetworkTableInstance
 
 private fun createSelectionCreator(uiSkin: Skin, changer: ScreenChanger): ScreenCreator {
     Controllers.getControllers() // initialize controllers ASAP
-    val creator = MyRobotCreator
+    val networkTable = NetworkTableInstance.getDefault()
+    // we still have to call either startServer() or startClient()
+    val rootDashboard = NetworkTableInstanceBasicDashboard(networkTable)
+    val bundle = DefaultDashboardBundle(rootDashboard)
+
+    val creator = MyRobotCreator(false, bundle)
+    val supplementaryCreator = MyRobotCreator(true, bundle)
     val exitButtonUpdateableCreator = ExitButtonCreator(Runnable {
         changer.change(createSelectionCreator(uiSkin, changer).create(changer))
     })
+    val fieldCreator = Field2020Creator
+
     return SelectionScreenCreator(
             uiSkin,
             FieldScreenCreator(uiSkin, UpdateableCreatorMultiplexer(listOf(
                     PracticeUpdateableCreator(creator),
-                    Field2020Creator,
+                    fieldCreator,
                     exitButtonUpdateableCreator
             ))),
             RealConfigScreenCreator(uiSkin) { _, config: RealConfig ->
                 changer.change(FieldScreenCreator(uiSkin, UpdateableCreatorMultiplexer(listOf(
-                        RealUpdateableCreator(uiSkin, config, creator),
-                        Field2020Creator,
+                        RealUpdateableCreator(config, creator),
+                        fieldCreator,
                         exitButtonUpdateableCreator
                 ))).create(changer))
-            }
+            },
+            FieldScreenCreator(uiSkin, UpdateableCreatorMultiplexer(listOf(
+                    SupplementaryUpdateableCreator(supplementaryCreator, DashboardFrcDriverStation(bundle.rootDashboard.getSubDashboard("FMSInfo"))),
+                    fieldCreator,
+                    exitButtonUpdateableCreator
+            )))
     )
 }
 

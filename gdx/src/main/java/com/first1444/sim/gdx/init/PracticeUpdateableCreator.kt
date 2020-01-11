@@ -7,14 +7,17 @@ import com.first1444.sim.gdx.ui.CoordinateUpdateable
 import com.first1444.sim.gdx.ui.PracticeSimulation
 import com.first1444.sim.gdx.ui.scoreboard.ScoreboardUpdateable
 
+/**
+ * An [UpdateableCreator] that is used in "practice" mode
+ */
 class PracticeUpdateableCreator(
         private val robotCreator: RobotCreator
 ) : UpdateableCreator {
     override fun create(data: UpdateableCreator.Data): CloseableUpdateable {
         val driverStation = MutableFrcDriverStation()
-        data.uiStage.addActor(PracticeSimulation.createSideTable(driverStation, data.uiSkin))
+        data.uiStage.addActor(PracticeSimulation.createSideTable(driverStation, data.uiSkin)) // adds Teleop, Autonomous, Test buttons
         return CloseableUpdateableMultiplexer(listOf(
-                CloseableUpdateable.fromUpdateable(KeyPressStopUpdateable {
+                CloseableUpdateable.fromUpdateable(KeyPressStopUpdateable { // disable when pressing enter
                     driverStation.mode = FrcMode.DISABLED
                 }),
                 robotCreator.create(RobotCreator.Data(driverStation), data),

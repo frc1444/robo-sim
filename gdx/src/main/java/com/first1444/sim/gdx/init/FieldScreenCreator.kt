@@ -37,7 +37,7 @@ class FieldScreenCreator(
                         CloseableUpdateable.fromUpdateable(StageActUpdateable(uiStage, true)),
                         CloseableUpdateable.fromUpdateable(clock),
                         additionalCloseableUpdateable,
-                        CloseableUpdateable.fromUpdateable(worldManager)
+                        worldManager
                 )),
                 RenderableMultiplexer(listOf(
                         ResetRenderable(Color.BLACK),

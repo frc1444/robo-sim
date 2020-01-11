@@ -17,8 +17,9 @@ import com.first1444.sim.gdx.ui.UIViewport
 
 class SelectionScreenCreator(
         private val uiSkin: Skin,
-        private val practiceScreenCreator: ScreenCreator,
-        private val realScreenCreator: ScreenCreator
+        private val practiceScreenCreator: ScreenCreator?,
+        private val realScreenCreator: ScreenCreator?,
+        private val supplementaryScreenCreator: ScreenCreator? = null
 ) : ScreenCreator {
     override fun create(changer: ScreenChanger): Screen {
 
@@ -27,14 +28,23 @@ class SelectionScreenCreator(
         table.setFillParent(true)
         table.add(Label("Robot Simulator", uiSkin))
         table.row()
-        ScreenSelector.populateTable(table, uiSkin, listOf(
-                ScreenSelector.ScreenSelect("Practice") {
-                    changer.change(practiceScreenCreator.create(changer))
-                },
-                ScreenSelector.ScreenSelect("Real") {
-                    changer.change(realScreenCreator.create(changer))
-                }
-        ))
+        val selectors = mutableListOf<ScreenSelector.ScreenSelect>()
+        if(practiceScreenCreator != null){
+            selectors.add(ScreenSelector.ScreenSelect("Practice") {
+                changer.change(practiceScreenCreator.create(changer))
+            })
+        }
+        if(realScreenCreator != null){
+            selectors.add(ScreenSelector.ScreenSelect("Real") {
+                changer.change(realScreenCreator.create(changer))
+            })
+        }
+        if(supplementaryScreenCreator != null){
+            selectors.add(ScreenSelector.ScreenSelect("Supplementary") {
+                changer.change(supplementaryScreenCreator.create(changer))
+            })
+        }
+        ScreenSelector.populateTable(table, uiSkin, selectors)
         table.add(Label("Made by Joshua Shannon from Lightning 1444", uiSkin))
 
         stage.addActor(table)
