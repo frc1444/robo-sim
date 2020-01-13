@@ -4,8 +4,8 @@ import com.first1444.sim.api.frc.implementations.infiniterecharge.Field2020
 import com.first1444.sim.gdx.CloseableUpdateable
 import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.UpdateableMultiplexer
-import com.first1444.sim.gdx.implementations.infiniterecharge.FieldSetup2020
-import com.first1444.sim.gdx.implementations.infiniterecharge.PowerCellEntity
+import com.first1444.sim.gdx.implementations.infiniterecharge2020.FieldSetup2020
+import com.first1444.sim.gdx.implementations.infiniterecharge2020.PowerCellEntity
 
 object Field2020Creator : UpdateableCreator {
     override fun create(data: UpdateableCreator.Data): CloseableUpdateable {

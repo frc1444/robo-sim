@@ -6,7 +6,7 @@ import com.first1444.sim.gdx.CloseableUpdateableMultiplexer
 import com.first1444.sim.gdx.ui.CoordinateUpdateable
 import com.first1444.sim.gdx.ui.scoreboard.ScoreboardUpdateable
 
-class SupplementaryUpdateableCreator (
+class SupplementaryUpdateableCreator(
         private val robotCreator: RobotCreator,
         private val driverStation: FrcDriverStation
 ) : UpdateableCreator {

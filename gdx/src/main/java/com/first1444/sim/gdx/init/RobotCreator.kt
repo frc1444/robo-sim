@@ -8,7 +8,8 @@ interface RobotCreator {
     fun create(data: Data, updateableData: UpdateableCreator.Data): CloseableUpdateable
 
     companion object {
-        operator fun invoke(lambda: (data: Data, updateableData: UpdateableCreator.Data) -> CloseableUpdateable): RobotCreator {
+        @JvmSynthetic
+        inline operator fun invoke(crossinline lambda: (data: Data, updateableData: UpdateableCreator.Data) -> CloseableUpdateable): RobotCreator {
             return object : RobotCreator {
                 override fun create(data: Data, updateableData: UpdateableCreator.Data): CloseableUpdateable {
                     return lambda(data, updateableData)

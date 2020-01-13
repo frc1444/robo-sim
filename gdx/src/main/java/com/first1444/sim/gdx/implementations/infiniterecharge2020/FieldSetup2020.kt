@@ -1,4 +1,4 @@
-package com.first1444.sim.gdx.implementations.infiniterecharge
+package com.first1444.sim.gdx.implementations.infiniterecharge2020
 
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.physics.box2d.*

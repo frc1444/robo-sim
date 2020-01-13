@@ -36,7 +36,6 @@ class RealConfigScreenCreator(
         table.setFillParent(true)
         stage.addActor(table)
         val driverStation = MutableFrcDriverStation()
-        driverStation.alliance = Alliance.RED
         DriverStationConfig.populateTable(table, driverStation, uiSkin)
         table.add(TextButton("done", uiSkin).apply {
             addListener(clickUpListener {

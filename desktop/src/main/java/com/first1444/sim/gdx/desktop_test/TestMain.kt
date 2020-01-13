@@ -17,8 +17,8 @@ private fun createSelectionCreator(uiSkin: Skin, changer: ScreenChanger): Screen
     val rootDashboard = NetworkTableInstanceBasicDashboard(networkTable)
     val bundle = DefaultDashboardBundle(rootDashboard)
 
-    val creator = MyRobotCreator(false, bundle)
-    val supplementaryCreator = MyRobotCreator(true, bundle)
+    val creator = MyRobotCreator(bundle)
+    val supplementaryCreator = SupplementaryRobotCreator("localhost", NetworkTableInstance.kDefaultPort)
     val exitButtonUpdateableCreator = ExitButtonCreator(Runnable {
         changer.change(createSelectionCreator(uiSkin, changer).create(changer))
     })
