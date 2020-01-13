@@ -167,7 +167,7 @@ class MyRobotCreator(
                         override fun close() {
                             dashboardBundle.onRemove()
                             driverStationActiveComponent.onRemove()
-                            NetworkTableInstance.getDefault().close()
+                            NetworkTableInstance.getDefault().stopServer()
                         }
 
                     }
@@ -181,9 +181,8 @@ class MyRobotCreator(
 
 }
 
-class SupplementaryRobotCreator(
-        private val serverName: String,
-        private val port: Int
+class MySupplementaryRobotCreator(
+        private val serverName: String
 ) : RobotCreator {
     override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): CloseableUpdateable {
         val entity = createEntity(data, updateableData)
@@ -191,12 +190,13 @@ class SupplementaryRobotCreator(
 
         val robotCreator = RunnableCreator.wrap {
             val networkTable = NetworkTableInstance.getDefault()
-            networkTable.startClient(serverName, port)
+            networkTable.startClient(serverName)
             object : RobotRunnable {
                 override fun run() {
                 }
 
                 override fun close() {
+                    networkTable.stopClient()
                 }
 
             }

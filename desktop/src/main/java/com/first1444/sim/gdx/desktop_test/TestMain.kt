@@ -18,7 +18,6 @@ private fun createSelectionCreator(uiSkin: Skin, changer: ScreenChanger): Screen
     val bundle = DefaultDashboardBundle(rootDashboard)
 
     val creator = MyRobotCreator(bundle)
-    val supplementaryCreator = SupplementaryRobotCreator("localhost", NetworkTableInstance.kDefaultPort)
     val exitButtonUpdateableCreator = ExitButtonCreator(Runnable {
         changer.change(createSelectionCreator(uiSkin, changer).create(changer))
     })
@@ -38,11 +37,14 @@ private fun createSelectionCreator(uiSkin: Skin, changer: ScreenChanger): Screen
                         exitButtonUpdateableCreator
                 ))).create(changer))
             },
-            FieldScreenCreator(uiSkin, UpdateableCreatorMultiplexer(listOf(
-                    SupplementaryUpdateableCreator(supplementaryCreator, DashboardFrcDriverStation(bundle.rootDashboard.getSubDashboard("FMSInfo"))),
-                    fieldCreator,
-                    exitButtonUpdateableCreator
-            )))
+            SupplementaryConfigScreenCreator(uiSkin, "localhost") { _, config ->
+                val supplementaryCreator = MySupplementaryRobotCreator(config.hostAddress)
+                changer.change(FieldScreenCreator(uiSkin, UpdateableCreatorMultiplexer(listOf(
+                        SupplementaryUpdateableCreator(supplementaryCreator, DashboardFrcDriverStation(bundle.rootDashboard.getSubDashboard("FMSInfo"))),
+                        fieldCreator,
+                        exitButtonUpdateableCreator
+                ))).create(changer))
+            }
     )
 }
 
