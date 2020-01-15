@@ -2,10 +2,7 @@ package com.first1444.sim.gdx.desktop_test;
 
 import com.first1444.dashboard.bundle.DashboardBundle;
 import com.first1444.dashboard.shuffleboard.SendableComponent;
-import com.first1444.sim.api.Clock;
-import com.first1444.sim.api.ClockSendable;
-import com.first1444.sim.api.Transform2;
-import com.first1444.sim.api.Vector2;
+import com.first1444.sim.api.*;
 import com.first1444.sim.api.distance.MutableDeltaDistanceAccumulator;
 import com.first1444.sim.api.distance.MutableDistanceAccumulator;
 import com.first1444.sim.api.distance.OrientationDeltaDistanceCalculator;
@@ -119,9 +116,10 @@ public class Robot implements BasicRobot {
         updateSwerve();
         swerveDrive.run();
         Vector2 position = distanceAccumulator.getPosition();
+        Rotation2 orientation = this.orientation.getOrientation();
         for(Surrounding surrounding : surroundingProvider.getSurroundings()){
             Transform2 transform = surrounding.getTransform();
-            Transform2 visionTransform = transform.rotateRadians(orientation.getOrientationRadians()).plus(position);
+            Transform2 visionTransform = transform.rotate(orientation).plus(position);
             VisionTarget2020 best = null;
             double closest2 = Double.MAX_VALUE;
             for(VisionTarget2020 target : Field2020.ALL_VISION_TARGETS){
@@ -135,7 +133,7 @@ public class Robot implements BasicRobot {
             requireNonNull(best);
             System.out.println("We see: " + best.getIdentifier() + " distance error: " + Math.sqrt(closest2) + " yaw error: " + Math.abs(visionTransform.getRotationDegrees() - best.getTransform().getRotationDegrees()));
             // If you're doing this on a robot, you might also want to check the yaw error.
-            distanceAccumulator.setPosition(best.getTransform().getPosition().minus(transform.getPosition().rotateRadians(orientation.getOrientationRadians())));
+            distanceAccumulator.setPosition(best.getTransform().getPosition().minus(transform.getPosition().rotate(orientation)));
         }
 //        System.out.println("Position: " + distanceAccumulator.getPosition());
 //        System.out.println("Surroundings: " + surroundingProvider.getSurroundings());
