@@ -17,14 +17,15 @@ import com.first1444.sim.api.frc.BasicRobot;
 import com.first1444.sim.api.frc.FrcDriverStation;
 import com.first1444.sim.api.frc.FrcMode;
 import com.first1444.sim.api.frc.implementations.deepspace.Field2019;
-import com.first1444.sim.api.frc.implementations.deepspace.VisionTarget;
+import com.first1444.sim.api.frc.implementations.deepspace.VisionTarget2019;
+import com.first1444.sim.api.frc.implementations.infiniterecharge.Field2020;
+import com.first1444.sim.api.frc.implementations.infiniterecharge.VisionTarget2020;
 import com.first1444.sim.api.frc.implementations.infiniterecharge.WheelColor;
 import com.first1444.sim.api.scheduler.match.DefaultMatchScheduler;
 import com.first1444.sim.api.scheduler.match.MatchSchedulerRunnable;
 import com.first1444.sim.api.scheduler.match.MatchTime;
 import com.first1444.sim.api.sensors.DefaultMutableOrientation;
 import com.first1444.sim.api.sensors.MutableOrientation;
-import com.first1444.sim.api.sensors.Orientation;
 import com.first1444.sim.api.sensors.OrientationHandler;
 import com.first1444.sim.api.sound.Sound;
 import com.first1444.sim.api.sound.SoundCreator;
@@ -121,9 +122,9 @@ public class Robot implements BasicRobot {
         for(Surrounding surrounding : surroundingProvider.getSurroundings()){
             Transform2 transform = surrounding.getTransform();
             Transform2 visionTransform = transform.rotateRadians(orientation.getOrientationRadians()).plus(position);
-            VisionTarget best = null;
+            VisionTarget2020 best = null;
             double closest2 = Double.MAX_VALUE;
-            for(VisionTarget target : Field2019.ALL_VISION_TARGETS){
+            for(VisionTarget2020 target : Field2020.ALL_VISION_TARGETS){
                 Transform2 targetTransform = target.getTransform();
                 double distance2 = targetTransform.getPosition().distance2(visionTransform.getPosition());
                 if(distance2 < closest2){
@@ -132,8 +133,8 @@ public class Robot implements BasicRobot {
                 }
             }
             requireNonNull(best);
-//            System.out.println("We see: " + best + " distance error: " + Math.sqrt(closest2) + " yaw error: " + Math.abs(visionTransform.getRotationDegrees() - best.getTransform().getRotationDegrees()));
-            // If you're doing this on a robot, you might also want to check the raw error.
+            System.out.println("We see: " + best.getIdentifier() + " distance error: " + Math.sqrt(closest2) + " yaw error: " + Math.abs(visionTransform.getRotationDegrees() - best.getTransform().getRotationDegrees()));
+            // If you're doing this on a robot, you might also want to check the yaw error.
             distanceAccumulator.setPosition(best.getTransform().getPosition().minus(transform.getPosition().rotateRadians(orientation.getOrientationRadians())));
         }
 //        System.out.println("Position: " + distanceAccumulator.getPosition());

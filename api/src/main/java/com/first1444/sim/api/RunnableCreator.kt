@@ -13,7 +13,7 @@ interface RunnableCreator {
 
     companion object {
         @JvmStatic
-        fun wrap(creator: () -> RobotRunnable): RunnableCreator{
+        inline fun wrap(crossinline creator: () -> RobotRunnable): RunnableCreator{
             return object : RunnableCreator {
                 override fun prematureInit() {
                 }

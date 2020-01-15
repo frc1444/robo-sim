@@ -22,6 +22,8 @@ import com.first1444.sim.gdx.entity.ActorBodyEntity
 import com.first1444.sim.gdx.entity.BodyEntity
 import com.first1444.sim.gdx.entity.EntityOrientation
 import com.first1444.sim.gdx.implementations.infiniterecharge2020.FieldSetup2020
+import com.first1444.sim.gdx.implementations.infiniterecharge2020.surroundings.VisionProvider2020
+import com.first1444.sim.gdx.implementations.surroundings.EntityRangeVisionFilter
 import com.first1444.sim.gdx.init.RobotCreator
 import com.first1444.sim.gdx.init.UpdateableCreator
 import com.first1444.sim.gdx.sound.GdxSoundCreator
@@ -151,10 +153,7 @@ class MyRobotCreator(
                             Robot(
                                     data.driverStation, updateableData.clock, dashboardBundle, swerveDriveData,
                                     DefaultOrientationHandler(EntityOrientation(entity)), joystick,
-                                    object : SurroundingProvider {
-                                        override val surroundings: List<Surrounding>
-                                            get() = emptyList()
-                                    },
+                                    VisionProvider2020(EntityRangeVisionFilter(entity, 3.0), entity, updateableData.clock),
                                     GdxSoundCreator { Gdx.files.internal(it) }
                             ),
                             data.driverStation

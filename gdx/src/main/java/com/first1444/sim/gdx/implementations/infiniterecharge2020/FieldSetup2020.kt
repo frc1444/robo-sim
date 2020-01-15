@@ -2,9 +2,11 @@ package com.first1444.sim.gdx.implementations.infiniterecharge2020
 
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.physics.box2d.*
+import com.first1444.sim.api.frc.implementations.deepspace.Field2019
 import com.first1444.sim.api.frc.implementations.infiniterecharge.Field2020
 import com.first1444.sim.api.inchesToMeters
 import com.first1444.sim.gdx.gdxVector
+import com.first1444.sim.gdx.set
 
 /**
  * This has methods to help create Box2D elements to display interactive field components for the FRC 2020 field.
@@ -19,6 +21,7 @@ object FieldSetup2020 {
     private val HL = (Field2020.LENGTH / 2).toFloat()
     @JvmStatic
     fun createField(world: World) {
+        createVisionTargets(world)
         createFieldBounds(world)
         createTargetZones(world)
         createLoadingZones(world)
@@ -26,6 +29,24 @@ object FieldSetup2020 {
         createTrench(world)
         createShieldGenerator(world)
         createInitiationLine(world)
+    }
+    @JvmStatic
+    fun createVisionTargets(world: World){
+        for(target in Field2020.ALL_VISION_TARGETS){
+            val transform = target.transform
+            world.createBody(BodyDef().apply {
+                position.set(transform.position)
+                angle = transform.rotationRadians.toFloat()
+            }).createFixture(FixtureDef().apply {
+                isSensor = true
+                shape = EdgeShape().apply {
+                    set(
+                            -0.03f, 0.2f,
+                            -0.03f, -0.2f
+                    )
+                }
+            })
+        }
     }
 
     @JvmStatic
