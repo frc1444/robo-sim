@@ -1,12 +1,22 @@
 package com.first1444.sim.api
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.lang.Math.toRadians
 import java.text.DecimalFormat
 import kotlin.math.*
 
 
-class Vector2(
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE)
+class Vector2
+@JsonCreator
+constructor(
+        @JsonProperty("x", required = true)
+        @get:JsonProperty
         val x: Double,
+        @JsonProperty("y", required = true)
+        @get:JsonProperty
         val y: Double
 ) : Comparable<Vector2>{
     companion object {

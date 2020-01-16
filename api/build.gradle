@@ -4,4 +4,8 @@ sourceCompatibility = 1.8
 
 dependencies {
     implementation "com.github.frc1444.abstract-dashboard:core:$abstractDashboardVersion"
+
+    implementation "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 }
