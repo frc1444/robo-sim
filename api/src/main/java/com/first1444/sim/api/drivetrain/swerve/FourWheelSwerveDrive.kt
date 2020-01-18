@@ -73,10 +73,10 @@ class FourWheelSwerveDrive(
             val sinA = this.sinA // wheel base // L/R
             val cosA = this.cosA // track width// W/R
 
-            val A = y - turnAmount * sinA
-            val B = y + turnAmount * sinA
-            val C = x - turnAmount * cosA
-            val D = x + turnAmount * cosA
+            val A = y - turnAmount * cosA
+            val B = y + turnAmount * cosA
+            val C = x - turnAmount * sinA
+            val D = x + turnAmount * sinA
 
             var frSpeed = hypot(A, C) * speed // ws1
             var flSpeed = hypot(A, D) * speed // ws2

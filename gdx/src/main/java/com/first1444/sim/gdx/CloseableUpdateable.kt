@@ -13,5 +13,23 @@ interface CloseableUpdateable : Closeable {
             override fun close() {
             }
         }
+        @JvmStatic
+        fun fromCloseable(closeable: Closeable) = object : CloseableUpdateable {
+            override fun update(delta: Float) {
+            }
+
+            override fun close() {
+                closeable.close()
+            }
+        }
+        @JvmSynthetic
+        inline fun fromCloseable(crossinline closeable: () -> Unit) = object : CloseableUpdateable {
+            override fun update(delta: Float) {
+            }
+
+            override fun close() {
+                closeable()
+            }
+        }
     }
 }

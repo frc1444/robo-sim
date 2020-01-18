@@ -6,6 +6,7 @@ import com.first1444.sim.api.event.EventHandler
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.lang.Math.toRadians
+import kotlin.math.sqrt
 
 class SwerveTest {
     @Test
@@ -45,19 +46,34 @@ class SwerveTest {
         drive.setControl(Vector2.ZERO, -1.0, 1.0)
         drive.run()
     }
+    @Test
+    fun testComplexRotateInPlace(){
+        // rotate counter clock wise
+        val data = createDataDegrees(
+                1.0, 30.0,
+                1.0, 90 + 60.0,
+                1.0, 180 + 30.0 - 360,
+                1.0, 270 + 60.0 - 360,
+                wheelBase = 1.0, trackWidth = sqrt(3.0)
+        )
+        val drive = FourWheelSwerveDrive(data)
+        drive.setControl(Vector2.ZERO, -1.0, 1.0)
+        drive.run()
+    }
 
     private fun createDataDegrees(
         frSpeed: Double, frAngle: Double,
         flSpeed: Double, flAngle: Double,
         rlSpeed: Double, rlAngle: Double,
-        rrSpeed: Double, rrAngle: Double
+        rrSpeed: Double, rrAngle: Double,
+        wheelBase: Double = 1.0, trackWidth: Double = 1.0
     ): FourWheelSwerveDriveData {
         return FourWheelSwerveDriveData(
             TestSwerveModule("front right", frSpeed, toRadians(frAngle)),
             TestSwerveModule("front left", flSpeed, toRadians(flAngle)),
             TestSwerveModule("rear left", rlSpeed, toRadians(rlAngle)),
             TestSwerveModule("rear right", rrSpeed, toRadians(rrAngle)),
-            1.0, 1.0
+            wheelBase, trackWidth
         )
     }
 }
