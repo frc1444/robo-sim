@@ -11,14 +11,15 @@ import edu.wpi.first.wpilibj.RobotController
 import edu.wpi.first.wpilibj.Watchdog
 
 open class RoboSimRobot
-@JvmOverloads constructor(
+constructor(
         private val runnableCreator: RunnableCreator,
-        private val period: Double = 0.02
+        private val period: Double
 ) : RobotBase() {
-    private val watchdog = Watchdog(period, ::printLoopOverrunMessage)
-
     private val notifier = NotifierJNI.initializeNotifier()
     private var expirationTime = 0.0
+
+    @Deprecated("Define the default value yourself! This will be removed")
+    constructor(runnableCreator: RunnableCreator) : this(runnableCreator, 0.02)
 
     init {
         NotifierJNI.setNotifierName(notifier, "RoboSimRobot")
@@ -54,20 +55,13 @@ open class RoboSimRobot
     }
 
     private fun loop(robotRunnable: RobotRunnable){
-        watchdog.reset()
         when {
             isDisabled -> HAL.observeUserProgramDisabled()
             isAutonomous -> HAL.observeUserProgramAutonomous()
             isOperatorControl -> HAL.observeUserProgramTeleop()
             else -> HAL.observeUserProgramTest()
         }
-        watchdog.addEpoch("RobotRunnable.run()")
         robotRunnable.run()
-
-        watchdog.disable()
-        if(watchdog.isExpired){
-            watchdog.printEpochs()
-        }
     }
 
     /** Although there isn't an override, this still overrides the finalize function*/
@@ -76,9 +70,6 @@ open class RoboSimRobot
         NotifierJNI.cleanNotifier(notifier)
     }
 
-    protected open fun printLoopOverrunMessage() {
-        DriverStation.reportWarning("Loop time of " + period + "s overrun\n", false)
-    }
     /**
      * Update the alarm hardware to reflect the next alarm.
      */
