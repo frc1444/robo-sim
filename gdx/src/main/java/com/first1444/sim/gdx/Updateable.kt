@@ -5,7 +5,7 @@ interface Updateable {
 
     companion object {
         @JvmSynthetic
-        operator fun invoke(lambda: (Float) -> Unit): Updateable{
+        inline operator fun invoke(crossinline lambda: (Float) -> Unit): Updateable{
             return object : Updateable {
                 override fun update(delta: Float) {
                     lambda(delta)

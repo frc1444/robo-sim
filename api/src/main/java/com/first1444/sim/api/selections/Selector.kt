@@ -9,7 +9,7 @@ interface Selector<T> {
 
     companion object {
         @JvmSynthetic
-        operator fun <T>invoke(lambda: (Collection<T>) -> T?): Selector<T> = object : Selector<T> {
+        inline operator fun <T>invoke(crossinline lambda: (Collection<T>) -> T?): Selector<T> = object : Selector<T> {
             override fun select(collection: Collection<T>): T? = lambda(collection)
         }
     }

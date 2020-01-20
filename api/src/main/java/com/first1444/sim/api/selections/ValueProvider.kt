@@ -4,7 +4,7 @@ interface ValueProvider<in T> {
     fun getValue(thing: T): Double
     companion object {
         @JvmSynthetic
-        operator fun <T>invoke(lambda: (T) -> Double): ValueProvider<T> = object : ValueProvider<T> {
+        inline operator fun <T>invoke(crossinline lambda: (T) -> Double): ValueProvider<T> = object : ValueProvider<T> {
             override fun getValue(thing: T): Double = lambda(thing)
         }
     }

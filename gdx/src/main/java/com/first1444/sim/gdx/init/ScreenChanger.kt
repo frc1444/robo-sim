@@ -7,11 +7,9 @@ interface ScreenChanger {
 
     companion object {
         @JvmSynthetic
-        operator fun invoke(lambda: (Screen) -> Unit): ScreenChanger {
-            return object : ScreenChanger {
-                override fun change(screen: Screen) {
-                    lambda(screen)
-                }
+        inline operator fun invoke(crossinline lambda: (Screen) -> Unit): ScreenChanger = object : ScreenChanger {
+            override fun change(screen: Screen) {
+                lambda(screen)
             }
         }
     }

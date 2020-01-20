@@ -10,7 +10,7 @@ interface SoundCreator : AutoCloseable {
     override fun close()
 
     companion object {
-        fun createWithoutClose(lambda: (String) -> Sound) = object : SoundCreator {
+        inline fun createWithoutClose(crossinline lambda: (String) -> Sound) = object : SoundCreator {
             override fun create(string: String) = lambda(string)
             override fun close() {
             }

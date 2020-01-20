@@ -9,7 +9,7 @@ import com.first1444.sim.api.sound.implementations.RandomSoundMultiplexer
 import com.first1444.sim.api.sound.implementations.SimpleSound
 
 @JvmSynthetic
-fun GdxSoundCreator(fileHandleProvider: (String) -> FileHandle): GdxSoundCreator {
+inline fun GdxSoundCreator(crossinline fileHandleProvider: (String) -> FileHandle): GdxSoundCreator {
     return GdxSoundCreator(object : GdxSoundCreator.FileHandleProvider {
         override fun getFileHandle(string: String): FileHandle = fileHandleProvider(string)
     })

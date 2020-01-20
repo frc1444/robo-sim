@@ -4,18 +4,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.first1444.sim.api.Clock
 import com.first1444.sim.gdx.CloseableUpdateable
-import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.WorldManager
 
 interface UpdateableCreator {
     fun create(data: Data): CloseableUpdateable
 
     companion object {
-        operator fun invoke(lambda: (data: Data) -> CloseableUpdateable): UpdateableCreator {
-            return object : UpdateableCreator {
-                override fun create(data: Data): CloseableUpdateable {
-                    return lambda(data)
-                }
+        inline operator fun invoke(crossinline lambda: (data: Data) -> CloseableUpdateable): UpdateableCreator = object : UpdateableCreator {
+            override fun create(data: Data): CloseableUpdateable {
+                return lambda(data)
             }
         }
     }

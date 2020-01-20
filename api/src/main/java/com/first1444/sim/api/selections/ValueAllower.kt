@@ -8,7 +8,7 @@ interface ValueAllower<in T> {
             override fun isAllowed(thing: T, value: Double): Boolean = true
         }
         @JvmSynthetic
-        operator fun <T>invoke(lambda: (T, Double) -> Boolean): ValueAllower<T> = object : ValueAllower<T> {
+        inline operator fun <T>invoke(crossinline lambda: (T, Double) -> Boolean): ValueAllower<T> = object : ValueAllower<T> {
             override fun isAllowed(thing: T, value: Double): Boolean = lambda(thing, value)
         }
     }

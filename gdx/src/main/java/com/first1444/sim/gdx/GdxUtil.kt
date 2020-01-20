@@ -35,13 +35,13 @@ val com.badlogic.gdx.physics.box2d.Transform.sim: Transform2
         return fromRadians(position.x.toDouble(), position.y.toDouble(), rotation.toDouble())
     }
 
-fun clickDownListener(onClick: () -> Unit): EventListener = object : InputListener() {
+inline fun clickDownListener(crossinline onClick: () -> Unit): EventListener = object : InputListener() {
     override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
         onClick()
         return true
     }
 }
-fun clickUpListener(onClick: () -> Unit): EventListener = object : InputListener() {
+inline fun clickUpListener(crossinline onClick: () -> Unit): EventListener = object : InputListener() {
     override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
         return true
     }
@@ -49,7 +49,7 @@ fun clickUpListener(onClick: () -> Unit): EventListener = object : InputListener
         onClick()
     }
 }
-fun changeEventListener(onChange: (ChangeListener.ChangeEvent) -> Unit): EventListener = object : EventListener {
+inline fun changeEventListener(crossinline onChange: (ChangeListener.ChangeEvent) -> Unit): EventListener = object : EventListener {
     override fun handle(event: Event): Boolean {
         if(event is ChangeListener.ChangeEvent){
             onChange(event)
