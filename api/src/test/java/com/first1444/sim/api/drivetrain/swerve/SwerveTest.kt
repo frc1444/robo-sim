@@ -17,9 +17,10 @@ class SwerveTest {
                 1.0, 0.0,
                 1.0, 0.0
         )
-        val drive = FourWheelSwerveDrive(data)
-        drive.setControl(Vector2.X, 0.0, 1.0)
-        drive.run()
+        for(drive in createDrives(data)) {
+            drive.setControl(Vector2.X, 0.0, 1.0)
+            drive.run()
+        }
     }
     @Test
     fun testStrafeDrive(){
@@ -29,9 +30,10 @@ class SwerveTest {
                 1.0, -90.0,
                 1.0, -90.0
         )
-        val drive = FourWheelSwerveDrive(data)
-        drive.setControl(-Vector2.Y, 0.0, 1.0)
-        drive.run()
+        for(drive in createDrives(data)) {
+            drive.setControl(-Vector2.Y, 0.0, 1.0)
+            drive.run()
+        }
     }
     @Test
     fun testRotateInPlace(){
@@ -42,9 +44,10 @@ class SwerveTest {
                 1.0, 180 + 45.0 - 360,
                 1.0, 270 + 45.0 - 360
         )
-        val drive = FourWheelSwerveDrive(data)
-        drive.setControl(Vector2.ZERO, -1.0, 1.0)
-        drive.run()
+        for(drive in createDrives(data)) {
+            drive.setControl(Vector2.ZERO, -1.0, 1.0)
+            drive.run()
+        }
     }
     @Test
     fun testComplexRotateInPlace(){
@@ -56,9 +59,10 @@ class SwerveTest {
                 1.0, 270 + 60.0 - 360,
                 wheelBase = 1.0, trackWidth = sqrt(3.0)
         )
-        val drive = FourWheelSwerveDrive(data)
-        drive.setControl(Vector2.ZERO, -1.0, 1.0)
-        drive.run()
+        for(drive in createDrives(data)) {
+            drive.setControl(Vector2.ZERO, -1.0, 1.0)
+            drive.run()
+        }
     }
 
     private fun createDataDegrees(
@@ -75,6 +79,19 @@ class SwerveTest {
             TestSwerveModule("rear right", rrSpeed, toRadians(rrAngle)),
             wheelBase, trackWidth
         )
+    }
+    private fun convert(data: FourWheelSwerveDriveData): AnyWheelSwerveDriveData {
+        val x = data.wheelBase / 2.0
+        val y = data.trackWidth / 2.0
+        return AnyWheelSwerveDriveData(listOf(
+                PositionSwerveModule(data.frontRight, Vector2(x, -y)),
+                PositionSwerveModule(data.frontLeft, Vector2(x, y)),
+                PositionSwerveModule(data.rearLeft, Vector2(-x, y)),
+                PositionSwerveModule(data.rearRight, Vector2(-x, -y))
+        ))
+    }
+    private fun createDrives(data: FourWheelSwerveDriveData): List<SwerveDrive> {
+        return listOf(FourWheelSwerveDrive(data), AnyWheelSwerveDrive(convert(data)))
     }
 }
 private class TestSwerveModule(
