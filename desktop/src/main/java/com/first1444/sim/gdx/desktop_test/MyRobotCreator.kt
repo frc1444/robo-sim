@@ -9,8 +9,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef
 import com.first1444.dashboard.bundle.ActiveDashboardBundle
 import com.first1444.sim.api.*
-import com.first1444.sim.api.drivetrain.swerve.FourWheelSwerveDriveData
-import com.first1444.sim.api.drivetrain.swerve.SwerveModule
+import com.first1444.sim.api.drivetrain.swerve.*
 import com.first1444.sim.api.frc.BasicRobotRunnable
 import com.first1444.sim.api.frc.sim.DriverStationSendable
 import com.first1444.sim.api.sensors.DefaultOrientationHandler
@@ -70,7 +69,7 @@ private fun createEntity(data: RobotCreator.Data, updateableData: UpdateableCrea
     }
     ))
 }
-private fun createSwerveDriveData(data: RobotCreator.Data, updateableData: UpdateableCreator.Data, entity: BodyEntity): FourWheelSwerveDriveData {
+private fun createSwerveDriveData(data: RobotCreator.Data, updateableData: UpdateableCreator.Data, entity: BodyEntity): AnyWheelSwerveDriveData {
     val wheelBody = BodyDef().apply {
         type = BodyDef.BodyType.DynamicBody
     }
@@ -90,7 +89,7 @@ private fun createSwerveDriveData(data: RobotCreator.Data, updateableData: Updat
     val rlPosition = Vector2(-wheelBase / 2, trackWidth / 2)
     val rrPosition = Vector2(-wheelBase / 2, -trackWidth / 2)
 
-    val moduleList = ArrayList<SwerveModule>(4)
+    val moduleList = ArrayList<PositionSwerveModule>(4)
     for((moduleName, position) in listOf(
             Pair("front right", frPosition),
             Pair("front left", flPosition),
@@ -111,12 +110,13 @@ private fun createSwerveDriveData(data: RobotCreator.Data, updateableData: Updat
                 AccelerateSetPointHandler(maxVelocity.toFloat() / .5f, maxVelocity.toFloat() / .2f),
                 AccelerateSetPointHandler(MathUtils.PI2 / .5f)
         )
-        moduleList.add(module)
+        moduleList.add(PositionSwerveModule(module, position))
     }
-    return FourWheelSwerveDriveData(
-            moduleList[0], moduleList[1], moduleList[2], moduleList[3],
-            wheelBase, trackWidth
-    )
+    return AnyWheelSwerveDriveData(moduleList)
+//    return FourWheelSwerveDriveData(
+//            moduleList[0], moduleList[1], moduleList[2], moduleList[3],
+//            wheelBase, trackWidth
+//    )
 }
 
 class MyRobotCreator(
@@ -151,7 +151,7 @@ class MyRobotCreator(
             RobotRunnableMultiplexer(listOf(
                     BasicRobotRunnable(
                             Robot(
-                                    data.driverStation, updateableData.clock, dashboardBundle, swerveDriveData,
+                                    data.driverStation, updateableData.clock, dashboardBundle, AnyWheelSwerveDrive(swerveDriveData),
                                     DefaultOrientationHandler(EntityOrientation(entity)), joystick,
                                     VisionProvider2020(EntityRangeVisionFilter(entity, 3.0), entity, updateableData.clock),
                                     GdxSoundCreator { Gdx.files.internal(it) }

@@ -32,10 +32,10 @@ class AnyWheelSwerveDrive(
             val map = HashMap<PositionSwerveModule, Double>(drivetrainData.positionSwerveModules.size)
             var max = 0.0
             for(positionModule in drivetrainData.positionSwerveModules){
-                val normalPosition = positionModule.position.normalized
+                val moduleAngle = positionModule.position.angle
                 val module = positionModule.swerveModule
-                val wheelX = x + turnAmount * normalPosition.y
-                val wheelY = y - turnAmount * normalPosition.x
+                val wheelX = x + turnAmount * moduleAngle.sin
+                val wheelY = y - turnAmount * moduleAngle.cos
                 val wheelSpeed = hypot(wheelX, wheelY) * speed
                 val wheelAngle = atan2(wheelY, wheelX)
                 map[positionModule] = wheelSpeed
@@ -46,11 +46,17 @@ class AnyWheelSwerveDrive(
             }
             if(max > 1){
                 for((positionModule, targetSpeed) in map){
-                    positionModule.swerveModule.setTargetSpeed(targetSpeed / max)
+                    positionModule.swerveModule.run {
+                        setTargetSpeed(targetSpeed / max)
+                        run()
+                    }
                 }
             } else {
                 for((positionModule, targetSpeed) in map){
-                    positionModule.swerveModule.setTargetSpeed(targetSpeed)
+                    positionModule.swerveModule.run {
+                        setTargetSpeed(targetSpeed)
+                        run()
+                    }
                 }
             }
         }

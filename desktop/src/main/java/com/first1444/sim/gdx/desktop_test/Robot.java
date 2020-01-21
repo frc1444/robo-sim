@@ -60,7 +60,7 @@ public class Robot implements BasicRobot {
             FrcDriverStation driverStation,
             Clock clock,
             DashboardBundle bundle,
-            FourWheelSwerveDriveData swerveDriveData,
+            SwerveDrive swerveDrive,
             OrientationHandler orientationHandler,
             StandardControllerInput controller,
             SurroundingProvider surroundingProvider,
@@ -68,7 +68,7 @@ public class Robot implements BasicRobot {
         this.driverStation = driverStation;
         this.clock = clock;
         this.bundle = bundle;
-        this.swerveDrive = new FourWheelSwerveDrive(swerveDriveData);
+        this.swerveDrive = swerveDrive;
         this.orientation = new DefaultMutableOrientation(orientationHandler.getOrientation());
         this.controller = controller;
         this.surroundingProvider = surroundingProvider;
@@ -77,7 +77,7 @@ public class Robot implements BasicRobot {
         MutableControlConfig config = new MutableControlConfig();
         config.fullAnalogDeadzone = .1;
         this.controlConfig = config;
-        distanceAccumulator = new MutableDeltaDistanceAccumulator(new OrientationDeltaDistanceCalculator(new SwerveDeltaDistanceCalculator(swerveDriveData), orientation));
+        distanceAccumulator = new MutableDeltaDistanceAccumulator(new OrientationDeltaDistanceCalculator(new SwerveDeltaDistanceCalculator(swerveDrive.getDrivetrainData()), orientation));
         distanceAccumulator.setPosition(new Vector2(0, 4.88));
 
         bundle.getShuffleboard().get("dash").add("time", new SendableComponent<>(new ClockSendable(clock)));
