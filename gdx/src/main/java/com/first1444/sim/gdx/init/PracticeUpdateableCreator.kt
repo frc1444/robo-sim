@@ -13,10 +13,10 @@ import com.first1444.sim.gdx.ui.scoreboard.ScoreboardUpdateable
 class PracticeUpdateableCreator(
         private val robotCreator: RobotCreator
 ) : UpdateableCreator {
-    override fun create(data: UpdateableCreator.Data): CloseableUpdateable {
+    override fun create(data: UpdateableCreator.Data): Updateable {
         val driverStation = MutableFrcDriverStation()
         data.uiStage.addActor(PracticeSimulation.createSideTable(driverStation, data.uiSkin)) // adds Teleop, Autonomous, Test buttons
-        return CloseableUpdateableMultiplexer(listOf(
+        return UpdateableMultiplexer(listOf(
                 KeyPressStopUpdateable { // disable when pressing enter
                     driverStation.mode = FrcMode.DISABLED
                 },

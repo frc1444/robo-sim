@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.first1444.sim.gdx.CloseableUpdateable
 import com.first1444.sim.gdx.SimpleScreen
 import com.first1444.sim.gdx.StageActUpdateable
 import com.first1444.sim.gdx.render.RenderableMultiplexer

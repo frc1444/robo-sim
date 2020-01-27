@@ -9,7 +9,7 @@ class RobotUpdateable
  */
 (
         private val runnableCreator: RunnableCreator
-) : CloseableUpdateable {
+) : Updateable {
 
     private var runnable: RobotRunnable? = null
     init {

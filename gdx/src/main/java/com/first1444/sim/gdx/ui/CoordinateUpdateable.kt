@@ -5,14 +5,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.first1444.sim.gdx.CloseableUpdateable
+import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.gdxVector
 import java.text.DecimalFormat
 
 class CoordinateUpdateable(
         private val uiStage: Stage,
         private val gameStage: Stage
-) : CloseableUpdateable {
+) : Updateable {
     companion object {
         private val FORMAT = DecimalFormat(" #0.000;-#0.000")
     }
@@ -26,12 +26,12 @@ class CoordinateUpdateable(
     init {
         val table = Table()
         val font = skin.getFont("default")
+        val labelStyle = Label.LabelStyle(font, skin.getColor("score"))
         group.addActor(table)
         table.apply {
             setFillParent(true)
             right()
             top()
-            val labelStyle = Label.LabelStyle(font, skin.getColor("score"))
             xLabel = Label("text", labelStyle)
             yLabel = Label("text", labelStyle)
             add(Label("x", labelStyle))

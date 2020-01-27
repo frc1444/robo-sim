@@ -4,9 +4,9 @@ import com.badlogic.gdx.ScreenAdapter
 
 class SimpleScreen
 @JvmOverloads constructor(
-    private val updateable: CloseableUpdateable,
-    private val renderable: Renderable,
-    private val pauseable: Pauseable = Pauseable.NOTHING
+        private val updateable: Updateable,
+        private val renderable: Renderable,
+        private val pauseable: Pauseable = Pauseable.NOTHING
 ) : ScreenAdapter() {
 
     override fun render(delta: Float) {

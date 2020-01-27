@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input
 
 class KeyPressStopUpdateable(
         private val runnable: Runnable
-) : CloseableUpdateable {
+) : Updateable {
 
     constructor(runnable: () -> Unit) : this(Runnable(runnable))
 

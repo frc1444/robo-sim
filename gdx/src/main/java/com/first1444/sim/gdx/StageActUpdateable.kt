@@ -7,7 +7,7 @@ class StageActUpdateable
 @JvmOverloads constructor(
         private val stage: Stage,
         private val setAsInputProcessor: Boolean = false
-) : CloseableUpdateable {
+) : Updateable {
     override fun update(delta: Float) {
         stage.act(delta)
         if(setAsInputProcessor){

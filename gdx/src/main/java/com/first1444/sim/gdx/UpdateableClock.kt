@@ -2,7 +2,7 @@ package com.first1444.sim.gdx
 
 import com.first1444.sim.api.Clock
 
-class UpdateableClock : Clock, CloseableUpdateable {
+class UpdateableClock : Clock, Updateable {
 
     private var time: Double = 0.0
 

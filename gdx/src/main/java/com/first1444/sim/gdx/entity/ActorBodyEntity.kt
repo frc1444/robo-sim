@@ -34,6 +34,11 @@ open class ActorBodyEntity(
         val position = body.position
         group.setPosition(position.x, position.y)
     }
+
+    override fun onRemove() {
+        body.world.destroyBody(body)
+        group.remove()
+    }
     @Throws(Exception::class) // may be overridden, so allow the option of throwing an exception
     override fun close() {
     }

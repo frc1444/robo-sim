@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.ui.TextField
-import com.first1444.sim.gdx.CloseableUpdateable
+import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.SimpleScreen
 import com.first1444.sim.gdx.clickUpListener
 import com.first1444.sim.gdx.render.RenderableMultiplexer
@@ -37,7 +37,7 @@ class SupplementaryConfigScreenCreator(
                 finishListener.finished(changer, Config(textLabel.text))
             })
         })
-        return SimpleScreen(CloseableUpdateable.fromUpdateOnly {
+        return SimpleScreen(Updateable.fromUpdateOnly {
             stage.act(it)
             Gdx.input.inputProcessor = stage
         }, RenderableMultiplexer(listOf(

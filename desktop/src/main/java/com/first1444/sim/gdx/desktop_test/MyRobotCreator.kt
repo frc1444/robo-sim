@@ -123,7 +123,7 @@ class MyRobotCreator(
         private val dashboardBundle: ActiveDashboardBundle
 ) : RobotCreator {
 
-    override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): CloseableUpdateable {
+    override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): Updateable {
         val entity = createEntity(data, updateableData)
         val swerveDriveData = createSwerveDriveData(data, updateableData, entity)
 
@@ -172,7 +172,7 @@ class MyRobotCreator(
                     }
             ))
         }
-        return CloseableUpdateableMultiplexer(listOf(
+        return UpdateableMultiplexer(listOf(
                 entity,
                 RobotUpdateable(robotCreator)
         ))
@@ -183,7 +183,7 @@ class MyRobotCreator(
 class MySupplementaryRobotCreator(
         private val serverName: String
 ) : RobotCreator {
-    override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): CloseableUpdateable {
+    override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): Updateable {
         val entity = createEntity(data, updateableData)
 //        val swerveDriveData = createSwerveDriveData(data, updateableData, entity)
 
@@ -200,7 +200,7 @@ class MySupplementaryRobotCreator(
 
             }
         }
-        return CloseableUpdateableMultiplexer(listOf(
+        return UpdateableMultiplexer(listOf(
                 entity,
                 RobotUpdateable(robotCreator)
         ))

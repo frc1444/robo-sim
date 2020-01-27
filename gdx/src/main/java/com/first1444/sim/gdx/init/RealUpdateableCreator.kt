@@ -6,8 +6,8 @@ import com.first1444.sim.api.frc.MatchInfo
 import com.first1444.sim.api.frc.MatchType
 import com.first1444.sim.api.frc.sim.FmsFrcDriverStation
 import com.first1444.sim.api.frc.sim.MatchFmsSimulator
-import com.first1444.sim.gdx.CloseableUpdateable
-import com.first1444.sim.gdx.CloseableUpdateableMultiplexer
+import com.first1444.sim.gdx.Updateable
+import com.first1444.sim.gdx.UpdateableMultiplexer
 import com.first1444.sim.gdx.KeyPressStopUpdateable
 import com.first1444.sim.gdx.clickDownListener
 import com.first1444.sim.gdx.ui.DriverStationConfig
@@ -17,7 +17,7 @@ class RealUpdateableCreator(
         private val config: RealConfig,
         private val robotCreator: RobotCreator
 ) : UpdateableCreator {
-    override fun create(data: UpdateableCreator.Data): CloseableUpdateable {
+    override fun create(data: UpdateableCreator.Data): Updateable {
         val fms = MatchFmsSimulator(data.clock, MatchInfo("", MatchType.NONE, 0, 0))
         val gameSpecificMessageHolder = arrayOf("")
         val driverStation = FmsFrcDriverStation(fms, config.alliance, config.driverStationLocation) { gameSpecificMessageHolder[0] }
@@ -38,7 +38,7 @@ class RealUpdateableCreator(
         })
         sideTable.row()
         DriverStationConfig.populateGameSpecificMessage(sideTable, data.uiSkin) { gameSpecificMessageHolder[0] = it }
-        return CloseableUpdateableMultiplexer(listOf(
+        return UpdateableMultiplexer(listOf(
                 KeyPressStopUpdateable {
                     fms.stop()
                 },
