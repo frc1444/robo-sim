@@ -44,7 +44,7 @@ private const val maxVelocity = 3.35
 private val wheelBase = inchesToMeters(22.75) // length
 private val trackWidth = inchesToMeters(24.0)
 
-private fun createEntity(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): BodyEntity {
+private fun createEntity(updateableData: UpdateableCreator.Data): BodyEntity {
     return ActorBodyEntity(updateableData.contentStage, updateableData.worldManager.world, BodyDef().apply {
         type = BodyDef.BodyType.DynamicBody
         position.set(startingPosition)
@@ -113,10 +113,6 @@ private fun createSwerveDriveData(data: RobotCreator.Data, updateableData: Updat
         moduleList.add(PositionSwerveModule(module, position))
     }
     return AnyWheelSwerveDriveData(moduleList)
-//    return FourWheelSwerveDriveData(
-//            moduleList[0], moduleList[1], moduleList[2], moduleList[3],
-//            wheelBase, trackWidth
-//    )
 }
 
 class MyRobotCreator(
@@ -124,8 +120,17 @@ class MyRobotCreator(
 ) : RobotCreator {
 
     override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): Updateable {
-        val entity = createEntity(data, updateableData)
+        val entity = createEntity(updateableData)
         val swerveDriveData = createSwerveDriveData(data, updateableData, entity)
+        entity.body.createFixture(FixtureDef().apply { // intake
+            isSensor = true
+            shape = PolygonShape().apply {
+                setAsBox(trackWidth.toFloat() / 8, trackWidth.toFloat() / 2, gdxVector(wheelBase.toFloat() / 2 + trackWidth.toFloat() / 8, 0f), 0f)
+            }
+        }).apply {
+            userData = IntakeUserData()
+        }
+        updateableData.worldManager.world.setContactListener(IntakeListener(updateableData.worldManager))
 
         val provider = IndexedControllerProvider(0)
         val creator = GdxControllerPartCreator(provider, true)
@@ -184,7 +189,7 @@ class MySupplementaryRobotCreator(
         private val serverName: String
 ) : RobotCreator {
     override fun create(data: RobotCreator.Data, updateableData: UpdateableCreator.Data): Updateable {
-        val entity = createEntity(data, updateableData)
+        val entity = createEntity(updateableData)
 //        val swerveDriveData = createSwerveDriveData(data, updateableData, entity)
 
         val robotCreator = RunnableCreator.wrap {

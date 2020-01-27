@@ -12,6 +12,7 @@ class WorldManager : Updateable {
     val world: World = World(Vector2.Zero, false) // TODO when we understand sleep better, we can enable it
 
     private val updateables = mutableListOf<RemovableUpdateable>()
+    private val removeList = mutableListOf<RemovableUpdateable>()
 
     private val bodyArrayCache = Array<Body>()
     private val fixtureArrayCache = Array<Fixture>()
@@ -21,6 +22,11 @@ class WorldManager : Updateable {
             updateable.update(delta)
         }
         world.step(delta, 6, 2)
+        for(toRemove in removeList){
+            updateables.remove(toRemove)
+            toRemove.onRemove()
+        }
+        removeList.clear()
     }
 
     override fun close() {
@@ -30,12 +36,8 @@ class WorldManager : Updateable {
     fun add(updateable: RemovableUpdateable) {
         updateables.add(updateable)
     }
-    fun remove(updateable: RemovableUpdateable): Boolean {
-        val r = updateables.remove(updateable)
-        if(r){
-            updateable.onRemove()
-        }
-        return r
+    fun remove(updateable: RemovableUpdateable) {
+        removeList.add(updateable)
     }
 
     val bodies: Array<Body>

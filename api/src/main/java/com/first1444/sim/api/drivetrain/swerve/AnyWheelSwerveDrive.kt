@@ -27,6 +27,7 @@ class AnyWheelSwerveDrive(
         if (x == 0.0 && y == 0.0 && turnAmount == 0.0) {
             for(module in drivetrainData.modules){
                 module.setTargetSpeed(0.0)
+                module.run()
             }
         } else {
             val map = HashMap<PositionSwerveModule, Double>(drivetrainData.positionSwerveModules.size)
