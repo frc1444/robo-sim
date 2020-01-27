@@ -1,5 +1,6 @@
 package com.first1444.sim.gdx
 
+@Deprecated("Use CloseableUpdateable")
 interface Updateable {
     fun update(delta: Float)
 

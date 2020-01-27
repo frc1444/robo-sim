@@ -13,8 +13,8 @@ class SupplementaryUpdateableCreator(
     override fun create(data: UpdateableCreator.Data): CloseableUpdateable {
         return CloseableUpdateableMultiplexer(listOf(
                 robotCreator.create(RobotCreator.Data(driverStation), data),
-                CloseableUpdateable.fromUpdateable(ScoreboardUpdateable(data.uiStage, driverStation)),
-                CloseableUpdateable.fromUpdateable(CoordinateUpdateable(data.uiStage, data.contentStage))
+                ScoreboardUpdateable(data.uiStage, driverStation),
+                CoordinateUpdateable(data.uiStage, data.contentStage)
         ))
     }
 

@@ -29,6 +29,6 @@ class SimpleScreen
     override fun dispose() {
         updateable.close()
         renderable.dispose()
-        println("Did dispose!")
+        println("SimpleScreen dispose!")
     }
 }

@@ -1,8 +1,8 @@
 package com.first1444.sim.gdx.velocity
 
-import com.first1444.sim.gdx.Updateable
+import com.first1444.sim.gdx.CloseableUpdateable
 
-interface SetPointHandler : Updateable {
+interface SetPointHandler : CloseableUpdateable {
     val calculated: Float
 
     fun setDesired(desired: Float)

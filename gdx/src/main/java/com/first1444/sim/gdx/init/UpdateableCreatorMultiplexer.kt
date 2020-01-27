@@ -2,8 +2,6 @@ package com.first1444.sim.gdx.init
 
 import com.first1444.sim.gdx.CloseableUpdateable
 import com.first1444.sim.gdx.CloseableUpdateableMultiplexer
-import com.first1444.sim.gdx.Updateable
-import com.first1444.sim.gdx.UpdateableMultiplexer
 
 class UpdateableCreatorMultiplexer(
         private val updateableCreatorList: List<UpdateableCreator>

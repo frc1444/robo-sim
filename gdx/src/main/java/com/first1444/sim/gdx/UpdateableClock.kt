@@ -2,7 +2,7 @@ package com.first1444.sim.gdx
 
 import com.first1444.sim.api.Clock
 
-class UpdateableClock : Clock, Updateable {
+class UpdateableClock : Clock, CloseableUpdateable {
 
     private var time: Double = 0.0
 
@@ -11,5 +11,7 @@ class UpdateableClock : Clock, Updateable {
 
     override fun update(delta: Float) {
         time += delta
+    }
+    override fun close() {
     }
 }

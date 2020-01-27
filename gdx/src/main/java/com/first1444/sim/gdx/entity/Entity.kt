@@ -3,15 +3,12 @@ package com.first1444.sim.gdx.entity
 import com.badlogic.gdx.math.Vector2
 import com.first1444.sim.api.Rotation2
 import com.first1444.sim.api.Transform2
-import com.first1444.sim.gdx.Updateable
-import com.first1444.sim.gdx.gdx
-import com.first1444.sim.gdx.set
-import com.first1444.sim.gdx.sim
+import com.first1444.sim.gdx.*
 
 
 // TODO think about whether or not an entity needs to be able to be removed
 
-interface Entity : Updateable {
+interface Entity : CloseableUpdateable {
     var position: Vector2
     var rotation: Rotation2
     var rotationDegrees: Float

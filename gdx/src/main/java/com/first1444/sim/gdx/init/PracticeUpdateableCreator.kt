@@ -17,12 +17,12 @@ class PracticeUpdateableCreator(
         val driverStation = MutableFrcDriverStation()
         data.uiStage.addActor(PracticeSimulation.createSideTable(driverStation, data.uiSkin)) // adds Teleop, Autonomous, Test buttons
         return CloseableUpdateableMultiplexer(listOf(
-                CloseableUpdateable.fromUpdateable(KeyPressStopUpdateable { // disable when pressing enter
+                KeyPressStopUpdateable { // disable when pressing enter
                     driverStation.mode = FrcMode.DISABLED
-                }),
+                },
                 robotCreator.create(RobotCreator.Data(driverStation), data),
-                CloseableUpdateable.fromUpdateable(ScoreboardUpdateable(data.uiStage, driverStation)),
-                CloseableUpdateable.fromUpdateable(CoordinateUpdateable(data.uiStage, data.contentStage))
+                ScoreboardUpdateable(data.uiStage, driverStation),
+                CoordinateUpdateable(data.uiStage, data.contentStage)
         ))
     }
 

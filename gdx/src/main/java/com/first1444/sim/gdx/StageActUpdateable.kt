@@ -7,12 +7,14 @@ class StageActUpdateable
 @JvmOverloads constructor(
         private val stage: Stage,
         private val setAsInputProcessor: Boolean = false
-) : Updateable {
+) : CloseableUpdateable {
     override fun update(delta: Float) {
         stage.act(delta)
         if(setAsInputProcessor){
             Gdx.input.inputProcessor = stage
         }
+    }
+    override fun close() {
     }
 
 }

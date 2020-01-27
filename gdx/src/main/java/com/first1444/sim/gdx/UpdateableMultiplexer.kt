@@ -5,6 +5,7 @@ package com.first1444.sim.gdx
  *
  * @param updateableList The list of [Updateable]s. If this changes, it will update whatever is in this list.
  */
+@Deprecated("Use CloseableUpdateableMultiplexer")
 class UpdateableMultiplexer(
         private val updateableList: List<Updateable>
 ) : Updateable {

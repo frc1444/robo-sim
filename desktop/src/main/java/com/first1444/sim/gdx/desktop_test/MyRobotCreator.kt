@@ -9,12 +9,12 @@ import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef
 import com.first1444.dashboard.bundle.ActiveDashboardBundle
 import com.first1444.sim.api.*
-import com.first1444.sim.api.drivetrain.swerve.*
+import com.first1444.sim.api.drivetrain.swerve.AnyWheelSwerveDrive
+import com.first1444.sim.api.drivetrain.swerve.AnyWheelSwerveDriveData
+import com.first1444.sim.api.drivetrain.swerve.PositionSwerveModule
 import com.first1444.sim.api.frc.BasicRobotRunnable
 import com.first1444.sim.api.frc.sim.DriverStationSendable
 import com.first1444.sim.api.sensors.DefaultOrientationHandler
-import com.first1444.sim.api.surroundings.Surrounding
-import com.first1444.sim.api.surroundings.SurroundingProvider
 import com.first1444.sim.gdx.*
 import com.first1444.sim.gdx.drivetrain.swerve.BodySwerveModule
 import com.first1444.sim.gdx.entity.ActorBodyEntity
@@ -173,7 +173,7 @@ class MyRobotCreator(
             ))
         }
         return CloseableUpdateableMultiplexer(listOf(
-                CloseableUpdateable.fromUpdateable(entity),
+                entity,
                 RobotUpdateable(robotCreator)
         ))
     }
@@ -201,7 +201,7 @@ class MySupplementaryRobotCreator(
             }
         }
         return CloseableUpdateableMultiplexer(listOf(
-                CloseableUpdateable.fromUpdateable(entity),
+                entity,
                 RobotUpdateable(robotCreator)
         ))
     }

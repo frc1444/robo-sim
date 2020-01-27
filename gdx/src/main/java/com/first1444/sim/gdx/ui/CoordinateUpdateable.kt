@@ -5,17 +5,18 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.first1444.sim.gdx.Updateable
+import com.first1444.sim.gdx.CloseableUpdateable
 import com.first1444.sim.gdx.gdxVector
 import java.text.DecimalFormat
 
 class CoordinateUpdateable(
         private val uiStage: Stage,
         private val gameStage: Stage
-) : Updateable {
+) : CloseableUpdateable {
     companion object {
         private val FORMAT = DecimalFormat(" #0.000;-#0.000")
     }
+    private val skin = Skin(Gdx.files.classpath("skins/scoreboard/skin.json"))
     private val group = Table().apply {
         setFillParent(true)
     }
@@ -24,8 +25,6 @@ class CoordinateUpdateable(
 
     init {
         val table = Table()
-
-        val skin = Skin(Gdx.files.classpath("skins/scoreboard/skin.json"))
         val font = skin.getFont("default")
         group.addActor(table)
         table.apply {
@@ -50,6 +49,10 @@ class CoordinateUpdateable(
         val position = gameStage.viewport.unproject(gdxVector(x.toFloat(), y.toFloat()))
         xLabel.setText(FORMAT.format(position.x))
         yLabel.setText(FORMAT.format(position.y))
+    }
+
+    override fun close() {
+        skin.dispose()
     }
 
 }

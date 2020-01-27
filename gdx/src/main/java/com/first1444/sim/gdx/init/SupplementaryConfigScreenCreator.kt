@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.ui.TextField
 import com.first1444.sim.gdx.CloseableUpdateable
 import com.first1444.sim.gdx.SimpleScreen
-import com.first1444.sim.gdx.Updateable
 import com.first1444.sim.gdx.clickUpListener
 import com.first1444.sim.gdx.render.RenderableMultiplexer
 import com.first1444.sim.gdx.render.ResetRenderable
@@ -38,10 +37,10 @@ class SupplementaryConfigScreenCreator(
                 finishListener.finished(changer, Config(textLabel.text))
             })
         })
-        return SimpleScreen(CloseableUpdateable.fromUpdateable(Updateable {
+        return SimpleScreen(CloseableUpdateable.fromUpdateOnly {
             stage.act(it)
             Gdx.input.inputProcessor = stage
-        }), RenderableMultiplexer(listOf(
+        }, RenderableMultiplexer(listOf(
                 ResetRenderable(Color.BLACK),
                 StageRenderable(stage)
         )))

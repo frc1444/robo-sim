@@ -6,13 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.first1444.sim.api.frc.Fms
-import com.first1444.sim.gdx.Updateable
+import com.first1444.sim.gdx.CloseableUpdateable
 import kotlin.math.roundToInt
 
 class ScoreboardUpdateable(
         private val stage: Stage,
         private val fms: Fms
-) : Updateable {
+) : CloseableUpdateable {
+    private val skin = Skin(Gdx.files.classpath("skins/scoreboard/skin.json"))
     private val group = Table().apply {
         setFillParent(true)
     }
@@ -20,7 +21,6 @@ class ScoreboardUpdateable(
 
     init {
         val scoreboardTable = Table()
-        val skin = Skin(Gdx.files.classpath("skins/scoreboard/skin.json"))
         val font = skin.getFont("default")
         group.addActor(scoreboardTable)
         scoreboardTable.apply {
@@ -39,6 +39,10 @@ class ScoreboardUpdateable(
         } else {
             label.setText(fms.mode.name)
         }
+    }
+
+    override fun close() {
+        skin.dispose()
     }
 
 }

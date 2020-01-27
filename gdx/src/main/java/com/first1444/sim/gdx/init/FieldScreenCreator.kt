@@ -34,8 +34,8 @@ class FieldScreenCreator(
 
         return SimpleScreen(
                 CloseableUpdateableMultiplexer(listOf(
-                        CloseableUpdateable.fromUpdateable(StageActUpdateable(uiStage, true)),
-                        CloseableUpdateable.fromUpdateable(clock),
+                        StageActUpdateable(uiStage, true),
+                        clock,
                         additionalCloseableUpdateable,
                         worldManager
                 )),

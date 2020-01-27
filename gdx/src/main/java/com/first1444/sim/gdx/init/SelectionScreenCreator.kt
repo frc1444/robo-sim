@@ -48,7 +48,7 @@ class SelectionScreenCreator(
         table.add(Label("Made by Joshua Shannon from Lightning 1444", uiSkin))
 
         stage.addActor(table)
-        return SimpleScreen(CloseableUpdateable.fromUpdateable(StageActUpdateable(stage, true)), RenderableMultiplexer(listOf(ResetRenderable(Color.BLACK), StageRenderable(stage))))
+        return SimpleScreen(StageActUpdateable(stage, true), RenderableMultiplexer(listOf(ResetRenderable(Color.BLACK), StageRenderable(stage))))
     }
 
 }

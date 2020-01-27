@@ -13,21 +13,29 @@ open class ActorBodyEntity(
         final override val body: Body
 ) : BodyEntity {
 
-    constructor(stage: Stage, world: World, bodyDef: BodyDef, fixtureDefs: List<FixtureDef>) : this(
+    constructor(stage: Stage, body: Body) : this(
             Group().apply {
                 stage.addActor(this)
                 touchable = Touchable.childrenOnly
             },
+            body
+    )
+    constructor(stage: Stage, world: World, bodyDef: BodyDef, fixtureDefs: List<FixtureDef>) : this(
+            stage,
             world.createBody(bodyDef).apply {
                 for(fixtureDef in fixtureDefs){
                     createFixture(fixtureDef)
                 }
             }
     )
+    constructor(stage: Stage, world: World, bodyDef: BodyDef) : this(stage, world, bodyDef, emptyList())
 
     override fun update(delta: Float) {
         val position = body.position
         group.setPosition(position.x, position.y)
+    }
+    @Throws(Exception::class) // may be overridden, so allow the option of throwing an exception
+    override fun close() {
     }
 
 }

@@ -39,11 +39,11 @@ class RealUpdateableCreator(
         sideTable.row()
         DriverStationConfig.populateGameSpecificMessage(sideTable, data.uiSkin) { gameSpecificMessageHolder[0] = it }
         return CloseableUpdateableMultiplexer(listOf(
-                CloseableUpdateable.fromUpdateable(KeyPressStopUpdateable {
+                KeyPressStopUpdateable {
                     fms.stop()
-                }),
+                },
                 robotCreator.create(RobotCreator.Data(driverStation), data),
-                CloseableUpdateable.fromUpdateable(ScoreboardUpdateable(data.uiStage, fms))
+                ScoreboardUpdateable(data.uiStage, fms)
         ))
     }
 

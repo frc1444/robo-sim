@@ -16,4 +16,7 @@ class InstantSetPointHandler : SetPointHandler {
     override fun update(delta: Float) {
     }
 
+    override fun close() {
+    }
+
 }

@@ -65,5 +65,7 @@ class AccelerateSetPointHandler(
         }
         this.velocity = current
     }
+    override fun close() {
+    }
 
 }
