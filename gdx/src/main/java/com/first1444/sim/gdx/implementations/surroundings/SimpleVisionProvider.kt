@@ -17,6 +17,7 @@ abstract class SimpleVisionProvider<T : VisionTarget<*>>(
         get() {
             val r = ArrayList<Surrounding>()
             val transform = entity.simTransform
+            val timestamp = clock.timeSeconds
             for(vision in targets){
                 if(!visionFilter.shouldInclude(vision)) continue
 
@@ -25,7 +26,7 @@ abstract class SimpleVisionProvider<T : VisionTarget<*>>(
                 val angle = visionTransform.rotationRadians
                 r.add(Surrounding(
                         Transform2.fromRadians(offset, angle).rotateRadians(-transform.rotationRadians),
-                        clock.timeSeconds,
+                        timestamp,
                         getExtra(vision)
                 ))
             }
