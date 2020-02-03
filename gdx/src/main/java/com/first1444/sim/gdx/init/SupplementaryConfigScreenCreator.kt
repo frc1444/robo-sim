@@ -36,14 +36,17 @@ class SupplementaryConfigScreenCreator(
         table.setFillParent(true)
         stage.addActor(table)
         val textLabel = TextField(defaultHostAddress, uiSkin)
-        table.add(textLabel)
-        for(option in quickSelectOptions){
-            table.add(TextButton(option, uiSkin).apply {
-                addListener(clickUpListener {
-                    textLabel.text = option
+        table.add(Table().apply {
+            add(textLabel)
+            for(option in quickSelectOptions){
+                add(TextButton(option, uiSkin).apply {
+                    addListener(clickUpListener {
+                        textLabel.text = option
+                    })
                 })
-            })
-        }
+            }
+            row()
+        })
         table.row()
         table.add(TextButton("done", uiSkin).apply {
             addListener(clickUpListener {

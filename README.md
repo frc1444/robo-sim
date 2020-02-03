@@ -1,6 +1,8 @@
 # RoboSim
 A 2D simulation and abstraction of WPILib code for FRC 
 
+[**Jitpack Link**](https://jitpack.io/#frc1444/robo-sim)
+
 ### About
 This is a 2D simulation built using libGDX. To use this it is recommended to
 use very few features from WPILib because this project has many abstractions for many WPILib features.
