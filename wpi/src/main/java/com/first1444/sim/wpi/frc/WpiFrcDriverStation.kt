@@ -15,9 +15,9 @@ class WpiFrcDriverStation(
         }
     override val mode: FrcMode
         get() = when {
+            station.isDisabled -> FrcMode.DISABLED
             station.isOperatorControl -> FrcMode.TELEOP
             station.isAutonomous -> FrcMode.AUTONOMOUS
-            station.isDisabled -> FrcMode.DISABLED
             station.isTest -> FrcMode.TEST
             else -> throw IllegalStateException("The driver station is not in any mode?")
         }
