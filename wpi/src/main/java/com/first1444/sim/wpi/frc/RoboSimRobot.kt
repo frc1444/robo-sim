@@ -18,11 +18,11 @@ constructor(
     private val notifier = NotifierJNI.initializeNotifier()
     private var expirationTime = 0.0
 
-    @Deprecated("Define the default value yourself! This will be removed")
-    constructor(runnableCreator: RunnableCreator) : this(runnableCreator, 0.02)
+    @Volatile
+    private var exit = false
 
     init {
-        NotifierJNI.setNotifierName(notifier, "RoboSimRobot")
+        NotifierJNI.setNotifierName(notifier, "TimedRobot")
         HAL.report(FRCNetComm.tResourceType.kResourceType_Framework, FRCNetComm.tInstances.kFramework_Timed)
         runnableCreator.prematureInit()
     }
@@ -37,9 +37,9 @@ constructor(
         updateAlarm()
 
         // Loop forever, calling the appropriate mode-dependent function
-        while (true) {
+        while (!Thread.currentThread().isInterrupted) {
             val curTime = NotifierJNI.waitForNotifierAlarm(notifier)
-            if (curTime == 0L) {
+            if (curTime == 0L || exit) {
                 break
             }
 
@@ -50,7 +50,9 @@ constructor(
         }
     }
 
-    override fun endCompetition() {
+    open override fun endCompetition() {
+        println("endCompetition()")
+        exit = true
         NotifierJNI.stopNotifier(notifier)
     }
 
@@ -66,6 +68,7 @@ constructor(
 
     /** Although there isn't an override, this still overrides the finalize function*/
     protected fun finalize() {
+        println("finalize()")
         NotifierJNI.stopNotifier(notifier)
         NotifierJNI.cleanNotifier(notifier)
     }
