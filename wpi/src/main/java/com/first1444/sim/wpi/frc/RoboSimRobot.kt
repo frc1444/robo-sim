@@ -37,9 +37,9 @@ constructor(
         updateAlarm()
 
         // Loop forever, calling the appropriate mode-dependent function
-        while (!Thread.currentThread().isInterrupted) {
+        while (!Thread.currentThread().isInterrupted && !exit) {
             val curTime = NotifierJNI.waitForNotifierAlarm(notifier)
-            if (curTime == 0L || exit) {
+            if (curTime == 0L || Thread.currentThread().isInterrupted || exit) {
                 break
             }
 
@@ -48,10 +48,10 @@ constructor(
 
             loop(robotRunnable)
         }
+        robotRunnable.close()
     }
 
-    open override fun endCompetition() {
-        println("endCompetition()")
+    override fun endCompetition() {
         exit = true
         NotifierJNI.stopNotifier(notifier)
     }
@@ -68,7 +68,6 @@ constructor(
 
     /** Although there isn't an override, this still overrides the finalize function*/
     protected fun finalize() {
-        println("finalize()")
         NotifierJNI.stopNotifier(notifier)
         NotifierJNI.cleanNotifier(notifier)
     }

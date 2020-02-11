@@ -33,9 +33,12 @@ object Field2020 {
 
     /** The alliance loading bay on the alliance's side of the field */
     @JvmField val ALLIANCE_LOADING_BAY = VisionTarget2020(Transform2(-WIDTH / 2.0 + inchesToMeters(94.66 + 48.0 / 2 + 6.0 * 12 + 60.0 / 2), -LENGTH / 2.0, Rotation2.DEG_270), VisionIdentifier2020(VisionType2020.LOADING_BAY, isEnemyOwner = false))
+    /** The enemy loading bay on the enemy's side of the field */
     @JvmField val ENEMY_LOADING_BAY = VisionTarget2020(-ALLIANCE_LOADING_BAY.transform, VisionIdentifier2020(VisionType2020.LOADING_BAY, isEnemyOwner = true))
 
+    /** The alliance power port on the enemy's side of the field */
     @JvmField val ALLIANCE_POWER_PORT = VisionTarget2020(Transform2(WIDTH / 2 - inchesToMeters(94.66), LENGTH / 2, Rotation2.DEG_90), VisionIdentifier2020(VisionType2020.POWER_PORT, isEnemyOwner = false))
+    /** The enemy power port on the alliance side of the field */
     @JvmField val ENEMY_POWER_PORT = VisionTarget2020(-ALLIANCE_POWER_PORT.transform, VisionIdentifier2020(VisionType2020.POWER_PORT, isEnemyOwner = true))
 
     @JvmField val ALL_VISION_TARGETS = listOf(ALLIANCE_LOADING_BAY, ENEMY_LOADING_BAY, ALLIANCE_POWER_PORT, ENEMY_POWER_PORT)

@@ -1,9 +1,10 @@
 package com.first1444.sim.wpi.frc
 
+import com.first1444.sim.api.RobotRunnable
 import com.first1444.sim.api.RunnableCreator
 import edu.wpi.first.wpilibj.TimedRobot
 
-class WpiTimedRobot @JvmOverloads constructor(
+open class WpiTimedRobot @JvmOverloads constructor(
         private val runnableCreator: RunnableCreator,
         period: Double = kDefaultPeriod
 ) : TimedRobot(period) {
@@ -12,7 +13,7 @@ class WpiTimedRobot @JvmOverloads constructor(
         runnableCreator.prematureInit()
     }
 
-    private lateinit var runnable: Runnable
+    private lateinit var runnable: RobotRunnable
 
     override fun robotInit() {
         runnable = runnableCreator.createRunnable()
@@ -20,10 +21,9 @@ class WpiTimedRobot @JvmOverloads constructor(
     override fun robotPeriodic() {
         runnable.run()
     }
-
-    override fun close() {
-        super.close()
-
+    override fun startCompetition() {
+        super.startCompetition()
+        runnable.close()
     }
     override fun disabledInit() {}
     override fun disabledPeriodic() {}
