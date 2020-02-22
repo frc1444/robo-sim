@@ -2,7 +2,7 @@
 buildscript {
     ext {
         kotlinVersion = '1.3.61'
-        wpiLibVersion = "2020.2.2"
+        wpiLibVersion = "2020.3.2"
         junit5Version = "5.5.2"
         gdxVersion = '1.9.10'
         box2DLightsVersion = '1.4'

@@ -5,10 +5,9 @@ import com.first1444.sim.api.RunnableCreator
 import edu.wpi.first.hal.FRCNetComm
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.hal.NotifierJNI
-import edu.wpi.first.wpilibj.DriverStation
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.RobotController
-import edu.wpi.first.wpilibj.Watchdog
+
 
 open class RoboSimRobot
 constructor(
