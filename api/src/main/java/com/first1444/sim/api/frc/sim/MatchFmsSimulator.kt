@@ -1,6 +1,7 @@
 package com.first1444.sim.api.frc.sim
 
 import com.first1444.sim.api.Clock
+import com.first1444.sim.api.frc.ControlWord
 import com.first1444.sim.api.frc.Fms
 import com.first1444.sim.api.frc.FrcMode
 import com.first1444.sim.api.frc.MatchInfo
@@ -33,7 +34,8 @@ class MatchFmsSimulator(
     val isMatchActive: Boolean
         get() {
             val startTime = this.startTime ?: return false
-            return startTime <= 150
+            val elapsed = clock.timeSeconds - startTime
+            return elapsed <= 150 + teleopTransitionTime
         }
 
     override val mode: FrcMode
@@ -47,6 +49,15 @@ class MatchFmsSimulator(
                 elapsed > 15 -> FrcMode.DISABLED
                 else -> FrcMode.AUTONOMOUS
             }
+        }
+    override val controlWord: ControlWord
+        get() {
+            val mode = this.mode
+            if(mode == FrcMode.DISABLED){
+                val autonomous = this.startTime == null
+                return ControlWord(false, autonomous, false, false, true, true)
+            }
+            return ControlWord(true, mode == FrcMode.AUTONOMOUS, mode == FrcMode.TEST, false, true, true)
         }
 
     override val matchTime: Double?

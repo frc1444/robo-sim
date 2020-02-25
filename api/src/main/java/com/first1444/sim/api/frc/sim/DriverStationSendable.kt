@@ -20,7 +20,7 @@ class DriverStationSendable(
             override fun update() {
                 val matchInfo = driverStation.matchInfo
                 dashboard["EventName"].strictSetter.setString(matchInfo.eventName)
-                dashboard["FMSControlData"].strictSetter.setNumber(ControlWord(driverStation.mode, false, driverStation.isFMSAttached, driverStation.isDriverStationAttached).word)
+                dashboard["FMSControlData"].strictSetter.setNumber(driverStation.controlWord.word)
                 dashboard["GameSpecificMessage"].strictSetter.setString(driverStation.gameSpecificMessage)
                 dashboard["IsRedAlliance"].strictSetter.setBoolean(driverStation.alliance == Alliance.RED)
                 dashboard["MatchNumber"].strictSetter.setNumber(matchInfo.matchNumber)

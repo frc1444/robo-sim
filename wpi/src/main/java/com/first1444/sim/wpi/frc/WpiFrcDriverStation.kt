@@ -1,6 +1,7 @@
 package com.first1444.sim.wpi.frc
 
 import com.first1444.sim.api.frc.*
+import edu.wpi.first.hal.HAL
 import edu.wpi.first.wpilibj.DriverStation
 
 class WpiFrcDriverStation(
@@ -12,14 +13,6 @@ class WpiFrcDriverStation(
             DriverStation.Alliance.Red -> Alliance.RED
             DriverStation.Alliance.Invalid -> null
             null -> throw NullPointerException("DriverStation.getAlliance() should not return null!")
-        }
-    override val mode: FrcMode
-        get() = when {
-            station.isDisabled -> FrcMode.DISABLED
-            station.isOperatorControl -> FrcMode.TELEOP
-            station.isAutonomous -> FrcMode.AUTONOMOUS
-            station.isTest -> FrcMode.TEST
-            else -> throw IllegalStateException("The driver station is not in any mode?")
         }
     override val matchInfo: MatchInfo
         get() = MatchInfo(
@@ -35,10 +28,9 @@ class WpiFrcDriverStation(
         )
     override val gameSpecificMessage: String
         get() = station.gameSpecificMessage
-    override val isDriverStationAttached: Boolean
-        get() = station.isDSAttached
-    override val isFMSAttached: Boolean
-        get() = station.isFMSAttached
+
+    override val controlWord: ControlWord
+        get() = ControlWord(station.isEnabled, station.isAutonomous, station.isTest, station.isEStopped, station.isFMSAttached, station.isDSAttached)
     override val driverStationLocationValue: Int
         get() = station.location
     override val matchTime: Double?

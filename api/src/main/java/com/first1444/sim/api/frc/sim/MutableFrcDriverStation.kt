@@ -8,13 +8,19 @@ import com.first1444.sim.api.frc.*
 open class MutableFrcDriverStation : FrcDriverStation {
     override var alliance: Alliance? = Alliance.RED
 
-    override var mode: FrcMode = FrcMode.DISABLED
-
     override var matchInfo: MatchInfo = MatchInfo("", MatchType.NONE, 0, 0)
     override var gameSpecificMessage: String = ""
 
-    override var isDriverStationAttached: Boolean = true
-    override var isFMSAttached: Boolean = false
+    override var mode: FrcMode
+        get() = super.mode
+        set(value) {
+            val previous = controlWord
+            if(value == FrcMode.DISABLED){
+                controlWord = ControlWord(false, previous.isAutonomous, previous.isTest, previous.isEmergencyStop, previous.isFMSAttached, previous.isDriverStationAttached)
+            }
+            controlWord = ControlWord(true, value == FrcMode.AUTONOMOUS, value == FrcMode.TEST, previous.isEmergencyStop, previous.isFMSAttached, previous.isDriverStationAttached)
+        }
+    override var controlWord: ControlWord = ControlWord.fromWord(0)
     override var driverStationLocationValue: Int = 1
         set(value) {
             check(value in 1..3)

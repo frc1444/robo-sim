@@ -15,7 +15,9 @@ interface FrcDriverStation : Fms, EnabledState {
     val gameSpecificMessage: String
 
     val isDriverStationAttached: Boolean
+        get() = controlWord.isDriverStationAttached
     val isFMSAttached: Boolean
+        get() = controlWord.isFMSAttached
 
     val driverStationLocationValue: Int
     val driverStationLocation: DriverStationLocation

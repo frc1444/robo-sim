@@ -14,10 +14,8 @@ class FmsFrcDriverStation(
         get() = fms.mode
     override val matchInfo: MatchInfo
         get() = fms.matchInfo
-    override val isDriverStationAttached: Boolean
-        get() = true
-    override var isFMSAttached: Boolean = false
-
+    override val controlWord: ControlWord
+        get() = fms.controlWord
     override val matchTime: Double?
         get() = fms.matchTime
 
