@@ -15,10 +15,11 @@ open class MutableFrcDriverStation : FrcDriverStation {
         get() = super.mode
         set(value) {
             val previous = controlWord
-            if(value == FrcMode.DISABLED){
-                controlWord = ControlWord(false, previous.isAutonomous, previous.isTest, previous.isEmergencyStop, previous.isFMSAttached, previous.isDriverStationAttached)
+            controlWord = if(value == FrcMode.DISABLED){
+                ControlWord(false, previous.isAutonomous, previous.isTest, previous.isEmergencyStop, previous.isFMSAttached, previous.isDriverStationAttached)
+            } else {
+                ControlWord(true, value == FrcMode.AUTONOMOUS, value == FrcMode.TEST, previous.isEmergencyStop, previous.isFMSAttached, previous.isDriverStationAttached)
             }
-            controlWord = ControlWord(true, value == FrcMode.AUTONOMOUS, value == FrcMode.TEST, previous.isEmergencyStop, previous.isFMSAttached, previous.isDriverStationAttached)
         }
     override var controlWord: ControlWord = ControlWord.fromWord(0)
     override var driverStationLocationValue: Int = 1

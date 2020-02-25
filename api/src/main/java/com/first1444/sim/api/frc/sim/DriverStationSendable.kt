@@ -3,6 +3,7 @@ package com.first1444.sim.api.frc.sim
 import com.first1444.dashboard.ActiveComponent
 import com.first1444.dashboard.BasicDashboard
 import com.first1444.dashboard.advanced.Sendable
+import com.first1444.dashboard.advanced.SendableHelper
 import com.first1444.sim.api.frc.Alliance
 import com.first1444.sim.api.frc.ControlWord
 import com.first1444.sim.api.frc.FrcDriverStation
@@ -11,6 +12,7 @@ class DriverStationSendable(
         private val driverStation: FrcDriverStation
 ) : Sendable<ActiveComponent> {
     override fun init(title: String, dashboard: BasicDashboard): ActiveComponent {
+        SendableHelper(dashboard).type = "FMSInfo"
         return object : ActiveComponent {
             override val title: String = title
 
