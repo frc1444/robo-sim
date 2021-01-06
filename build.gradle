@@ -2,9 +2,9 @@
 buildscript {
     ext {
         kotlinVersion = '1.4.21'
-        wpiLibVersion = "2021.1.1-beta-4" // TODO change
+        wpiLibVersion = "2021.1.2"
         junit5Version = "5.7.0" // https://junit.org/junit5/
-        gdxVersion = '1.9.12' // https://github.com/libgdx/libgdx/releases
+        gdxVersion = '1.9.13' // https://github.com/libgdx/libgdx/releases
         abstractDashboardVersion = "v1.1.0"
         abstractControllerLibVersion = "v2.5.0"
         jacksonVersion = "2.12.0"

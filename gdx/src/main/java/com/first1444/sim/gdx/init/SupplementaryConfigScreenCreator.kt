@@ -62,14 +62,8 @@ class SupplementaryConfigScreenCreator(
         )))
     }
 
-    interface FinishListener {
+    fun interface FinishListener {
         fun finished(changer: ScreenChanger, config: Config)
-        companion object {
-            @JvmSynthetic
-            inline operator fun invoke(crossinline lambda: (ScreenChanger, Config) -> Unit) = object : FinishListener {
-                override fun finished(changer: ScreenChanger, config: Config) = lambda(changer, config)
-            }
-        }
     }
     class Config(
         val hostAddress: String

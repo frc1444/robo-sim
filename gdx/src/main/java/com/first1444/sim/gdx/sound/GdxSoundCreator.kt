@@ -8,17 +8,10 @@ import com.first1444.sim.api.sound.SoundCreator
 import com.first1444.sim.api.sound.implementations.RandomSoundMultiplexer
 import com.first1444.sim.api.sound.implementations.SimpleSound
 
-@JvmSynthetic
-inline fun GdxSoundCreator(crossinline fileHandleProvider: (String) -> FileHandle): GdxSoundCreator {
-    return GdxSoundCreator(object : GdxSoundCreator.FileHandleProvider {
-        override fun getFileHandle(string: String): FileHandle = fileHandleProvider(string)
-    })
-}
-
 class GdxSoundCreator(
         private val fileHandleProvider: FileHandleProvider
 ) : SoundCreator {
-    interface FileHandleProvider {
+    fun interface FileHandleProvider {
         fun getFileHandle(string: String): FileHandle
     }
     private val closeables = ArrayList<AutoCloseable>()
