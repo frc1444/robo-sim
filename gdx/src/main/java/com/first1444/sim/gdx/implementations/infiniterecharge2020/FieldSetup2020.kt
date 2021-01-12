@@ -20,14 +20,15 @@ object FieldSetup2020 {
     private val HW = (Field2020.WIDTH / 2).toFloat()
     private val HL = (Field2020.LENGTH / 2).toFloat()
     @JvmStatic
-    fun createField(world: World) {
+    @JvmOverloads
+    fun createField(world: World, do2021: Boolean = true) {
         createVisionTargets(world)
         createFieldBounds(world)
         createTargetZones(world)
         createLoadingZones(world)
         createTrenchRun(world)
         createTrench(world)
-        createShieldGenerator(world)
+        createShieldGenerator(world, do2021)
         createInitiationLine(world)
     }
     @JvmStatic
@@ -195,7 +196,8 @@ object FieldSetup2020 {
     }
 
     @JvmStatic
-    fun createShieldGenerator(world: World) {
+    @JvmOverloads
+    fun createShieldGenerator(world: World, do2021: Boolean = true) {
         val barrierSize = inchesToMeters(12.38f)
         val zoneLength = inchesToMeters(145.99f)
         val zoneWidth = inchesToMeters(134f) // this is an estimate
@@ -215,13 +217,15 @@ object FieldSetup2020 {
                         setAsBox(zoneWidth / 4, zoneLength / 2, gdxVector(zoneWidth / 4, 0f), 0f)
                     }
                 })
-                createFixture(FixtureDef().apply {
-                    // line dividing zone into two
-                    isSensor = true
-                    shape = EdgeShape().apply {
-                        set(0f, 0f, zoneWidth / 2, 0f)
-                    }
-                })
+                if (!do2021) {
+                    createFixture(FixtureDef().apply {
+                        // line dividing zone into two
+                        isSensor = true
+                        shape = EdgeShape().apply {
+                            set(0f, 0f, zoneWidth / 2, 0f)
+                        }
+                    })
+                }
                 createFixture(FixtureDef().apply {
                     // top barrier
                     shape = PolygonShape().apply {

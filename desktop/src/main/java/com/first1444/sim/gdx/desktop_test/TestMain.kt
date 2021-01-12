@@ -21,7 +21,7 @@ private fun createSelectionCreator(uiSkin: Skin, changer: ScreenChanger): Screen
     val exitButtonUpdateableCreator = ExitButtonCreator(Runnable {
         changer.change(createSelectionCreator(uiSkin, changer).create(changer))
     })
-    val fieldCreator = Field2020Creator
+    val fieldCreator = Field2020Creator(do2021 = true)
 
     return SelectionScreenCreator(
             uiSkin,
