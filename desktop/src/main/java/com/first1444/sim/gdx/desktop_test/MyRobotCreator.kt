@@ -134,8 +134,8 @@ class MyRobotCreator(
 
         val provider = IndexedControllerProvider(0)
         val creator = GdxControllerPartCreator(provider, true)
-        val joystick = if("sony" in provider.name.toLowerCase()){
-            val osName = System.getProperty("os.name").toLowerCase()
+        val joystick = if("sony" in provider.name.lowercase()){
+            val osName = System.getProperty("os.name").lowercase()
             if("nux" in osName || "nix" in osName || "aix" in osName || "mac" in osName) { // only Linux is tested, so feel free to change these if you need to add or remove one
                 println("*nix ps4")
                 InputUtil.createController(creator, LinuxPS4StandardControllerInputCreator())

@@ -1,14 +1,11 @@
 package com.first1444.sim.wpi.frc
 
 import com.first1444.sim.api.frc.*
-import edu.wpi.first.hal.HAL
 import edu.wpi.first.wpilibj.DriverStation
 
-class WpiFrcDriverStation(
-        private val station: DriverStation
-) : FrcDriverStation {
+object WpiFrcDriverStation : FrcDriverStation {
     override val alliance: Alliance?
-        get() = when(station.alliance){
+        get() = when(DriverStation.getAlliance()){
             DriverStation.Alliance.Blue -> Alliance.BLUE
             DriverStation.Alliance.Red -> Alliance.RED
             DriverStation.Alliance.Invalid -> null
@@ -16,26 +13,26 @@ class WpiFrcDriverStation(
         }
     override val matchInfo: MatchInfo
         get() = MatchInfo(
-                station.eventName,
-                when(station.matchType!!){
+                DriverStation.getEventName(),
+                when(DriverStation.getMatchType()!!){
                     DriverStation.MatchType.Elimination -> MatchType.ELIMINATION
                     DriverStation.MatchType.Qualification -> MatchType.QUALIFICATION
                     DriverStation.MatchType.Practice -> MatchType.PRACTICE
                     DriverStation.MatchType.None -> MatchType.NONE
                 },
-                station.matchNumber,
-                station.replayNumber
+                DriverStation.getMatchNumber(),
+                DriverStation.getReplayNumber()
         )
     override val gameSpecificMessage: String
-        get() = station.gameSpecificMessage
+        get() = DriverStation.getGameSpecificMessage()
 
     override val controlWord: ControlWord
-        get() = ControlWord(station.isEnabled, station.isAutonomous, station.isTest, station.isEStopped, station.isFMSAttached, station.isDSAttached)
+        get() = ControlWord(DriverStation.isEnabled(), DriverStation.isAutonomous(), DriverStation.isTest(), DriverStation.isEStopped(), DriverStation.isFMSAttached(), DriverStation.isDSAttached())
     override val driverStationLocationValue: Int
-        get() = station.location
+        get() = DriverStation.getLocation()
     override val matchTime: Double?
         get() {
-            val r = station.matchTime
+            val r = DriverStation.getMatchTime()
             if(r == -1.0){
                 return null
             }

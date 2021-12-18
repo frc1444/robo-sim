@@ -59,7 +59,7 @@ constructor(
         when {
             isDisabled -> HAL.observeUserProgramDisabled()
             isAutonomous -> HAL.observeUserProgramAutonomous()
-            isOperatorControl -> HAL.observeUserProgramTeleop()
+            isTeleop -> HAL.observeUserProgramTeleop()
             else -> HAL.observeUserProgramTest()
         }
         robotRunnable.run()

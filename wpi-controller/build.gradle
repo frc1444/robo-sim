@@ -1,5 +1,6 @@
 
 dependencies {
     api "edu.wpi.first.wpilibj:wpilibj-java:$wpiLibVersion"
+    api "edu.wpi.first.wpiutil:wpiutil-java:$wpiLibVersion"
     api "com.github.retrodaredevil.abstract-controller-lib:api:$abstractControllerLibVersion"
 }

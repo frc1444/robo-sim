@@ -1,6 +1,6 @@
 package me.retrodaredevil.controller.wpi.sendable;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import me.retrodaredevil.controller.input.JoystickPart;
 
 import java.util.function.Supplier;

@@ -1,13 +1,13 @@
 
 buildscript {
     ext {
-        kotlinVersion = '1.4.21'
-        wpiLibVersion = "2021.1.2"
-        junit5Version = "5.7.0" // https://junit.org/junit5/
+        kotlinVersion = '1.5.10'
+        wpiLibVersion = "2022.1.1-beta-3"
+        junit5Version = "5.8.2" // https://junit.org/junit5/
         gdxVersion = '1.9.13' // https://github.com/libgdx/libgdx/releases
         abstractDashboardVersion = "v1.1.0"
         abstractControllerLibVersion = "v2.5.0"
-        jacksonVersion = "2.12.0"
+        jacksonVersion = "2.13.0" // https://github.com/FasterXML/jackson-databind/tags
     }
 
     repositories {
@@ -15,7 +15,6 @@ buildscript {
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
         google()
     }
     dependencies {
@@ -33,7 +32,6 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-        jcenter()
         google()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
@@ -55,7 +53,8 @@ subprojects {
     }
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "1.8"
+            // WPILib requires Java 11, so lets use its features!
+            jvmTarget = "11"
         }
     }
     [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -93,6 +92,6 @@ project(":wpi"){
 }
 
 wrapper {
-    gradleVersion = '6.7.1' // https://gradle.org/releases/
+    gradleVersion = '7.3.2' // https://gradle.org/releases/
     distributionType = Wrapper.DistributionType.ALL
 }
