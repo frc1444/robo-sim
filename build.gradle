@@ -1,9 +1,12 @@
 
 buildscript {
     ext {
-        kotlinVersion = '1.5.10'
-        wpiLibVersion = "2022.1.1-beta-3"
+        kotlinVersion = '1.6.10'
+        wpiLibVersion = "2022.1.1"
         junit5Version = "5.8.2" // https://junit.org/junit5/
+
+        // We need to follow what robot2021 did to upgrade for the new controllers library: https://github.com/frc1444/robot2021/tree/update2022
+        //   For now, we'll leave this as this is only needed in the :desktop module.
         gdxVersion = '1.9.13' // https://github.com/libgdx/libgdx/releases
         abstractDashboardVersion = "v1.1.0"
         abstractControllerLibVersion = "v2.5.0"
